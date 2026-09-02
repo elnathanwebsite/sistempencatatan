@@ -2314,107 +2314,215 @@
         </div>
     </div>
 
-    <!-- EmailJS Settings Modal -->
+    <!-- EmailJS & Custom Template & Multi-Recipient Selector Modal -->
     <div class="modal" id="emailModal" onclick="closeEmailModal(event)">
-        <div class="modal-content" style="max-width: 560px;" onclick="event.stopPropagation()">
-            <div class="modal-header">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div
-                        style="width: 36px; height: 36px; border-radius: var(--radius-sm); background: linear-gradient(135deg, #ea4335 0%, #4285f4 100%); color: white; display: flex; align-items: center; justify-content: center;">
-                        <i data-lucide="mail" style="width: 20px; height: 20px;"></i>
+        <div class="modal-content" style="max-width: 760px; max-height: 90vh; display: flex; flex-direction: column;" onclick="event.stopPropagation()">
+            <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border);">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #ea4335 0%, #4285f4 100%); color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(66, 133, 244, 0.3);">
+                        <i data-lucide="mail" style="width: 22px; height: 22px;"></i>
                     </div>
                     <div>
-                        <h4 style="margin: 0; font-size: 1.05rem;">Integrasi Email Notifikasi (EmailJS & Gmail)</h4>
-                        <p style="font-size: 0.76rem; color: var(--text-muted); margin: 0;">Kirim otomatis email
-                            inspeksi ke SPV/Leader via Gmail Anda</p>
+                        <h4 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--text-main);">Pusat Notifikasi & Broadcast Email K3</h4>
+                        <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Pilih penerima, kustomisasi template HTML, dan kirim pesan serentak</p>
                     </div>
                 </div>
                 <button class="modal-close-btn" onclick="closeEmailModalDirect()">
                     <i data-lucide="x" style="width: 18px; height: 18px;"></i>
                 </button>
             </div>
-            <div class="modal-body" style="text-align: left; padding: 22px;">
-                <form id="formEmailConfig" onsubmit="saveEmailConfig(event)">
-                    <div class="form-group" style="margin-bottom: 14px;">
-                        <label for="emailServiceId">Service ID (Gmail) <span
-                                style="color: var(--danger);">*</span></label>
-                        <div class="input-wrapper">
-                            <span class="input-icon"><i data-lucide="server"
-                                    style="width: 16px; height: 16px;"></i></span>
-                            <input type="text" id="emailServiceId" placeholder="service_q5t1439" value="service_q5t1439"
-                                required style="font-family: monospace; font-size: 0.85rem;">
+
+            <!-- Modal Nav Tabs -->
+            <div style="display: flex; gap: 6px; padding: 10px 20px 0 20px; background: var(--bg-surface-2); border-bottom: 1px solid var(--border); overflow-x: auto;">
+                <button type="button" class="btn btn-sm email-modal-tab active" id="tabBtnRecipients" onclick="switchEmailTab('recipients')" style="border-radius: var(--radius-sm) var(--radius-sm) 0 0; padding: 8px 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; color: var(--primary); border-bottom: 2px solid var(--primary);">
+                    <i data-lucide="users" style="width: 15px; height: 15px;"></i> 1. Pilih Penerima & Kirim
+                </button>
+                <button type="button" class="btn btn-sm email-modal-tab" id="tabBtnTemplate" onclick="switchEmailTab('template')" style="border-radius: var(--radius-sm) var(--radius-sm) 0 0; padding: 8px 14px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="code" style="width: 15px; height: 15px;"></i> 2. Template Email HTML
+                </button>
+                <button type="button" class="btn btn-sm email-modal-tab" id="tabBtnConfig" onclick="switchEmailTab('config')" style="border-radius: var(--radius-sm) var(--radius-sm) 0 0; padding: 8px 14px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="settings" style="width: 15px; height: 15px;"></i> 3. Pengaturan EmailJS
+                </button>
+            </div>
+
+            <!-- Modal Body (Scrollable) -->
+            <div class="modal-body" style="text-align: left; padding: 20px; overflow-y: auto; flex: 1;">
+                
+                <!-- TAB 1: PILIH PENERIMA & KIRIM -->
+                <div id="emailTabRecipientsContent">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <div style="font-weight: 700; font-size: 0.92rem; color: var(--text-main);">Tandai Penerima Notifikasi</div>
+                            <div style="font-size: 0.76rem; color: var(--text-muted);">Pilih satu, beberapa, atau seluruh email terdaftar untuk dikirimi pesan</div>
                         </div>
-                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
-                            ID Service Gmail yang sudah terhubung di dashboard EmailJS.
+                        <!-- Filter chips -->
+                        <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                            <button type="button" class="btn btn-outline btn-xs" onclick="selectRecipientsFilter('all')">
+                                <i data-lucide="check-square" style="width: 12px; height: 12px;"></i> Semua
+                            </button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="selectRecipientsFilter('spv')">
+                                👔 SPV
+                            </button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="selectRecipientsFilter('pemilik')">
+                                👷 Karyawan
+                            </button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="selectRecipientsFilter('pic')">
+                                📋 PIC
+                            </button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="selectRecipientsFilter('none')" style="color: var(--danger); border-color: var(--danger);">
+                                ✕ Batal
+                            </button>
                         </div>
                     </div>
 
-                    <div class="form-group" style="margin-bottom: 14px;">
-                        <label for="emailTemplateId">Template ID <span style="color: var(--danger);">*</span></label>
-                        <div class="input-wrapper">
-                            <span class="input-icon"><i data-lucide="file-text"
-                                    style="width: 16px; height: 16px;"></i></span>
-                            <input type="text" id="emailTemplateId" placeholder="template_0bzqbkm"
-                                value="template_0bzqbkm" required style="font-family: monospace; font-size: 0.85rem;">
-                        </div>
-                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
-                            ID Template email dari menu <strong>Email Templates</strong> di EmailJS.
-                        </div>
+                    <!-- Search Input -->
+                    <div class="input-wrapper" style="margin-bottom: 12px;">
+                        <span class="input-icon"><i data-lucide="search" style="width: 14px; height: 14px;"></i></span>
+                        <input type="text" id="searchRecipientInput" onkeyup="filterRecipientList()" placeholder="Cari nama atau email penerima..." style="font-size: 0.82rem; padding: 7px 10px 7px 32px;">
                     </div>
 
-                    <div class="form-group" style="margin-bottom: 18px;">
-                        <label for="emailPublicKey">Public Key (User ID) <span
-                                style="color: var(--danger);">*</span></label>
-                        <div class="input-wrapper">
-                            <span class="input-icon"><i data-lucide="key" style="width: 16px; height: 16px;"></i></span>
-                            <input type="text" id="emailPublicKey" placeholder="EX2aChiMhL1QozTTc"
-                                value="EX2aChiMhL1QozTTc" required style="font-family: monospace; font-size: 0.85rem;">
-                        </div>
-                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
-                            Kunci publik API dari menu <strong>Account > API Keys</strong> di EmailJS.
-                        </div>
+                    <!-- Recipient Checkbox List -->
+                    <div id="recipientCheckboxList" style="border: 1px solid var(--border); border-radius: var(--radius-sm); max-height: 240px; overflow-y: auto; background: var(--bg-card); padding: 4px;">
+                        <!-- Filled dynamically -->
                     </div>
 
-                    <!-- Guidance Banner for Multi-Email Sending -->
-                    <div style="background: var(--primary-soft); border: 1px solid rgba(79, 70, 229, 0.3); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px; font-size: 0.78rem;">
-                        <div style="display: flex; align-items: flex-start; gap: 8px;">
-                            <i data-lucide="info" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0; margin-top: 2px;"></i>
-                            <div>
-                                <strong style="color: var(--primary);">Penting untuk Pengiriman ke Semua Email:</strong><br>
-                                Pada Dashboard EmailJS &gt; <strong>Email Templates</strong> &gt; Pilih Template Anda &gt; Tab <strong>Settings</strong>:<br>
-                                • Pastikan kolom <strong>"To Email"</strong> diisi variabel <code>{{to_email}}</code> (BUKAN alamat email tetap/manual).<br>
-                                • Kolom <strong>"Subject"</strong> diisi <code>{{subject}}</code>.<br>
-                                • Isi body pesan diisi <code>{{message}}</code>.
+                    <!-- Selected summary & Action button -->
+                    <div style="margin-top: 16px; background: var(--bg-surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">
+                                Terpilih: <span id="selectedRecipientCount" style="color: var(--primary); font-size: 0.95rem;">0</span> dari <span id="totalRecipientCount">0</span> email
+                            </div>
+                            <div style="font-size: 0.74rem; color: var(--text-muted);" id="currentSubjectPreview">
+                                Subject: <em>Pemberitahuan Pemeriksaan APD</em>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Registered Emails Preview -->
-                    <div style="background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 18px; font-size: 0.78rem;">
-                        <div style="font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-                            <span><i data-lucide="users" style="width: 13px; height: 13px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i> Daftar Email Terdaftar di Master Data:</span>
-                            <span id="registeredEmailCount" class="badge badge-quarter" style="font-size: 0.7rem;">0 Email</span>
-                        </div>
-                        <div id="registeredEmailList" style="max-height: 90px; overflow-y: auto; color: var(--text-muted); line-height: 1.4; font-family: monospace; font-size: 0.74rem;">
-                            <!-- Populated dynamically -->
-                        </div>
-                    </div>
-
-                    <div
-                        style="display: flex; gap: 8px; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 16px; flex-wrap: wrap;">
-                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                            <button type="button" class="btn btn-outline btn-sm" onclick="testEmailJS()" id="btnTestEmail" title="Kirim test ke email admin">
-                                <i data-lucide="send" style="width: 14px; height: 14px;"></i> Test 1 Email
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" class="btn btn-outline btn-sm" onclick="switchEmailTab('template')">
+                                <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> Edit Template
                             </button>
-                            <button type="button" class="btn btn-outline btn-sm" onclick="testBroadcastEmailJS()" id="btnTestBroadcast" title="Kirim uji coba ke semua email terdaftar" style="border-color: var(--primary); color: var(--primary);">
-                                <i data-lucide="mail-check" style="width: 14px; height: 14px;"></i> Test Semua Email
+                            <button type="button" class="btn btn-primary btn-sm" id="btnSendSelectedEmails" onclick="sendSelectedRecipients()">
+                                <i data-lucide="send" style="width: 14px; height: 14px;"></i> Kirim ke Email Terpilih
                             </button>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            <i data-lucide="check" style="width: 14px; height: 14px;"></i> Simpan Pengaturan
+                    </div>
+                </div>
+
+                <!-- TAB 2: TEMPLATE EMAIL HTML -->
+                <div id="emailTabTemplateContent" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <div style="font-weight: 700; font-size: 0.92rem; color: var(--text-main);">Kustomisasi Template Email HTML</div>
+                            <div style="font-size: 0.76rem; color: var(--text-muted);">Sesuaikan teks, tautan approval, dan desain email notifikasi sesuai kebutuhan</div>
+                        </div>
+                        <button type="button" class="btn btn-outline btn-xs" onclick="resetEmailTemplateToDefault()" style="color: var(--danger); border-color: var(--danger);">
+                            <i data-lucide="rotate-ccw" style="width: 12px; height: 12px;"></i> Reset ke Default
                         </button>
                     </div>
-                </form>
+
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label for="customEmailSubject" style="font-size: 0.8rem;">Judul Subjek Email (Subject)</label>
+                        <input type="text" id="customEmailSubject" placeholder="🔔 [SafeGuard K3] Pemberitahuan Pemeriksaan APD" style="font-size: 0.85rem; font-weight: 600;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label for="customEmailApprovalLink" style="font-size: 0.8rem;">Tautan Tombol Masuk / Approval (<code>{{approval_link}}</code>)</label>
+                        <input type="text" id="customEmailApprovalLink" placeholder="https://domainanda.com/halaman-approval" style="font-family: monospace; font-size: 0.82rem;">
+                    </div>
+
+                    <!-- Insert Variable Chips -->
+                    <div style="margin-bottom: 8px;">
+                        <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Klik untuk menyisipkan variabel otomatis:</label>
+                        <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                            <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{to_name}}')" title="Nama Penerima">{{to_name}}</button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{to_email}}')" title="Email Penerima">{{to_email}}</button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{role}}')" title="Peran Penerima">{{role}}</button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{approval_link}}')" title="Link Tombol Approval">{{approval_link}}</button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{nama_apd}}')" title="Nama APD">{{nama_apd}}</button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{tgl_inspeksi}}')" title="Tanggal">{{tgl_inspeksi}}</button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{kondisi}}')" title="Kondisi">{{kondisi}}</button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{pemilik}}')" title="Pemilik">{{pemilik}}</button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{pic}}')" title="PIC Pemeriksa">{{pic}}</button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{spv}}')" title="Supervisor">{{spv}}</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label for="customEmailHtml" style="font-size: 0.8rem;">Konten Kode HTML Template Email</label>
+                        <textarea id="customEmailHtml" rows="9" style="font-family: 'Consolas', 'Fira Code', monospace; font-size: 0.78rem; line-height: 1.4; tab-size: 2; width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; background: var(--bg-card); color: var(--text-main);"></textarea>
+                    </div>
+
+                    <!-- Live Preview Box Toggle -->
+                    <div style="margin-bottom: 14px;">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="toggleEmailPreview()" id="btnTogglePreview">
+                            <i data-lucide="eye" style="width: 14px; height: 14px;"></i> Preview Tampilan Email
+                        </button>
+                        <div id="emailPreviewFrameContainer" style="display: none; margin-top: 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; background: #f8fafc;">
+                            <div style="font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 8px;">PRATINJAU HASIL RENDERING:</div>
+                            <div id="emailPreviewContent" style="background: white; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"></div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--border); padding-top: 12px;">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="switchEmailTab('recipients')">
+                            Kembali ke Pilih Penerima
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="saveCustomEmailTemplate()">
+                            <i data-lucide="save" style="width: 14px; height: 14px;"></i> Simpan Template
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TAB 3: PENGATURAN EMAILJS -->
+                <div id="emailTabConfigContent" style="display: none;">
+                    <form id="formEmailConfig" onsubmit="saveEmailConfig(event)">
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="emailServiceId">Service ID (Gmail) <span style="color: var(--danger);">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i data-lucide="server" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="emailServiceId" placeholder="service_q5t1439" value="service_q5t1439" required style="font-family: monospace; font-size: 0.85rem;">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="emailTemplateId">Template ID <span style="color: var(--danger);">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i data-lucide="file-text" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="emailTemplateId" placeholder="template_0bzqbkm" value="template_0bzqbkm" required style="font-family: monospace; font-size: 0.85rem;">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label for="emailPublicKey">Public Key (User ID) <span style="color: var(--danger);">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i data-lucide="key" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="emailPublicKey" placeholder="EX2aChiMhL1QozTTc" value="EX2aChiMhL1QozTTc" required style="font-family: monospace; font-size: 0.85rem;">
+                            </div>
+                        </div>
+
+                        <!-- Guidance Banner -->
+                        <div style="background: var(--primary-soft); border: 1px solid rgba(79, 70, 229, 0.3); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px; font-size: 0.78rem;">
+                            <div style="display: flex; align-items: flex-start; gap: 8px;">
+                                <i data-lucide="info" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0; margin-top: 2px;"></i>
+                                <div>
+                                    <strong style="color: var(--primary);">Panduan Template di Dashboard EmailJS:</strong><br>
+                                    1. Di EmailJS &gt; <strong>Email Templates</strong> &gt; Pilih Template &gt; Tab <strong>Settings</strong>:<br>
+                                    • Kolom <strong>To Email</strong>: <code>{{to_email}}</code><br>
+                                    • Kolom <strong>Subject</strong>: <code>{{subject}}</code><br>
+                                    2. Di Tab <strong>Content</strong>, isi pesan dengan: <code>{{{message}}}</code> atau <code>{{{html_content}}}</code> (gunakan kurung kurawal 3 rangkap agar format HTML tampil sempurna).
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 8px; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 14px; flex-wrap: wrap;">
+                            <button type="button" class="btn btn-outline btn-sm" onclick="testEmailJS()" id="btnTestEmail" title="Kirim test ke email admin">
+                                <i data-lucide="send" style="width: 14px; height: 14px;"></i> Test 1 Email (Admin)
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i data-lucide="check" style="width: 14px; height: 14px;"></i> Simpan Kredensial API
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -3966,14 +4074,43 @@
             document.getElementById('photoModal').classList.remove('active');
         }
 
-        // EmailJS Settings & Configuration Functions (Hardcoded defaults)
+        // EmailJS Settings & Configuration Defaults
         const DEFAULT_EMAILJS = {
             serviceId: 'service_q5t1439',
             publicKey: 'EX2aChiMhL1QozTTc',
             templateId: 'template_0bzqbkm'
         };
 
-        // Initialize localStorage with hardcoded credentials if not already customized
+        // Default Customizable HTML Email Template
+        const DEFAULT_EMAIL_TEMPLATE = {
+            subject: "🔔 [SafeGuard K3] Pemberitahuan Pemeriksaan APD",
+            approvalLink: window.location.href.split('#')[0] || "http://localhost/sistempencatatan/",
+            htmlContent: `<div style='font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px; background-color: #ffffff;'>
+    <h2 style='color: #0056b3; border-bottom: 2px solid #f4f4f4; padding-bottom: 10px; margin-top: 0;'>Pemberitahuan Pemeriksaan APD</h2>
+    
+    <p>Yth. Bapak/Ibu <strong>{{to_name}}</strong>,</p>
+    
+    <p>Dengan hormat,</p>
+    <p>Bersama email ini kami beritahukan bahwa <strong>hari ini</strong> adalah jadwal pelaksanaan pemeriksaan rutin Alat Pelindung Diri (APD) bagi setiap karyawan.</p>
+    
+    <p>Pemeriksaan ini merupakan prosedur wajib yang dilakukan guna menjaga keselamatan bersama dan meningkatkan standar keamanan dalam lingkungan kerja kita.</p>
+    
+    <p>Sehubungan dengan hal tersebut, kami mohon kesediaan Bapak/Ibu untuk memberikan konfirmasi persetujuan (<em>approval</em>) terkait jadwal pemeriksaan ini. Silakan klik tombol di bawah ini untuk masuk ke dalam sistem website:</p>
+    
+    <div style='text-align: center; margin: 30px 0;'>
+        <a href='{{approval_link}}' style='background-color: #0056b3; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;'>Masuk ke Sistem Approval</a>
+    </div>
+    
+    <p>Partisipasi aktif Bapak/Ibu sangat berarti untuk memastikan seluruh prosedur Keselamatan dan Kesehatan Kerja (K3) berjalan dengan baik.</p>
+    
+    <p>Terima kasih atas perhatian dan kerja sama yang diberikan.</p>
+    
+    <hr style='border: none; border-top: 1px solid #eee; margin: 20px 0;'>
+    <p style='font-size: 12px; color: #888;'>Hormat kami,<br><strong>Tim Administrator K3</strong><br>Sistem Notifikasi Otomatis SafeGuard K3</p>
+</div>`
+        };
+
+        // Initialize localStorage configurations
         (function initEmailConfig() {
             let config = JSON.parse(localStorage.getItem('k3_emailjs_config'));
             if (!config) {
@@ -3985,12 +4122,170 @@
                 if (!config.templateId) config.templateId = DEFAULT_EMAILJS.templateId;
                 localStorage.setItem('k3_emailjs_config', JSON.stringify(config));
             }
+
+            let tpl = JSON.parse(localStorage.getItem('k3_email_template'));
+            if (!tpl || !tpl.htmlContent || tpl.htmlContent.includes('Tim Administrator</strong>')) {
+                localStorage.setItem('k3_email_template', JSON.stringify(DEFAULT_EMAIL_TEMPLATE));
+            }
         })();
 
         // Email format validation helper
         function isValidEmail(email) {
             if (!email || typeof email !== 'string') return false;
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+        }
+
+        // Get template configuration
+        function getEmailTemplateConfig() {
+            const saved = localStorage.getItem('k3_email_template');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    return {
+                        subject: parsed.subject || DEFAULT_EMAIL_TEMPLATE.subject,
+                        approvalLink: parsed.approvalLink || DEFAULT_EMAIL_TEMPLATE.approvalLink,
+                        htmlContent: parsed.htmlContent || DEFAULT_EMAIL_TEMPLATE.htmlContent
+                    };
+                } catch (e) {}
+            }
+            return { ...DEFAULT_EMAIL_TEMPLATE };
+        }
+
+        // Render template with dynamic variables
+        function renderEmailTemplate(templateText, variables) {
+            if (!templateText) return '';
+            let output = templateText;
+            for (const [key, val] of Object.entries(variables)) {
+                const regex = new RegExp(`{{\\s*${key}\\s*}}`, 'gi');
+                output = output.replace(regex, val !== undefined && val !== null ? val : '');
+            }
+            if (variables.to_name) {
+                output = output.replace(/\$namaPenerima/g, variables.to_name);
+                output = output.replace(/\[Nama Penerima Terdaftar\]/gi, variables.to_name);
+                output = output.replace(/\[Nama Penerima\]/gi, variables.to_name);
+            }
+            if (variables.approval_link) {
+                output = output.replace(/https:\/\/domainanda\.com\/halaman-approval/gi, variables.approval_link);
+                output = output.replace(/https:\/\/glasspane\.pages\.dev\/[^\s'"]+/gi, variables.approval_link);
+            }
+            return output;
+        }
+
+        // Load template settings into UI fields
+        function loadEmailTemplateIntoUI() {
+            const tpl = getEmailTemplateConfig();
+            const subjInput = document.getElementById('customEmailSubject');
+            const linkInput = document.getElementById('customEmailApprovalLink');
+            const htmlTextarea = document.getElementById('customEmailHtml');
+            const previewSubj = document.getElementById('currentSubjectPreview');
+
+            if (subjInput) subjInput.value = tpl.subject;
+            if (linkInput) linkInput.value = tpl.approvalLink;
+            if (htmlTextarea) htmlTextarea.value = tpl.htmlContent;
+            if (previewSubj) previewSubj.innerHTML = `Subject: <em>${escapeHtml(tpl.subject)}</em>`;
+        }
+
+        // Save customized template
+        function saveCustomEmailTemplate() {
+            const subject = document.getElementById('customEmailSubject')?.value.trim() || DEFAULT_EMAIL_TEMPLATE.subject;
+            const approvalLink = document.getElementById('customEmailApprovalLink')?.value.trim() || DEFAULT_EMAIL_TEMPLATE.approvalLink;
+            const htmlContent = document.getElementById('customEmailHtml')?.value.trim() || DEFAULT_EMAIL_TEMPLATE.htmlContent;
+
+            const config = { subject, approvalLink, htmlContent };
+            localStorage.setItem('k3_email_template', JSON.stringify(config));
+            showToast('Template email HTML berhasil disimpan!', 'success');
+            
+            const previewSubj = document.getElementById('currentSubjectPreview');
+            if (previewSubj) previewSubj.innerHTML = `Subject: <em>${escapeHtml(subject)}</em>`;
+        }
+
+        // Reset template to default HTML
+        function resetEmailTemplateToDefault() {
+            if (confirm('Apakah Anda yakin ingin mengembalikan template email ke format HTML default bawaan sistem?')) {
+                localStorage.setItem('k3_email_template', JSON.stringify(DEFAULT_EMAIL_TEMPLATE));
+                loadEmailTemplateIntoUI();
+                toggleEmailPreview(true);
+                showToast('Template berhasil di-reset ke format default.', 'info');
+            }
+        }
+
+        // Insert variable tag at cursor
+        function insertVariableTag(tag) {
+            const textarea = document.getElementById('customEmailHtml');
+            if (!textarea) return;
+            const start = textarea.selectionStart || 0;
+            const end = textarea.selectionEnd || 0;
+            const text = textarea.value;
+            textarea.value = text.substring(0, start) + tag + text.substring(end);
+            textarea.focus();
+            textarea.selectionStart = textarea.selectionEnd = start + tag.length;
+            toggleEmailPreview(true);
+        }
+
+        // Toggle / update HTML email preview
+        function toggleEmailPreview(forceUpdate = false) {
+            const container = document.getElementById('emailPreviewFrameContainer');
+            const previewEl = document.getElementById('emailPreviewContent');
+            const btn = document.getElementById('btnTogglePreview');
+            if (!container || !previewEl) return;
+
+            if (forceUpdate && container.style.display === 'none') {
+                return;
+            }
+
+            if (!forceUpdate && container.style.display !== 'none') {
+                container.style.display = 'none';
+                if (btn) btn.innerHTML = `<i data-lucide="eye" style="width: 14px; height: 14px;"></i> Preview Tampilan Email`;
+                lucide.createIcons();
+                return;
+            }
+
+            const htmlTemplate = document.getElementById('customEmailHtml')?.value || DEFAULT_EMAIL_TEMPLATE.htmlContent;
+            const approvalLink = document.getElementById('customEmailApprovalLink')?.value || DEFAULT_EMAIL_TEMPLATE.approvalLink;
+
+            const sampleVariables = {
+                to_name: 'Ir. Hendra Wijaya',
+                to_email: 'hendra.k3@perusahaan.com',
+                role: 'Supervisor K3',
+                approval_link: approvalLink,
+                nama_apd: 'Helm Safety (MSA Full Brim)',
+                tgl_inspeksi: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+                kondisi: 'Layak Pakai',
+                pemilik: 'Budi Santoso',
+                pic: 'Ahmad Fauzi (PIC)',
+                spv: 'Ir. Hendra Wijaya'
+            };
+
+            const rendered = renderEmailTemplate(htmlTemplate, sampleVariables);
+            previewEl.innerHTML = rendered;
+            container.style.display = 'block';
+            if (btn) btn.innerHTML = `<i data-lucide="eye-off" style="width: 14px; height: 14px;"></i> Tutup Preview`;
+            lucide.createIcons();
+        }
+
+        // Switch Modal Tabs
+        function switchEmailTab(tab) {
+            const tabs = ['recipients', 'template', 'config'];
+            tabs.forEach(t => {
+                const btn = document.getElementById('tabBtn' + t.charAt(0).toUpperCase() + t.slice(1));
+                const content = document.getElementById('emailTab' + t.charAt(0).toUpperCase() + t.slice(1) + 'Content');
+                if (t === tab) {
+                    if (btn) {
+                        btn.classList.add('active');
+                        btn.style.color = 'var(--primary)';
+                        btn.style.borderBottom = '2px solid var(--primary)';
+                    }
+                    if (content) content.style.display = 'block';
+                } else {
+                    if (btn) {
+                        btn.classList.remove('active');
+                        btn.style.color = 'var(--text-muted)';
+                        btn.style.borderBottom = 'none';
+                    }
+                    if (content) content.style.display = 'none';
+                }
+            });
+            lucide.createIcons();
         }
 
         // Get all unique registered emails with details from Master Data
@@ -4005,6 +4300,7 @@
                         emailMap.set(key, {
                             email: s.email.trim(),
                             name: s.nama || 'Supervisor',
+                            roleKey: 'spv',
                             role: 'Supervisor / Leader (' + (s.jabatan || 'K3') + ')'
                         });
                     }
@@ -4019,6 +4315,7 @@
                         emailMap.set(key, {
                             email: p.email.trim(),
                             name: p.nama || 'Karyawan',
+                            roleKey: 'pemilik',
                             role: 'Karyawan / Pekerja (' + (p.dept || 'Umum') + ')'
                         });
                     }
@@ -4033,6 +4330,7 @@
                         emailMap.set(key, {
                             email: pi.email.trim(),
                             name: pi.nama || 'Petugas PIC',
+                            roleKey: 'pic',
                             role: 'PIC K3 (' + (pi.idPic || 'Pemeriksa') + ')'
                         });
                     }
@@ -4042,145 +4340,100 @@
             return Array.from(emailMap.values());
         }
 
-        // Update Registered Emails UI in Config Modal
-        function updateModalEmailList() {
-            const listEl = document.getElementById('registeredEmailList');
-            const countEl = document.getElementById('registeredEmailCount');
+        // Render Checkboxes of all recipients in modal
+        function renderRecipientCheckboxes() {
+            const listEl = document.getElementById('recipientCheckboxList');
+            const totalCountEl = document.getElementById('totalRecipientCount');
             if (!listEl) return;
 
             const recipients = getAllRegisteredRecipients();
-            if (countEl) countEl.innerText = `${recipients.length} Email Terdaftar`;
+            if (totalCountEl) totalCountEl.innerText = recipients.length;
 
             if (recipients.length === 0) {
-                listEl.innerHTML = '<span style="color: var(--warning); font-style: italic;">Belum ada email valid di Data Master (Tambahkan email di menu Data Master K3).</span>';
-            } else {
-                listEl.innerHTML = recipients.map((r, idx) => `
-                    <div style="padding: 2px 0; border-bottom: 1px dashed var(--border); display: flex; justify-content: space-between;">
-                        <span>${idx + 1}. <strong>${escapeHtml(r.name)}</strong> (${escapeHtml(r.email)})</span>
-                        <span style="color: var(--text-muted); font-size: 0.7rem;">${escapeHtml(r.role)}</span>
+                listEl.innerHTML = `
+                    <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 0.8rem;">
+                        <i data-lucide="users" style="width: 24px; height: 24px; margin-bottom: 6px; opacity: 0.5;"></i>
+                        <div>Belum ada data email terdaftar di Master Data K3.</div>
+                        <div style="font-size: 0.72rem; margin-top: 4px;">Tambahkan email di menu <strong>Data Master K3</strong>.</div>
                     </div>
-                `).join('');
-            }
-        }
-
-        function openEmailConfigModal() {
-            const modal = document.getElementById('emailModal');
-            const config = JSON.parse(localStorage.getItem('k3_emailjs_config')) || DEFAULT_EMAILJS;
-
-            document.getElementById('emailServiceId').value = config.serviceId || DEFAULT_EMAILJS.serviceId;
-            document.getElementById('emailTemplateId').value = config.templateId || '';
-            document.getElementById('emailPublicKey').value = config.publicKey || DEFAULT_EMAILJS.publicKey;
-
-            updateModalEmailList();
-            modal.classList.add('active');
-            lucide.createIcons();
-        }
-
-        function closeEmailModal(e) {
-            if (e.target.id === 'emailModal') {
-                closeEmailModalDirect();
-            }
-        }
-
-        function closeEmailModalDirect() {
-            document.getElementById('emailModal').classList.remove('active');
-        }
-
-        function updateEmailStatusUI() {
-            const config = JSON.parse(localStorage.getItem('k3_emailjs_config')) || DEFAULT_EMAILJS;
-            const statusText = document.getElementById('emailStatusText');
-            if (statusText) {
-                if (config.serviceId && config.templateId && config.publicKey) {
-                    statusText.innerHTML = `<span style="color: var(--success); font-weight: 700; margin-right: 2px;">●</span> Email Aktif`;
-                } else {
-                    statusText.innerText = 'Email Notif';
-                }
-            }
-        }
-
-        function saveEmailConfig(e) {
-            e.preventDefault();
-            const serviceId = document.getElementById('emailServiceId').value.trim() || DEFAULT_EMAILJS.serviceId;
-            const templateId = document.getElementById('emailTemplateId').value.trim();
-            const publicKey = document.getElementById('emailPublicKey').value.trim() || DEFAULT_EMAILJS.publicKey;
-
-            if (!serviceId || !templateId || !publicKey) {
-                showToast('Harap masukkan Template ID dari menu Email Templates di EmailJS!', 'warning');
+                `;
+                lucide.createIcons();
+                updateSelectedRecipientCount();
                 return;
             }
 
-            const config = { serviceId, templateId, publicKey };
-            localStorage.setItem('k3_emailjs_config', JSON.stringify(config));
-            updateEmailStatusUI();
-            closeEmailModalDirect();
-            showToast('Konfigurasi EmailJS berhasil disimpan & aktif!', 'success');
+            listEl.innerHTML = recipients.map((r, idx) => {
+                let badgeClass = 'badge-quarter';
+                let avatarBg = '#10b981';
+
+                if (r.roleKey === 'spv') {
+                    badgeClass = 'badge-layak';
+                    avatarBg = '#4f46e5';
+                } else if (r.roleKey === 'pic') {
+                    badgeClass = 'badge-done';
+                    avatarBg = '#0284c7';
+                }
+
+                return `
+                    <label for="chk_rec_${idx}" class="recipient-row" data-search="${escapeHtml((r.name + ' ' + r.email + ' ' + r.role).toLowerCase())}" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; border-radius: 4px; margin-bottom: 2px;" onmouseover="this.style.background='var(--bg-surface-2)'" onmouseout="this.style.background='transparent'">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" class="recipient-checkbox" id="chk_rec_${idx}" value="${escapeHtml(r.email)}" data-role="${r.roleKey}" data-name="${escapeHtml(r.name)}" data-fullrole="${escapeHtml(r.role)}" onchange="updateSelectedRecipientCount()" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary);" checked>
+                            <div style="width: 30px; height: 30px; border-radius: 50%; background: ${avatarBg}; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0;">
+                                ${escapeHtml(r.name.charAt(0).toUpperCase())}
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.82rem; color: var(--text-main);">${escapeHtml(r.name)}</div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted); font-family: monospace;">${escapeHtml(r.email)}</div>
+                            </div>
+                        </div>
+                        <span class="badge ${badgeClass}" style="font-size: 0.68rem;">${escapeHtml(r.role)}</span>
+                    </label>
+                `;
+            }).join('');
+
+            updateSelectedRecipientCount();
+            lucide.createIcons();
         }
 
-        // Test Kirim 1 Email
-        async function testEmailJS() {
-            const serviceId = document.getElementById('emailServiceId').value.trim();
-            const templateId = document.getElementById('emailTemplateId').value.trim();
-            const publicKey = document.getElementById('emailPublicKey').value.trim();
-
-            if (!serviceId || !templateId || !publicKey) {
-                showToast('Harap lengkapi Service ID, Template ID, dan Public Key terlebih dahulu!', 'warning');
-                return;
-            }
-
-            const btn = document.getElementById('btnTestEmail');
-            const origHtml = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = `<i data-lucide="loader-2" style="width: 14px; height: 14px;"></i> Mengirim...`;
-            lucide.createIcons();
-
-            try {
-                const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        service_id: serviceId,
-                        template_id: templateId,
-                        user_id: publicKey,
-                        template_params: {
-                            to_email: "arifanalfahri1@gmail.com",
-                            email: "arifanalfahri1@gmail.com",
-                            user_email: "arifanalfahri1@gmail.com",
-                            recipient_email: "arifanalfahri1@gmail.com",
-                            to: "arifanalfahri1@gmail.com",
-                            reply_to: "arifanalfahri1@gmail.com",
-                            to_name: "Admin SafeGuard K3",
-                            name: "Admin SafeGuard K3",
-                            recipient_name: "Admin SafeGuard K3",
-                            subject: "🔔 [SafeGuard K3] Uji Coba Pengiriman Notifikasi Email Berhasil!",
-                            title: "🔔 [SafeGuard K3] Uji Coba Pengiriman Notifikasi Email Berhasil!",
-                            spv_name: "Admin SafeGuard K3",
-                            kuartal: "Q1 (Jan-Mar)",
-                            tgl_inspeksi: new Date().toISOString().slice(0, 10),
-                            nama_apd: "Helm Safety Test",
-                            pemilik: "Budi Santoso",
-                            sn: "SN-TEST-001",
-                            kondisi: "Layak Pakai",
-                            pic: "Ahmad Fauzi (PIC)",
-                            message: "Selamat! Integrasi sistem notifikasi email SafeGuard K3 ke EmailJS & Gmail telah berhasil 100% aktif dan siap digunakan.",
-                            pesan: "Selamat! Integrasi sistem notifikasi email SafeGuard K3 ke EmailJS & Gmail telah berhasil 100% aktif dan siap digunakan."
-                        }
-                    })
-                });
-
-                if (response.ok) {
-                    showToast(`Test email berhasil terkirim ke Gmail Anda! Silakan cek inbox/spam.`, 'success');
+        // Quick filter recipients checkboxes
+        function selectRecipientsFilter(type) {
+            const chks = document.querySelectorAll('.recipient-checkbox');
+            chks.forEach(chk => {
+                if (type === 'all') {
+                    chk.checked = true;
+                } else if (type === 'none') {
+                    chk.checked = false;
                 } else {
-                    const errText = await response.text();
-                    showToast(`Gagal kirim test email: ${errText || response.statusText}`, 'danger');
+                    const role = chk.getAttribute('data-role');
+                    chk.checked = (role === type);
                 }
-            } catch (err) {
-                console.error('Test EmailJS Error:', err);
-                showToast('Gagal menghubungi API EmailJS. Periksa koneksi internet.', 'danger');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = origHtml;
+            });
+            updateSelectedRecipientCount();
+        }
+
+        // Instant search in recipients list
+        function filterRecipientList() {
+            const query = (document.getElementById('searchRecipientInput')?.value || '').toLowerCase().trim();
+            const rows = document.querySelectorAll('.recipient-row');
+            rows.forEach(row => {
+                const text = row.getAttribute('data-search') || '';
+                if (text.includes(query)) {
+                    row.style.display = 'flex';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Update selected recipient counter & button text
+        function updateSelectedRecipientCount() {
+            const checked = document.querySelectorAll('.recipient-checkbox:checked');
+            const countEl = document.getElementById('selectedRecipientCount');
+            const btnSend = document.getElementById('btnSendSelectedEmails');
+            if (countEl) countEl.innerText = checked.length;
+            if (btnSend) {
+                btnSend.innerHTML = `<i data-lucide="send" style="width: 14px; height: 14px;"></i> Kirim ke (${checked.length}) Email Terpilih`;
+                btnSend.disabled = (checked.length === 0);
                 lucide.createIcons();
             }
         }
@@ -4225,24 +4478,30 @@
             });
         }
 
-        // Test Broadcast ke SEMUA Email Terdaftar di Master Data
-        async function testBroadcastEmailJS() {
-            const serviceId = document.getElementById('emailServiceId').value.trim();
-            const templateId = document.getElementById('emailTemplateId').value.trim();
-            const publicKey = document.getElementById('emailPublicKey').value.trim();
-
-            if (!serviceId || !templateId || !publicKey) {
-                showToast('Harap lengkapi pengaturan EmailJS terlebih dahulu!', 'warning');
+        // Send email broadcast to specifically SELECTED recipients
+        async function sendSelectedRecipients() {
+            const config = JSON.parse(localStorage.getItem('k3_emailjs_config')) || DEFAULT_EMAILJS;
+            if (!config || !config.serviceId || !config.templateId || !config.publicKey) {
+                showToast('Harap lengkapi Service ID, Template ID, dan Public Key terlebih dahulu di tab Pengaturan EmailJS!', 'warning');
+                switchEmailTab('config');
                 return;
             }
 
-            const recipients = getAllRegisteredRecipients();
-            if (recipients.length === 0) {
-                showToast('Belum ada email terdaftar di Master Data! Tambahkan email di menu Data Master.', 'warning');
+            const checkedBoxes = Array.from(document.querySelectorAll('.recipient-checkbox:checked'));
+            if (checkedBoxes.length === 0) {
+                showToast('Tandai setidaknya satu email penerima untuk dikirimkan pesan!', 'warning');
                 return;
             }
 
-            const btn = document.getElementById('btnTestBroadcast');
+            const templateConfig = getEmailTemplateConfig();
+
+            const recipients = checkedBoxes.map(chk => ({
+                email: chk.value.trim(),
+                name: chk.getAttribute('data-name') || 'Rekan K3',
+                role: chk.getAttribute('data-fullrole') || 'Pengguna Terdaftar'
+            }));
+
+            const btn = document.getElementById('btnSendSelectedEmails');
             const origHtml = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = `<i data-lucide="loader-2" style="width: 14px; height: 14px;"></i> Mengirim 0/${recipients.length}...`;
@@ -4255,14 +4514,31 @@
                 btn.innerHTML = `<i data-lucide="loader-2" style="width: 14px; height: 14px;"></i> Mengirim ${idx + 1}/${total}...`;
                 lucide.createIcons();
 
+                const variables = {
+                    to_name: r.name,
+                    to_email: r.email,
+                    role: r.role,
+                    approval_link: templateConfig.approvalLink,
+                    subject: templateConfig.subject,
+                    tgl_inspeksi: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+                    nama_apd: 'Alat Pelindung Diri (Rutin)',
+                    kondisi: 'Pemeriksaan Rutin',
+                    pemilik: r.name,
+                    pic: 'Tim Safety K3',
+                    spv: 'Supervisor K3'
+                };
+
+                const renderedSubject = renderEmailTemplate(templateConfig.subject, variables);
+                const renderedHtml = renderEmailTemplate(templateConfig.htmlContent, variables);
+
                 try {
                     const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            service_id: serviceId,
-                            template_id: templateId,
-                            user_id: publicKey,
+                            service_id: config.serviceId,
+                            template_id: config.templateId,
+                            user_id: config.publicKey,
                             template_params: {
                                 to_email: r.email,
                                 email: r.email,
@@ -4273,25 +4549,32 @@
                                 to_name: r.name,
                                 name: r.name,
                                 recipient_name: r.name,
+                                namaPenerima: r.name,
                                 role: r.role,
-                                subject: `📢 [SafeGuard K3] Uji Coba Broadcast Notifikasi ke Seluruh Email Terdaftar`,
-                                title: `📢 [SafeGuard K3] Uji Coba Broadcast Notifikasi ke Seluruh Email Terdaftar`,
-                                message: `Halo ${r.name},\n\nIni adalah pesan uji coba sistem siaran notifikasi otomatis SafeGuard K3.\nAlamat email Anda (${r.email}) telah terdaftar dengan peran: ${r.role}.\nSistem notifikasi K3 siap memberikan informasi real-time hasil inspeksi APD.\n\nSalam Keselamatan Kerja (Safety First)!`,
-                                pesan: `Halo ${r.name},\n\nIni adalah pesan uji coba sistem siaran notifikasi otomatis SafeGuard K3.\nAlamat email Anda (${r.email}) telah terdaftar dengan peran: ${r.role}.\nSistem notifikasi K3 siap memberikan informasi real-time hasil inspeksi APD.\n\nSalam Keselamatan Kerja (Safety First)!`
+                                subject: renderedSubject,
+                                title: renderedSubject,
+                                approval_link: templateConfig.approvalLink,
+                                link: templateConfig.approvalLink,
+                                html_content: renderedHtml,
+                                htmlContent: renderedHtml,
+                                html: renderedHtml,
+                                message: renderedHtml,
+                                pesan: renderedHtml,
+                                content: renderedHtml
                             }
                         })
                     });
 
                     if (response.ok) {
                         successCount++;
-                        console.log(`[Test Broadcast] Berhasil ke ${r.email}`);
+                        console.log(`[Broadcast Terpilih] Berhasil ke ${r.email}`);
                     } else {
                         const err = await response.text();
-                        console.error(`[Test Broadcast] Gagal ke ${r.email}:`, err);
+                        console.error(`[Broadcast Terpilih] Gagal ke ${r.email}:`, err);
                         failedList.push(`${r.email} (${err || 'Gagal'})`);
                     }
                 } catch (e) {
-                    console.error(`[Test Broadcast] Network error ke ${r.email}:`, e);
+                    console.error(`[Broadcast Terpilih] Network error ke ${r.email}:`, e);
                     failedList.push(`${r.email} (Koneksi error)`);
                 }
             }, 600);
@@ -4301,11 +4584,150 @@
             lucide.createIcons();
 
             if (successCount === recipients.length) {
-                showToast(`🎉 Sukses! Semua (${successCount}) email terdaftar berhasil menerima pesan!`, 'success');
+                showToast(`🎉 Sukses! Pesan email berhasil dikirim ke seluruh (${successCount}) penerima terpilih!`, 'success');
             } else if (successCount > 0) {
-                showToast(`Terkirim ke ${successCount} dari ${recipients.length} email. (${failedList.length} gagal)`, 'warning');
+                showToast(`Terkirim ke ${successCount} dari ${recipients.length} email terpilih. (${failedList.length} gagal)`, 'warning');
             } else {
-                showToast(`Semua pengiriman gagal. Periksa kuota / Template ID EmailJS Anda.`, 'danger');
+                showToast(`Pengiriman gagal. Periksa kuota / Template ID EmailJS Anda.`, 'danger');
+            }
+        }
+
+        function openEmailConfigModal() {
+            const modal = document.getElementById('emailModal');
+            const config = JSON.parse(localStorage.getItem('k3_emailjs_config')) || DEFAULT_EMAILJS;
+
+            document.getElementById('emailServiceId').value = config.serviceId || DEFAULT_EMAILJS.serviceId;
+            document.getElementById('emailTemplateId').value = config.templateId || '';
+            document.getElementById('emailPublicKey').value = config.publicKey || DEFAULT_EMAILJS.publicKey;
+
+            renderRecipientCheckboxes();
+            loadEmailTemplateIntoUI();
+            switchEmailTab('recipients');
+            modal.classList.add('active');
+            lucide.createIcons();
+        }
+
+        function closeEmailModal(e) {
+            if (e.target.id === 'emailModal') {
+                closeEmailModalDirect();
+            }
+        }
+
+        function closeEmailModalDirect() {
+            document.getElementById('emailModal').classList.remove('active');
+        }
+
+        function updateEmailStatusUI() {
+            const config = JSON.parse(localStorage.getItem('k3_emailjs_config')) || DEFAULT_EMAILJS;
+            const statusText = document.getElementById('emailStatusText');
+            if (statusText) {
+                if (config.serviceId && config.templateId && config.publicKey) {
+                    statusText.innerHTML = `<span style="color: var(--success); font-weight: 700; margin-right: 2px;">●</span> Email Aktif`;
+                } else {
+                    statusText.innerText = 'Email Notif';
+                }
+            }
+        }
+
+        function saveEmailConfig(e) {
+            e.preventDefault();
+            const serviceId = document.getElementById('emailServiceId').value.trim() || DEFAULT_EMAILJS.serviceId;
+            const templateId = document.getElementById('emailTemplateId').value.trim();
+            const publicKey = document.getElementById('emailPublicKey').value.trim() || DEFAULT_EMAILJS.publicKey;
+
+            if (!serviceId || !templateId || !publicKey) {
+                showToast('Harap masukkan Template ID dari menu Email Templates di EmailJS!', 'warning');
+                return;
+            }
+
+            const config = { serviceId, templateId, publicKey };
+            localStorage.setItem('k3_emailjs_config', JSON.stringify(config));
+            updateEmailStatusUI();
+            closeEmailModalDirect();
+            showToast('Konfigurasi EmailJS berhasil disimpan & aktif!', 'success');
+        }
+
+        // Test Kirim 1 Email (Admin)
+        async function testEmailJS() {
+            const serviceId = document.getElementById('emailServiceId').value.trim();
+            const templateId = document.getElementById('emailTemplateId').value.trim();
+            const publicKey = document.getElementById('emailPublicKey').value.trim();
+
+            if (!serviceId || !templateId || !publicKey) {
+                showToast('Harap lengkapi Service ID, Template ID, dan Public Key terlebih dahulu!', 'warning');
+                return;
+            }
+
+            const btn = document.getElementById('btnTestEmail');
+            const origHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i data-lucide="loader-2" style="width: 14px; height: 14px;"></i> Mengirim...`;
+            lucide.createIcons();
+
+            const templateConfig = getEmailTemplateConfig();
+            const sampleVariables = {
+                to_name: "Admin SafeGuard K3",
+                to_email: "arifanalfahri1@gmail.com",
+                role: "Administrator K3",
+                approval_link: templateConfig.approvalLink,
+                nama_apd: "Helm Safety Test",
+                tgl_inspeksi: new Date().toISOString().slice(0, 10),
+                kondisi: "Layak Pakai",
+                pemilik: "Budi Santoso",
+                pic: "Ahmad Fauzi (PIC)",
+                spv: "Ir. Hendra Wijaya"
+            };
+
+            const renderedHtml = renderEmailTemplate(templateConfig.htmlContent, sampleVariables);
+            const renderedSubject = renderEmailTemplate(templateConfig.subject, sampleVariables);
+
+            try {
+                const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        service_id: serviceId,
+                        template_id: templateId,
+                        user_id: publicKey,
+                        template_params: {
+                            to_email: "arifanalfahri1@gmail.com",
+                            email: "arifanalfahri1@gmail.com",
+                            user_email: "arifanalfahri1@gmail.com",
+                            recipient_email: "arifanalfahri1@gmail.com",
+                            to: "arifanalfahri1@gmail.com",
+                            reply_to: "arifanalfahri1@gmail.com",
+                            to_name: "Admin SafeGuard K3",
+                            name: "Admin SafeGuard K3",
+                            recipient_name: "Admin SafeGuard K3",
+                            namaPenerima: "Admin SafeGuard K3",
+                            subject: renderedSubject,
+                            title: renderedSubject,
+                            approval_link: templateConfig.approvalLink,
+                            link: templateConfig.approvalLink,
+                            html_content: renderedHtml,
+                            htmlContent: renderedHtml,
+                            html: renderedHtml,
+                            message: renderedHtml,
+                            pesan: renderedHtml
+                        }
+                    })
+                });
+
+                if (response.ok) {
+                    showToast(`Test email berhasil terkirim ke Gmail Anda! Silakan cek inbox/spam.`, 'success');
+                } else {
+                    const errText = await response.text();
+                    showToast(`Gagal kirim test email: ${errText || response.statusText}`, 'danger');
+                }
+            } catch (err) {
+                console.error('Test EmailJS Error:', err);
+                showToast('Gagal menghubungi API EmailJS. Periksa koneksi internet.', 'danger');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+                lucide.createIcons();
             }
         }
 
@@ -4445,6 +4867,7 @@
                                 name: r.name,
                                 user_name: r.name,
                                 recipient_name: r.name,
+                                namaPenerima: r.name,
                                 role: r.role,
                                 subject: r.subject,
                                 title: r.subject,
@@ -4456,8 +4879,12 @@
                                 pic: item.pic,
                                 kuartal: item.kuartal,
                                 tgl_inspeksi: item.tgl_inspeksi,
+                                approval_link: window.location.href.split('#')[0] || "http://localhost/sistempencatatan/",
+                                link: window.location.href.split('#')[0] || "http://localhost/sistempencatatan/",
                                 message: r.message,
-                                pesan: r.message
+                                pesan: r.message,
+                                html_content: r.message.replace(/\n/g, '<br>'),
+                                htmlContent: r.message.replace(/\n/g, '<br>')
                             }
                         })
                     });
