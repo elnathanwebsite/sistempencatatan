@@ -2384,6 +2384,17 @@
                         <input type="text" id="searchRecipientInput" onkeyup="filterRecipientList()" placeholder="Cari nama atau email penerima..." style="font-size: 0.82rem; padding: 7px 10px 7px 32px;">
                     </div>
 
+                    <!-- Recipient Limit Warning Banner (> 5 Recipients) -->
+                    <div id="recipientLimitWarningBanner" style="display: none; background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 12px; font-size: 0.78rem; color: #92400e;">
+                        <div style="display: flex; align-items: flex-start; gap: 8px;">
+                            <i data-lucide="alert-triangle" style="width: 16px; height: 16px; color: #d97706; flex-shrink: 0; margin-top: 2px;"></i>
+                            <div>
+                                <strong style="color: #b45309;">⚠️ Peringatan Kuota Email (> 5 Penerima):</strong><br>
+                                Anda memilih <span id="warnSelectedCount" style="font-weight: 700; color: #b45309;">0</span> penerima. Disarankan centang pihak penting saja (seperti <strong>SPV</strong> atau <strong>PIC</strong>) agar kuota gratis EmailJS tidak cepat habis.
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Recipient Checkbox List -->
                     <div id="recipientCheckboxList" style="border: 1px solid var(--border); border-radius: var(--radius-sm); max-height: 240px; overflow-y: auto; background: var(--bg-card); padding: 4px;">
                         <!-- Filled dynamically -->
@@ -4620,15 +4631,37 @@
             });
         }
 
-        // Update selected recipient counter & button text
-        function updateSelectedRecipientCount() {
+        // Update selected recipient counter & button text with limit warning (> 5)
+        let hasShownRecipientLimitToast = false;
+        function updateSelectedRecipientCount(triggerWarning = true) {
             const checked = document.querySelectorAll('.recipient-checkbox:checked');
             const countEl = document.getElementById('selectedRecipientCount');
             const btnSend = document.getElementById('btnSendSelectedEmails');
-            if (countEl) countEl.innerText = checked.length;
+            const warnBanner = document.getElementById('recipientLimitWarningBanner');
+            const warnCountEl = document.getElementById('warnSelectedCount');
+
+            const total = checked.length;
+            if (countEl) countEl.innerText = total;
+
+            if (total > 5) {
+                if (warnBanner) warnBanner.style.display = 'block';
+                if (warnCountEl) warnCountEl.innerText = total;
+                if (triggerWarning && !hasShownRecipientLimitToast) {
+                    showToast(`⚠️ Peringatan Kuota Limit: Anda memilih ${total} orang! Disarankan hanya kirim ke pihak penting (SPV/PIC) agar kuota EmailJS tidak cepat habis.`, 'warning');
+                    hasShownRecipientLimitToast = true;
+                }
+            } else {
+                if (warnBanner) warnBanner.style.display = 'none';
+                hasShownRecipientLimitToast = false;
+            }
+
             if (btnSend) {
-                btnSend.innerHTML = `<i data-lucide="send" style="width: 14px; height: 14px;"></i> Kirim ke (${checked.length}) Email Terpilih`;
-                btnSend.disabled = (checked.length === 0);
+                if (total > 5) {
+                    btnSend.innerHTML = `<i data-lucide="send" style="width: 14px; height: 14px;"></i> Kirim ke (${total}) Email ⚠️`;
+                } else {
+                    btnSend.innerHTML = `<i data-lucide="send" style="width: 14px; height: 14px;"></i> Kirim ke (${total}) Email Terpilih`;
+                }
+                btnSend.disabled = (total === 0);
                 lucide.createIcons();
             }
         }
@@ -4686,6 +4719,17 @@
             if (checkedBoxes.length === 0) {
                 showToast('Tandai setidaknya satu email penerima untuk dikirimkan pesan!', 'warning');
                 return;
+            }
+
+            // Limit warning confirmation pop-up if user selects more than 5 recipients
+            if (checkedBoxes.length > 5) {
+                const confirmSend = confirm(
+                    `⚠️ PERINGATAN LIMIT KUOTA EMAILJS\n\n` +
+                    `Anda memilih ${checkedBoxes.length} penerima (lebih dari 5 orang).\n\n` +
+                    `Akun gratis EmailJS dibatasi 200 email per bulan. Disarankan mengirim email hanya ke beberapa pengguna penting saja (seperti SPV atau PIC terkait) agar kuota tidak cepat habis.\n\n` +
+                    `Apakah Anda yakin ingin tetap melanjutkan pengiriman ke ${checkedBoxes.length} orang ini?`
+                );
+                if (!confirmSend) return;
             }
 
             const templateConfig = getEmailTemplateConfig();
