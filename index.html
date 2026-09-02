@@ -2410,12 +2410,12 @@
                     </div>
                 </div>
 
-                <!-- TAB 2: TEMPLATE EMAIL HTML -->
+                <!-- TAB 2: TEMPLATE EMAIL & QR CODE GENERATOR -->
                 <div id="emailTabTemplateContent" style="display: none;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
                         <div>
-                            <div style="font-weight: 700; font-size: 0.92rem; color: var(--text-main);">Kustomisasi Template Email HTML</div>
-                            <div style="font-size: 0.76rem; color: var(--text-muted);">Sesuaikan teks, tautan approval, dan desain email notifikasi sesuai kebutuhan</div>
+                            <div style="font-weight: 700; font-size: 0.92rem; color: var(--text-main);">Kustomisasi Template Email & QR Code Generator</div>
+                            <div style="font-size: 0.76rem; color: var(--text-muted);">Ubah link approval otomatis jadi QR Code untuk memudahkan scan via HP / smartphone</div>
                         </div>
                         <button type="button" class="btn btn-outline btn-xs" onclick="resetEmailTemplateToDefault()" style="color: var(--danger); border-color: var(--danger);">
                             <i data-lucide="rotate-ccw" style="width: 12px; height: 12px;"></i> Reset ke Default
@@ -2423,23 +2423,63 @@
                     </div>
 
                     <div class="form-group" style="margin-bottom: 12px;">
-                        <label for="customEmailSubject" style="font-size: 0.8rem;">Judul Subjek Email (Subject)</label>
+                        <label for="customEmailSubject" style="font-size: 0.8rem; font-weight: 600;">Judul Subjek Email (Subject)</label>
                         <input type="text" id="customEmailSubject" placeholder="🔔 [SafeGuard K3] Pemberitahuan Pemeriksaan APD" style="font-size: 0.85rem; font-weight: 600;">
                     </div>
 
-                    <div class="form-group" style="margin-bottom: 12px;">
-                        <label for="customEmailApprovalLink" style="font-size: 0.8rem;">Tautan Tombol Masuk / Approval (<code>{{approval_link}}</code>)</label>
-                        <input type="text" id="customEmailApprovalLink" placeholder="https://domainanda.com/halaman-approval" style="font-family: monospace; font-size: 0.82rem;">
+                    <!-- Card Link & Live QR Code Generator -->
+                    <div style="background: var(--bg-surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label for="customEmailApprovalLink" style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 6px; margin: 0;">
+                                <i data-lucide="qr-code" style="width: 16px; height: 16px; color: var(--primary);"></i>
+                                Konversi Link Menjadi Gambar QR Code Langsung
+                            </label>
+                            <span class="badge badge-layak" style="font-size: 0.7rem; font-weight: 600;">Format Gambar PNG</span>
+                        </div>
+                        
+                        <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+                            <div style="flex: 1; min-width: 240px;">
+                                <div class="input-wrapper" style="margin-bottom: 6px;">
+                                    <span class="input-icon"><i data-lucide="link" style="width: 14px; height: 14px;"></i></span>
+                                    <input type="text" id="customEmailApprovalLink" placeholder="http://localhost/sistempencatatan/" oninput="handleApprovalLinkChange(this.value)" style="font-family: monospace; font-size: 0.82rem; width: 100%;">
+                                </div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 8px;">
+                                    Tautan di atas otomatis diubah menjadi <strong>gambar QR Code</strong> murni. Klik tombol di bawah untuk langsung menaruh gambar ke pesan email atau mengunduh gambar PNG.
+                                </div>
+                                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                    <button type="button" class="btn btn-primary btn-xs" onclick="insertQrCodeBlockToEmail()" style="font-weight: 600;">
+                                        <i data-lucide="image" style="width: 13px; height: 13px;"></i> Taruh Gambar di Pesan
+                                    </button>
+                                    <button type="button" class="btn btn-outline btn-xs" onclick="downloadQrImage()" title="Download file gambar QR Code PNG">
+                                        <i data-lucide="download" style="width: 12px; height: 12px;"></i> Download Gambar QR (.PNG)
+                                    </button>
+                                    <button type="button" class="btn btn-outline btn-xs" onclick="copyQrImageUrl()" title="Salin URL file gambar QR Code">
+                                        <i data-lucide="copy" style="width: 12px; height: 12px;"></i> Salin URL Gambar
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Live QR Code Card Preview -->
+                            <div style="display: flex; flex-direction: column; align-items: center; background: white; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 1px 4px rgba(0,0,0,0.06); flex-shrink: 0; text-align: center;">
+                                <img id="qrCodePreviewImg" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=http%3A%2F%2Flocalhost%2Fsistempencatatan%2F" alt="Gambar QR Code" width="75" height="75" style="border-radius: 4px; display: block; background: #fff; margin-bottom: 4px;">
+                                <span style="font-size: 0.65rem; color: #475569; font-weight: 600; margin-bottom: 4px;">Gambar QR Code</span>
+                                <button type="button" class="btn btn-outline btn-xs" onclick="insertQrCodeBlockToEmail()" style="font-size: 0.68rem; padding: 2px 8px; color: var(--primary); border-color: var(--primary); width: 100%;">
+                                    + Taruh di Pesan
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Insert Variable Chips -->
                     <div style="margin-bottom: 8px;">
-                        <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Klik untuk menyisipkan variabel otomatis:</label>
+                        <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Klik untuk menyisipkan variabel otomatis ke template:</label>
                         <div style="display: flex; gap: 4px; flex-wrap: wrap;">
                             <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{to_name}}')" title="Nama Penerima">{{to_name}}</button>
                             <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{to_email}}')" title="Email Penerima">{{to_email}}</button>
                             <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{role}}')" title="Peran Penerima">{{role}}</button>
                             <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{approval_link}}')" title="Link Tombol Approval">{{approval_link}}</button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{qr_code_url}}')" title="URL Gambar QR Code (Scan HP)" style="color: var(--primary); border-color: var(--primary); font-weight: 600;">📷 {{qr_code_url}}</button>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{qr_code}}')" title="Tag HTML Gambar QR Code Lengkap" style="color: var(--primary); border-color: var(--primary); font-weight: 600;">🔳 {{qr_code}}</button>
                             <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{nama_apd}}')" title="Nama APD">{{nama_apd}}</button>
                             <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{tgl_inspeksi}}')" title="Tanggal">{{tgl_inspeksi}}</button>
                             <button type="button" class="btn btn-outline btn-xs" onclick="insertVariableTag('{{kondisi}}')" title="Kondisi">{{kondisi}}</button>
@@ -4125,7 +4165,98 @@
             templateId: 'template_0bzqbkm'
         };
 
-        // Default Customizable HTML Email Template
+        // Helper to generate reliable QR Code URL from any link
+        function getQrCodeUrl(link, size = '150x150') {
+            const raw = (link || window.location.href.split('#')[0] || 'http://localhost/sistempencatatan/').trim();
+            return `https://api.qrserver.com/v1/create-qr-code/?size=${size}&data=${encodeURIComponent(raw)}`;
+        }
+
+        // Handle changes in approval link input and update live QR Code
+        function handleApprovalLinkChange(val) {
+            const qrImg = document.getElementById('qrCodePreviewImg');
+            const link = val.trim() || window.location.href.split('#')[0] || 'http://localhost/sistempencatatan/';
+            if (qrImg) {
+                qrImg.src = getQrCodeUrl(link, '100x100');
+            }
+            toggleEmailPreview(true);
+        }
+
+        // Download generated QR Code Image as PNG file
+        async function downloadQrImage() {
+            const linkInput = document.getElementById('customEmailApprovalLink');
+            const link = (linkInput?.value || '').trim() || window.location.href.split('#')[0] || 'http://localhost/sistempencatatan/';
+            const qrUrl = getQrCodeUrl(link, '300x300');
+            try {
+                const res = await fetch(qrUrl);
+                const blob = await res.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = `QR_Code_Approval_K3_${Date.now()}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(blobUrl);
+                showToast('✅ Gambar QR Code (.PNG) berhasil diunduh!', 'success');
+            } catch (e) {
+                window.open(qrUrl, '_blank');
+                showToast('Membuka gambar QR Code di tab baru...', 'info');
+            }
+        }
+
+        // Copy direct QR Code Image URL to clipboard
+        function copyQrImageUrl() {
+            const linkInput = document.getElementById('customEmailApprovalLink');
+            const link = (linkInput?.value || '').trim() || window.location.href.split('#')[0] || 'http://localhost/sistempencatatan/';
+            const qrUrl = getQrCodeUrl(link, '150x150');
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(qrUrl).then(() => {
+                    showToast('✅ URL Gambar QR Code berhasil disalin ke clipboard!', 'success');
+                });
+            } else {
+                showToast(`URL: ${qrUrl}`, 'info');
+            }
+        }
+
+        // Insert clean QR Code Image directly into email template HTML (Taruh di Pesan)
+        function insertQrCodeBlockToEmail() {
+            const linkInput = document.getElementById('customEmailApprovalLink');
+            const link = (linkInput?.value || '').trim() || window.location.href.split('#')[0] || 'http://localhost/sistempencatatan/';
+            const qrImageUrl = getQrCodeUrl(link, '140x140');
+
+            // Clean direct image block without messy markup
+            const cleanImageTag = `\n    <!-- Gambar QR Code Scanner -->\n    <div style='text-align: center; margin: 20px 0;'>\n        <p style='margin: 0 0 8px 0; font-size: 13px; color: #475569; font-weight: bold;'>Scan QR Code via Smartphone:</p>\n        <img src='${qrImageUrl}' alt='QR Code Approval K3' width='140' height='140' style='display: block; margin: 0 auto; border-radius: 6px; border: 1px solid #e2e8f0; background: #ffffff; padding: 6px;'>\n    </div>`;
+
+            const textarea = document.getElementById('customEmailHtml');
+            if (!textarea) return;
+
+            const text = textarea.value;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+
+            // If text is selected or cursor placed
+            if (start !== undefined && start !== end && start > 0) {
+                textarea.value = text.substring(0, start) + cleanImageTag + text.substring(end);
+            } else {
+                // Otherwise insert before the closing hr/footer or closing div
+                const hrIdx = text.lastIndexOf('<hr');
+                if (hrIdx !== -1) {
+                    textarea.value = text.substring(0, hrIdx) + cleanImageTag + '\n    ' + text.substring(hrIdx);
+                } else {
+                    const lastDivIdx = text.lastIndexOf('</div>');
+                    if (lastDivIdx !== -1) {
+                        textarea.value = text.substring(0, lastDivIdx) + cleanImageTag + '\n' + text.substring(lastDivIdx);
+                    } else {
+                        textarea.value = text + '\n' + cleanImageTag;
+                    }
+                }
+            }
+
+            toggleEmailPreview(true);
+            showToast('✅ Gambar QR Code berhasil ditaruh ke dalam pesan template email!', 'success');
+        }
+
+        // Default Customizable HTML Email Template with QR Code for Mobile Scanning
         const DEFAULT_EMAIL_TEMPLATE = {
             subject: "🔔 [SafeGuard K3] Pemberitahuan Pemeriksaan APD",
             approvalLink: window.location.href.split('#')[0] || "http://localhost/sistempencatatan/",
@@ -4141,8 +4272,15 @@
     
     <p>Sehubungan dengan hal tersebut, kami mohon kesediaan Bapak/Ibu untuk memberikan konfirmasi persetujuan (<em>approval</em>) terkait jadwal pemeriksaan ini. Silakan klik tombol di bawah ini untuk masuk ke dalam sistem website:</p>
     
-    <div style='text-align: center; margin: 30px 0;'>
+    <div style='text-align: center; margin: 25px 0 15px 0;'>
         <a href='{{approval_link}}' style='background-color: #0056b3; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;'>Masuk ke Sistem Approval</a>
+    </div>
+
+    <!-- QR Code Scan Box for Mobile / Smartphone -->
+    <div style='text-align: center; margin: 20px 0; padding: 16px; background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px;'>
+        <p style='margin: 0 0 10px 0; font-size: 13px; color: #475569; font-weight: 600;'>Atau Scan QR Code Berikut untuk Akses Langsung via Smartphone:</p>
+        <img src='{{qr_code_url}}' alt='QR Code Approval K3' width='140' height='140' style='display: block; margin: 0 auto; border-radius: 6px; border: 1px solid #e2e8f0; background: #ffffff; padding: 6px;'>
+        <p style='margin: 8px 0 0 0; font-size: 11px; color: #94a3b8;'>Arahkan kamera smartphone ke QR Code di atas untuk membuka tautan</p>
     </div>
     
     <p>Partisipasi aktif Bapak/Ibu sangat berarti untuk memastikan seluruh prosedur Keselamatan dan Kesehatan Kerja (K3) berjalan dengan baik.</p>
@@ -4168,7 +4306,7 @@
             }
 
             let tpl = JSON.parse(localStorage.getItem('k3_email_template'));
-            if (!tpl || !tpl.htmlContent || tpl.htmlContent.includes('Tim Administrator</strong>')) {
+            if (!tpl || !tpl.htmlContent || !tpl.htmlContent.includes('qr_code')) {
                 localStorage.setItem('k3_email_template', JSON.stringify(DEFAULT_EMAIL_TEMPLATE));
             }
         })();
@@ -4195,11 +4333,22 @@
             return { ...DEFAULT_EMAIL_TEMPLATE };
         }
 
-        // Render template with dynamic variables
+        // Render template with dynamic variables and automatic QR Code
         function renderEmailTemplate(templateText, variables) {
             if (!templateText) return '';
             let output = templateText;
-            for (const [key, val] of Object.entries(variables)) {
+            
+            const effectiveLink = variables.approval_link || DEFAULT_EMAIL_TEMPLATE.approvalLink;
+            const qrUrl = getQrCodeUrl(effectiveLink, '150x150');
+            const qrImgTag = `<img src="${qrUrl}" alt="QR Code Approval" width="140" height="140" style="display: block; margin: 0 auto; border-radius: 6px; border: 1px solid #e2e8f0; background: #ffffff; padding: 6px;">`;
+
+            const allVars = {
+                ...variables,
+                qr_code_url: qrUrl,
+                qr_code: qrImgTag
+            };
+
+            for (const [key, val] of Object.entries(allVars)) {
                 const regex = new RegExp(`{{\\s*${key}\\s*}}`, 'gi');
                 output = output.replace(regex, val !== undefined && val !== null ? val : '');
             }
@@ -4208,9 +4357,9 @@
                 output = output.replace(/\[Nama Penerima Terdaftar\]/gi, variables.to_name);
                 output = output.replace(/\[Nama Penerima\]/gi, variables.to_name);
             }
-            if (variables.approval_link) {
-                output = output.replace(/https:\/\/domainanda\.com\/halaman-approval/gi, variables.approval_link);
-                output = output.replace(/https:\/\/glasspane\.pages\.dev\/[^\s'"]+/gi, variables.approval_link);
+            if (effectiveLink) {
+                output = output.replace(/https:\/\/domainanda\.com\/halaman-approval/gi, effectiveLink);
+                output = output.replace(/https:\/\/glasspane\.pages\.dev\/[^\s'"]+/gi, effectiveLink);
             }
             return output;
         }
@@ -4222,11 +4371,13 @@
             const linkInput = document.getElementById('customEmailApprovalLink');
             const htmlTextarea = document.getElementById('customEmailHtml');
             const previewSubj = document.getElementById('currentSubjectPreview');
+            const qrImg = document.getElementById('qrCodePreviewImg');
 
             if (subjInput) subjInput.value = tpl.subject;
             if (linkInput) linkInput.value = tpl.approvalLink;
             if (htmlTextarea) htmlTextarea.value = tpl.htmlContent;
             if (previewSubj) previewSubj.innerHTML = `Subject: <em>${escapeHtml(tpl.subject)}</em>`;
+            if (qrImg) qrImg.src = getQrCodeUrl(tpl.approvalLink, '100x100');
         }
 
         // Save customized template
@@ -4237,7 +4388,7 @@
 
             const config = { subject, approvalLink, htmlContent };
             localStorage.setItem('k3_email_template', JSON.stringify(config));
-            showToast('Template email HTML berhasil disimpan!', 'success');
+            showToast('Template email HTML & QR Code berhasil disimpan!', 'success');
             
             const previewSubj = document.getElementById('currentSubjectPreview');
             if (previewSubj) previewSubj.innerHTML = `Subject: <em>${escapeHtml(subject)}</em>`;
