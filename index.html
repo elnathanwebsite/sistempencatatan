@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafeGuard K3 - Sistem Inspeksi & Data Master APD</title>
+    <title>PPE Compliance Monitoring System - Sistem Inspeksi & Data Master APD</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -502,8 +502,12 @@
         }
 
         input[type="text"],
+        input[type="email"],
+        input[type="url"],
+        input[type="password"],
         input[type="date"],
-        select {
+        select,
+        textarea {
             width: 100%;
             padding: 10px 14px 10px 38px;
             background-color: var(--bg-input);
@@ -514,11 +518,22 @@
             font-size: 0.88rem;
             transition: var(--transition);
             outline: none;
+            box-sizing: border-box;
+        }
+
+        .form-group > input:not(.input-wrapper input),
+        .form-group > textarea,
+        input.no-icon {
+            padding-left: 14px;
         }
 
         input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="url"]:focus,
+        input[type="password"]:focus,
         input[type="date"]:focus,
-        select:focus {
+        select:focus,
+        textarea:focus {
             border-color: var(--border-focus);
             background-color: var(--bg-card);
             box-shadow: 0 0 0 3px var(--primary-glow);
@@ -1456,7 +1471,7 @@
                     <i data-lucide="shield-check" style="width: 24px; height: 24px;"></i>
                 </div>
                 <div class="brand-text">
-                    <h1>SafeGuard K3</h1>
+                    <h1>PPE Compliance Monitoring System</h1>
                     <p>Sistem Inspeksi & Master Data APD</p>
                 </div>
             </div>
@@ -1751,7 +1766,7 @@
                     <div class="print-only" id="printHeaderSection">
                         <div class="print-header-container">
                             <div>
-                                <div class="print-title">SafeGuard K3 • Laporan Inspeksi APD</div>
+                                <div class="print-title">PPE Compliance Monitoring System • Laporan Inspeksi APD</div>
                                 <div class="print-subtitle">Sistem Manajemen Keselamatan dan Kesehatan Kerja (SMK3)
                                 </div>
                             </div>
@@ -2435,7 +2450,7 @@
 
                     <div class="form-group" style="margin-bottom: 12px;">
                         <label for="customEmailSubject" style="font-size: 0.8rem; font-weight: 600;">Judul Subjek Email (Subject)</label>
-                        <input type="text" id="customEmailSubject" placeholder="🔔 [SafeGuard K3] Pemberitahuan Pemeriksaan APD" style="font-size: 0.85rem; font-weight: 600;">
+                        <input type="text" id="customEmailSubject" placeholder="🔔 [PPE Compliance] Pemberitahuan Pemeriksaan APD" style="font-size: 0.85rem; font-weight: 600;">
                     </div>
 
                     <!-- Card Link & Live QR Code Generator -->
@@ -3635,8 +3650,8 @@
 
             try {
                 const workbook = new ExcelJS.Workbook();
-                workbook.creator = 'SafeGuard K3 System';
-                workbook.lastModifiedBy = 'SafeGuard K3';
+                workbook.creator = 'PPE Compliance Monitoring System';
+                workbook.lastModifiedBy = 'PPE Compliance Monitoring System';
                 workbook.created = new Date();
                 workbook.modified = new Date();
 
@@ -3682,7 +3697,7 @@
                 // --- ROW 2: SUBTITLE BANNER ---
                 worksheet.mergeCells('A2:J2');
                 const subTitleCell = worksheet.getCell('A2');
-                subTitleCell.value = 'Sistem Manajemen Keselamatan dan Kesehatan Kerja (SMK3) • SafeGuard K3';
+                subTitleCell.value = 'Sistem Manajemen Keselamatan dan Kesehatan Kerja (SMK3) • PPE Compliance Monitoring System';
                 subTitleCell.font = { name: 'Calibri', size: 10, italic: true, color: { argb: 'FF94A3B8' } };
                 subTitleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E293B' } };
                 subTitleCell.alignment = { vertical: 'middle', horizontal: 'center' };
@@ -4005,7 +4020,7 @@
                         <td colspan="10" class="title-main">LAPORAN HASIL INSPEKSI & PEMERIKSAAN APD (K3)</td>
                     </tr>
                     <tr>
-                        <td colspan="10" class="title-sub">Sistem Manajemen Keselamatan dan Kesehatan Kerja (SMK3) • SafeGuard K3</td>
+                        <td colspan="10" class="title-sub">Sistem Manajemen Keselamatan dan Kesehatan Kerja (SMK3) • PPE Compliance Monitoring System</td>
                     </tr>
                     <tr><td colspan="10" style="border:none; height:10px;"></td></tr>
                     <tr>
@@ -4269,7 +4284,7 @@
 
         // Default Customizable HTML Email Template with QR Code for Mobile Scanning
         const DEFAULT_EMAIL_TEMPLATE = {
-            subject: "🔔 [SafeGuard K3] Pemberitahuan Pemeriksaan APD",
+            subject: "🔔 [PPE Compliance] Pemberitahuan Pemeriksaan APD",
             approvalLink: window.location.href.split('#')[0] || "http://localhost/sistempencatatan/",
             htmlContent: `<div style='font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px; background-color: #ffffff;'>
     <h2 style='color: #0056b3; border-bottom: 2px solid #f4f4f4; padding-bottom: 10px; margin-top: 0;'>Pemberitahuan Pemeriksaan APD</h2>
@@ -4299,7 +4314,7 @@
     <p>Terima kasih atas perhatian dan kerja sama yang diberikan.</p>
     
     <hr style='border: none; border-top: 1px solid #eee; margin: 20px 0;'>
-    <p style='font-size: 12px; color: #888;'>Hormat kami,<br><strong>Tim Administrator K3</strong><br>Sistem Notifikasi Otomatis SafeGuard K3</p>
+    <p style='font-size: 12px; color: #888;'>Hormat kami,<br><strong>Tim Administrator K3</strong><br>Sistem Notifikasi Otomatis PPE Compliance Monitoring System</p>
 </div>`
         };
 
@@ -4317,7 +4332,7 @@
             }
 
             let tpl = JSON.parse(localStorage.getItem('k3_email_template'));
-            if (!tpl || !tpl.htmlContent || !tpl.htmlContent.includes('qr_code')) {
+            if (!tpl || !tpl.htmlContent || !tpl.htmlContent.includes('PPE Compliance')) {
                 localStorage.setItem('k3_email_template', JSON.stringify(DEFAULT_EMAIL_TEMPLATE));
             }
         })();
@@ -5004,8 +5019,8 @@
                     mainSpv.email,
                     mainSpv.nama,
                     'SPV / Approver Utama',
-                    `🔔 [SafeGuard K3] Menunggu Approval: Inspeksi APD ${item.nama_apd} - ${item.pemilik}`,
-                    `Halo ${mainSpv.nama} (${mainSpv.jabatan || 'Supervisor / Leader'}),\n\nTelah dilakukan pemeriksaan fisik APD di lapangan:\n• Periode: ${item.kuartal}\n• Tanggal: ${item.tgl_inspeksi}\n• Jenis APD: ${item.nama_apd}\n• Pemilik: ${item.pemilik} (SN: ${item.sn})\n• Kondisi Fisik: ${item.kondisi}\n• PIC Pemeriksa: ${item.pic}\n• Status: ⏱ Menunggu Approval Anda di sistem SafeGuard K3.\n\nSilakan buka aplikasi SafeGuard K3 untuk melakukan approval.`
+                    `🔔 [PPE Compliance] Menunggu Approval: Inspeksi APD ${item.nama_apd} - ${item.pemilik}`,
+                    `Halo ${mainSpv.nama} (${mainSpv.jabatan || 'Supervisor / Leader'}),\n\nTelah dilakukan pemeriksaan fisik APD di lapangan:\n• Periode: ${item.kuartal}\n• Tanggal: ${item.tgl_inspeksi}\n• Jenis APD: ${item.nama_apd}\n• Pemilik: ${item.pemilik} (SN: ${item.sn})\n• Kondisi Fisik: ${item.kondisi}\n• PIC Pemeriksa: ${item.pic}\n• Status: ⏱ Menunggu Approval Anda di sistem PPE Compliance Monitoring System.\n\nSilakan buka aplikasi PPE Compliance Monitoring System untuk melakukan approval.`
                 );
             }
 
@@ -5016,7 +5031,7 @@
                     mainPemilik.email,
                     mainPemilik.nama,
                     'Pekerja / Pemilik APD',
-                    `⛑️ [SafeGuard K3] Hasil Inspeksi APD Anda: ${item.nama_apd} (${item.kondisi})`,
+                    `⛑️ [PPE Compliance] Hasil Inspeksi APD Anda: ${item.nama_apd} (${item.kondisi})`,
                     `Halo ${item.pemilik},\n\nAlat Pelindung Diri (APD) Anda telah selesai diinspeksi oleh petugas K3 (${item.pic}) pada tanggal ${item.tgl_inspeksi}:\n• Jenis APD: ${item.nama_apd}\n• Serial Number: ${item.sn}\n• Hasil Kondisi: ${item.kondisi}\n• Evaluasi: ${item.kondisi === 'Layak Pakai' ? 'APD dalam kondisi BAIK dan layak dipakai bekerja.' : 'Perhatian! APD Anda memerlukan perbaikan/penggantian.'}\n\nTetap utamakan keselamatan kerja (K3)!`
                 );
             }
@@ -5028,7 +5043,7 @@
                     mainPic.email,
                     mainPic.nama,
                     'PIC Pemeriksa',
-                    `📋 [SafeGuard K3] Konfirmasi Laporan Inspeksi Berhasil: ${item.nama_apd}`,
+                    `📋 [PPE Compliance] Konfirmasi Laporan Inspeksi Berhasil: ${item.nama_apd}`,
                     `Halo ${item.pic},\n\nLaporan inspeksi yang Anda input untuk ${item.pemilik} (${item.nama_apd}) pada ${item.tgl_inspeksi} telah berhasil disimpan ke database dan diteruskan untuk approval.`
                 );
             }
@@ -5040,8 +5055,8 @@
                         s.email,
                         s.nama,
                         'SPV / Management',
-                        `📢 [SafeGuard K3] Update Inspeksi APD: ${item.nama_apd} - ${item.pemilik}`,
-                        `Halo ${s.nama},\n\nPemberitahuan inspeksi berkala APD baru di sistem SafeGuard K3:\n• Tanggal: ${item.tgl_inspeksi} (${item.kuartal})\n• Pekerja: ${item.pemilik} (SN: ${item.sn})\n• Jenis APD: ${item.nama_apd}\n• Kondisi: ${item.kondisi}\n• PIC Pemeriksa: ${item.pic}\n• Approver: ${item.spv}`
+                        `📢 [PPE Compliance] Update Inspeksi APD: ${item.nama_apd} - ${item.pemilik}`,
+                        `Halo ${s.nama},\n\nPemberitahuan inspeksi berkala APD baru di sistem PPE Compliance Monitoring System:\n• Tanggal: ${item.tgl_inspeksi} (${item.kuartal})\n• Pekerja: ${item.pemilik} (SN: ${item.sn})\n• Jenis APD: ${item.nama_apd}\n• Kondisi: ${item.kondisi}\n• PIC Pemeriksa: ${item.pic}\n• Approver: ${item.spv}`
                     );
                 }
             });
@@ -5053,7 +5068,7 @@
                         p.email,
                         p.nama,
                         'Karyawan',
-                        `📢 [SafeGuard K3] Informasi Jadwal & Hasil Inspeksi APD`,
+                        `📢 [PPE Compliance] Informasi Jadwal & Hasil Inspeksi APD`,
                         `Halo ${p.nama},\n\nTelah dilaksanakan kegiatan inspeksi APD keselamatan kerja pada ${item.tgl_inspeksi} (${item.kuartal}) untuk unit ${item.nama_apd}.\nPastikan seluruh APD yang Anda gunakan dalam kondisi layak pakai demi keselamatan bersama.`
                     );
                 }
@@ -5066,7 +5081,7 @@
                         pi.email,
                         pi.nama,
                         'Tim PIC K3',
-                        `📢 [SafeGuard K3] Log Pemeriksaan APD Baru (${item.nama_apd})`,
+                        `📢 [PPE Compliance] Log Pemeriksaan APD Baru (${item.nama_apd})`,
                         `Halo ${pi.nama},\n\nLog pemeriksaan APD baru telah dicatat oleh ${item.pic} untuk ${item.pemilik} (${item.nama_apd} - ${item.kondisi}) pada ${item.tgl_inspeksi}.`
                     );
                 }
@@ -5130,14 +5145,14 @@
 
                     if (response.ok) {
                         successCount++;
-                        console.log(`[SafeGuard K3] Email sukses dikirim ke: ${r.email} (${r.name})`);
+                        console.log(`[PPE Compliance] Email sukses dikirim ke: ${r.email} (${r.name})`);
                     } else {
                         const errText = await response.text();
-                        console.error(`[SafeGuard K3] Gagal kirim ke ${r.email}:`, errText);
+                        console.error(`[PPE Compliance] Gagal kirim ke ${r.email}:`, errText);
                         failedEmails.push(r.email);
                     }
                 } catch (err) {
-                    console.error(`[SafeGuard K3] Network error kirim ke ${r.email}:`, err);
+                    console.error(`[PPE Compliance] Network error kirim ke ${r.email}:`, err);
                     failedEmails.push(r.email);
                 }
             }, 600);
