@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- ExcelJS for High Quality Excel Generation -->
+    <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
     
     <style>
         :root {
@@ -634,6 +636,17 @@
             filter: brightness(1.1);
         }
 
+        .btn-excel {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+        }
+        .btn-excel:hover {
+            filter: brightness(1.08);
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45);
+            transform: translateY(-1px);
+        }
+
         .btn-danger {
             background: var(--danger-soft);
             color: var(--danger-text);
@@ -1093,18 +1106,166 @@
         .toast-danger { border-left: 4px solid var(--danger); }
         .toast-info { border-left: 4px solid var(--primary); }
 
+        .print-only {
+            display: none;
+        }
+
         /* Print styles */
         @media print {
-            .navbar, .theme-toggle-btn, #formCard, .filter-bar, .action-cell, th:last-child {
+            .navbar, 
+            .theme-toggle-btn, 
+            #formCard, 
+            .filter-bar, 
+            .action-cell, 
+            th:last-child, 
+            td:last-child,
+            .stats-grid, 
+            .nav-tabs-wrapper,
+            .toast-container,
+            .modal,
+            .card-header,
+            #pageMaster {
                 display: none !important;
             }
+
+            .print-only {
+                display: block !important;
+            }
+
             body {
                 background: white !important;
-                color: black !important;
+                background-image: none !important;
+                color: #0f172a !important;
+                font-family: var(--font-sans) !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                font-size: 10pt !important;
             }
+
+            .main-container {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 12px !important;
+            }
+
             .card {
-                border: 1px solid #ccc !important;
+                border: none !important;
                 box-shadow: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+            }
+
+            .card-body {
+                padding: 0 !important;
+            }
+
+            .table-full-container {
+                border: 1px solid #1e293b !important;
+                border-radius: 4px !important;
+                overflow: visible !important;
+            }
+
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                font-size: 8.5pt !important;
+            }
+
+            thead th {
+                background-color: #1e293b !important;
+                color: #ffffff !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                border: 1px solid #0f172a !important;
+                padding: 8px 6px !important;
+                text-align: center !important;
+                font-size: 8pt !important;
+            }
+
+            tbody td {
+                border: 1px solid #cbd5e1 !important;
+                padding: 6px 8px !important;
+                color: #0f172a !important;
+                page-break-inside: avoid !important;
+            }
+
+            tbody tr:nth-child(even) {
+                background-color: #f8fafc !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .badge {
+                border: 1px solid #94a3b8 !important;
+                padding: 2px 6px !important;
+                font-size: 7.5pt !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .photo-thumb-wrapper img {
+                max-width: 36px !important;
+                max-height: 36px !important;
+            }
+
+            .photo-zoom-icon {
+                display: none !important;
+            }
+
+            /* Print Header Layout */
+            .print-header-container {
+                border-bottom: 2px solid #0f172a;
+                padding-bottom: 10px;
+                margin-bottom: 14px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .print-title {
+                font-size: 15pt;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: -0.01em;
+                color: #0f172a;
+            }
+
+            .print-subtitle {
+                font-size: 9pt;
+                color: #475569;
+                font-weight: 500;
+            }
+
+            .print-meta-box {
+                font-size: 8.5pt;
+                text-align: right;
+                color: #333;
+                line-height: 1.4;
+            }
+
+            /* Print Footer / Signatures */
+            .print-signatures {
+                margin-top: 28px;
+                display: flex;
+                justify-content: space-between;
+                page-break-inside: avoid !important;
+            }
+
+            .print-sig-box {
+                width: 220px;
+                text-align: center;
+                font-size: 9pt;
+            }
+
+            .print-sig-space {
+                height: 50px;
+            }
+
+            .print-sig-line {
+                font-weight: 700;
+                border-bottom: 1px solid #0f172a;
+                padding-bottom: 2px;
+                margin-bottom: 3px;
             }
         }
     </style>
@@ -1354,10 +1515,18 @@
                         <h3>Daftar Laporan Inspeksi K3</h3>
                     </div>
                     
-                    <div style="display: flex; gap: 8px;">
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn btn-excel btn-sm" onclick="exportExcel()" id="btnExportExcel" title="Download Laporan Format Excel (.xlsx) Rapi & Lengkap">
+                            <i data-lucide="file-spreadsheet" style="width: 15px; height: 15px;"></i>
+                            Export Excel (.xlsx)
+                        </button>
+                        <button class="btn btn-outline btn-sm" onclick="printReport()" title="Cetak Laporan / Simpan PDF Resmi">
+                            <i data-lucide="printer" style="width: 14px; height: 14px;"></i>
+                            Cetak / Print
+                        </button>
                         <button class="btn btn-outline btn-sm" onclick="exportCSV()" title="Ekspor data ke format CSV">
                             <i data-lucide="download" style="width: 14px; height: 14px;"></i>
-                            Export CSV
+                            CSV
                         </button>
                         <button class="btn btn-danger btn-sm" onclick="clearData()" title="Hapus semua data simulasi">
                             <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
@@ -1368,6 +1537,19 @@
 
                 <div class="card-body">
                     
+                    <!-- Print-Only Official Letterhead / Header -->
+                    <div class="print-only" id="printHeaderSection">
+                        <div class="print-header-container">
+                            <div>
+                                <div class="print-title">SafeGuard K3 • Laporan Inspeksi APD</div>
+                                <div class="print-subtitle">Sistem Manajemen Keselamatan dan Kesehatan Kerja (SMK3)</div>
+                            </div>
+                            <div class="print-meta-box" id="printMetaContent">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Search & Filter Controls -->
                     <div class="filter-bar">
                         <div class="search-box">
@@ -1410,6 +1592,26 @@
                                 <!-- Data rows injected via JavaScript -->
                             </tbody>
                         </table>
+                    </div>
+
+                    <!-- Print-Only Official Signatures -->
+                    <div class="print-only" id="printSignaturesSection">
+                        <div class="print-signatures">
+                            <div class="print-sig-box">
+                                <div>Dibuat & Diperiksa Oleh,</div>
+                                <div style="font-size: 8pt; color: #666; margin-bottom: 4px;">PIC Pemeriksa K3</div>
+                                <div class="print-sig-space"></div>
+                                <div class="print-sig-line">( .................................................... )</div>
+                                <div style="font-size: 8pt; color: #666;">Tanggal: .......................................</div>
+                            </div>
+                            <div class="print-sig-box">
+                                <div>Mengetahui & Menyetujui,</div>
+                                <div style="font-size: 8pt; color: #666; margin-bottom: 4px;">Supervisor / Section Head K3</div>
+                                <div class="print-sig-space"></div>
+                                <div class="print-sig-line">( .................................................... )</div>
+                                <div style="font-size: 8pt; color: #666;">Tanggal: .......................................</div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -1910,26 +2112,56 @@
             document.getElementById('statRate').innerText = `${rate}%`;
         }
 
+        // Filter logic helper
+        function getFilteredData() {
+            return dataInspeksi.filter(item => {
+                const matchQuery = !currentFilter.query || 
+                    (item.pemilik && item.pemilik.toLowerCase().includes(currentFilter.query.toLowerCase())) ||
+                    (item.nama_apd && item.nama_apd.toLowerCase().includes(currentFilter.query.toLowerCase())) ||
+                    (item.sn && item.sn.toLowerCase().includes(currentFilter.query.toLowerCase())) ||
+                    (item.pic && item.pic.toLowerCase().includes(currentFilter.query.toLowerCase())) ||
+                    (item.spv && item.spv.toLowerCase().includes(currentFilter.query.toLowerCase()));
+
+                const matchKuartal = currentFilter.kuartal === 'all' || (item.kuartal && item.kuartal.includes(currentFilter.kuartal));
+                const matchStatus = currentFilter.status === 'all' || item.status === currentFilter.status;
+
+                return matchQuery && matchKuartal && matchStatus;
+            });
+        }
+
+        // Update Print Metadata (for Official Printable View)
+        function updatePrintMeta() {
+            const printMetaEl = document.getElementById('printMetaContent');
+            if (!printMetaEl) return;
+
+            const now = new Date();
+            const tglCetak = now.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }) + ', ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+
+            const filterKuartalText = currentFilter.kuartal === 'all' ? 'Semua Kuartal' : currentFilter.kuartal;
+            const filterStatusText = currentFilter.status === 'all' ? 'Semua Status' : (currentFilter.status === 'Done' ? 'Disetujui' : 'Menunggu SPV');
+            const filteredData = getFilteredData();
+
+            printMetaEl.innerHTML = `
+                <div><strong>Tgl Cetak:</strong> ${tglCetak}</div>
+                <div><strong>Filter:</strong> Periode (${filterKuartalText}) | Status (${filterStatusText})</div>
+                <div><strong>Total Data:</strong> ${filteredData.length} Laporan (Done: ${filteredData.filter(x => x.status === 'Done').length}, Pending: ${filteredData.filter(x => x.status === 'Pending').length})</div>
+            `;
+        }
+
         // Render Table Rows (Full Width)
         function renderTable() {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
             updateStats();
+            updatePrintMeta();
 
             // Filter logic
-            const filteredData = dataInspeksi.filter(item => {
-                const matchQuery = !currentFilter.query || 
-                    item.pemilik.toLowerCase().includes(currentFilter.query.toLowerCase()) ||
-                    item.nama_apd.toLowerCase().includes(currentFilter.query.toLowerCase()) ||
-                    item.sn.toLowerCase().includes(currentFilter.query.toLowerCase()) ||
-                    item.pic.toLowerCase().includes(currentFilter.query.toLowerCase()) ||
-                    item.spv.toLowerCase().includes(currentFilter.query.toLowerCase());
-
-                const matchKuartal = currentFilter.kuartal === 'all' || item.kuartal.includes(currentFilter.kuartal);
-                const matchStatus = currentFilter.status === 'all' || item.status === currentFilter.status;
-
-                return matchQuery && matchKuartal && matchStatus;
-            });
+            const filteredData = getFilteredData();
 
             if (filteredData.length === 0) {
                 tbody.innerHTML = `
@@ -2134,20 +2366,517 @@
             renderTable();
         }
 
+        // Print Report Action
+        function printReport() {
+            updatePrintMeta();
+            window.print();
+        }
+
+        // Export to Excel (.xlsx) with Professional Styling & Layout
+        async function exportExcel() {
+            const dataToExport = getFilteredData();
+
+            if (dataToExport.length === 0) {
+                showToast('Tidak ada data yang sesuai filter untuk diekspor!', 'warning');
+                return;
+            }
+
+            showToast('Sedang menyiapkan file Excel...', 'info');
+
+            // Fallback if ExcelJS is not loaded
+            if (typeof ExcelJS === 'undefined') {
+                console.warn('ExcelJS tidak tersedia, menggunakan fallback HTML-Excel.');
+                exportExcelFallback(dataToExport);
+                return;
+            }
+
+            try {
+                const workbook = new ExcelJS.Workbook();
+                workbook.creator = 'SafeGuard K3 System';
+                workbook.lastModifiedBy = 'SafeGuard K3';
+                workbook.created = new Date();
+                workbook.modified = new Date();
+
+                const worksheet = workbook.addWorksheet('Laporan Inspeksi APD', {
+                    views: [{ showGridLines: true }],
+                    pageSetup: {
+                        orientation: 'landscape',
+                        paperSize: 9, // A4
+                        fitToPage: true,
+                        fitToWidth: 1,
+                        fitToHeight: 0,
+                        margins: {
+                            left: 0.5, right: 0.5,
+                            top: 0.7, bottom: 0.7,
+                            header: 0.3, footer: 0.3
+                        }
+                    }
+                });
+
+                // Column Definitions & Widths
+                worksheet.columns = [
+                    { key: 'no', width: 6 },          // A: No
+                    { key: 'kuartal', width: 17 },     // B: Kuartal
+                    { key: 'tgl', width: 15 },         // C: Tgl Inspeksi
+                    { key: 'nama_apd', width: 30 },    // D: Nama APD
+                    { key: 'pemilik', width: 25 },     // E: Pemilik APD
+                    { key: 'sn', width: 22 },          // F: Serial Number
+                    { key: 'kondisi', width: 18 },     // G: Kondisi Fisik
+                    { key: 'pic', width: 22 },         // H: PIC Pemeriksa
+                    { key: 'spv', width: 25 },         // I: SPV / Leader
+                    { key: 'status', width: 20 }       // J: Status
+                ];
+
+                // --- ROW 1: MAIN TITLE BANNER ---
+                worksheet.mergeCells('A1:J1');
+                const titleCell = worksheet.getCell('A1');
+                titleCell.value = 'LAPORAN HASIL INSPEKSI & PEMERIKSAAN APD (K3)';
+                titleCell.font = { name: 'Calibri', size: 16, bold: true, color: { argb: 'FFFFFFFF' } };
+                titleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E293B' } };
+                titleCell.alignment = { vertical: 'middle', horizontal: 'center' };
+                worksheet.getRow(1).height = 36;
+
+                // --- ROW 2: SUBTITLE BANNER ---
+                worksheet.mergeCells('A2:J2');
+                const subTitleCell = worksheet.getCell('A2');
+                subTitleCell.value = 'Sistem Manajemen Keselamatan dan Kesehatan Kerja (SMK3) • SafeGuard K3';
+                subTitleCell.font = { name: 'Calibri', size: 10, italic: true, color: { argb: 'FF94A3B8' } };
+                subTitleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E293B' } };
+                subTitleCell.alignment = { vertical: 'middle', horizontal: 'center' };
+                worksheet.getRow(2).height = 20;
+
+                // --- ROW 3: EMPTY ROW ---
+                worksheet.getRow(3).height = 10;
+
+                // Dates & Filter Information
+                const now = new Date();
+                const tglCetak = now.toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }) + ', ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+
+                const filterKuartalText = currentFilter.kuartal === 'all' ? 'Semua Kuartal' : currentFilter.kuartal;
+                const filterStatusText = currentFilter.status === 'all' ? 'Semua Status' : (currentFilter.status === 'Done' ? 'Disetujui' : 'Menunggu SPV');
+
+                const totalItems = dataToExport.length;
+                const totalDone = dataToExport.filter(x => x.status === 'Done').length;
+                const totalPending = dataToExport.filter(x => x.status === 'Pending').length;
+
+                // --- ROW 4: INFO METADATA ---
+                worksheet.getCell('A4').value = 'Tanggal Cetak';
+                worksheet.getCell('B4').value = `: ${tglCetak}`;
+                worksheet.mergeCells('B4:E4');
+                worksheet.getCell('G4').value = 'Total Data';
+                worksheet.getCell('H4').value = `: ${totalItems} Laporan`;
+                worksheet.mergeCells('H4:J4');
+
+                // --- ROW 5: INFO FILTER & STATS ---
+                worksheet.getCell('A5').value = 'Periode Kuartal';
+                worksheet.getCell('B5').value = `: ${filterKuartalText}`;
+                worksheet.mergeCells('B5:E5');
+                worksheet.getCell('G5').value = 'Disetujui (Done)';
+                worksheet.getCell('H5').value = `: ${totalDone} Laporan`;
+                worksheet.mergeCells('H5:J5');
+
+                // --- ROW 6: INFO STATUS ---
+                worksheet.getCell('A6').value = 'Filter Status';
+                worksheet.getCell('B6').value = `: ${filterStatusText}`;
+                worksheet.mergeCells('B6:E6');
+                worksheet.getCell('G6').value = 'Menunggu SPV';
+                worksheet.getCell('H6').value = `: ${totalPending} Laporan`;
+                worksheet.mergeCells('H6:J6');
+
+                // Style Metadata Info Rows (4, 5, 6)
+                [4, 5, 6].forEach(r => {
+                    worksheet.getRow(r).height = 19;
+                    ['A', 'G'].forEach(col => {
+                        const cell = worksheet.getCell(`${col}${r}`);
+                        cell.font = { name: 'Calibri', size: 9.5, bold: true, color: { argb: 'FF475569' } };
+                        cell.alignment = { vertical: 'middle' };
+                    });
+                    ['B', 'H'].forEach(col => {
+                        const cell = worksheet.getCell(`${col}${r}`);
+                        cell.font = { name: 'Calibri', size: 9.5, color: { argb: 'FF0F172A' }, bold: (col === 'H') };
+                        cell.alignment = { vertical: 'middle' };
+                    });
+                });
+
+                // --- ROW 7: EMPTY ROW ---
+                worksheet.getRow(7).height = 10;
+
+                // --- ROW 8: TABLE HEADERS ---
+                const headers = [
+                    'NO',
+                    'KUARTAL',
+                    'TANGGAL',
+                    'NAMA APD',
+                    'PEMILIK APD',
+                    'NO. SERI (SN / ID)',
+                    'KONDISI FISIK',
+                    'PIC PEMERIKSA',
+                    'SPV / LEADER',
+                    'STATUS LAPORAN'
+                ];
+
+                const headerRow = worksheet.getRow(8);
+                headerRow.values = headers;
+                headerRow.height = 28;
+
+                const headerBorder = {
+                    top: { style: 'thin', color: { argb: 'FF94A3B8' } },
+                    left: { style: 'thin', color: { argb: 'FF94A3B8' } },
+                    bottom: { style: 'medium', color: { argb: 'FF1E293B' } },
+                    right: { style: 'thin', color: { argb: 'FF94A3B8' } }
+                };
+
+                for (let c = 1; c <= 10; c++) {
+                    const cell = headerRow.getCell(c);
+                    cell.font = { name: 'Calibri', size: 10, bold: true, color: { argb: 'FFFFFFFF' } };
+                    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4338CA' } }; // Indigo-700
+                    cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+                    cell.border = headerBorder;
+                }
+
+                // --- DATA ROWS (9+) ---
+                const thinBorder = {
+                    top: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+                    left: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+                    bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+                    right: { style: 'thin', color: { argb: 'FFE2E8F0' } }
+                };
+
+                dataToExport.forEach((item, index) => {
+                    const rowNumber = 9 + index;
+                    const row = worksheet.getRow(rowNumber);
+                    row.height = 24;
+
+                    const isEven = index % 2 === 0;
+                    const bgDefault = isEven ? 'FFFFFFFF' : 'FFF8FAFC';
+
+                    row.values = [
+                        index + 1,
+                        item.kuartal || '-',
+                        item.tgl_inspeksi || '-',
+                        item.nama_apd || '-',
+                        item.pemilik || '-',
+                        item.sn || '-',
+                        item.kondisi || 'Layak Pakai',
+                        item.pic || '-',
+                        item.spv || '-',
+                        item.status === 'Done' ? 'SELESAI (APPROVED)' : 'MENUNGGU SPV'
+                    ];
+
+                    // Base format for all cells in row
+                    for (let c = 1; c <= 10; c++) {
+                        const cell = row.getCell(c);
+                        cell.font = { name: 'Calibri', size: 10, color: { argb: 'FF0F172A' } };
+                        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bgDefault } };
+                        cell.border = thinBorder;
+                        cell.alignment = { vertical: 'middle' };
+                    }
+
+                    // Alignments
+                    row.getCell(1).alignment = { vertical: 'middle', horizontal: 'center' }; // No
+                    row.getCell(2).alignment = { vertical: 'middle', horizontal: 'center' }; // Kuartal
+                    row.getCell(3).alignment = { vertical: 'middle', horizontal: 'center' }; // Tanggal
+                    row.getCell(6).alignment = { vertical: 'middle', horizontal: 'center' }; // SN
+                    row.getCell(7).alignment = { vertical: 'middle', horizontal: 'center' }; // Kondisi
+                    row.getCell(10).alignment = { vertical: 'middle', horizontal: 'center' }; // Status
+
+                    // Highlight Kondisi Cell (Col 7 / G)
+                    const cellKondisi = row.getCell(7);
+                    if (item.kondisi === 'Layak Pakai') {
+                        cellKondisi.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDCFCE7' } }; // Soft Green
+                        cellKondisi.font = { name: 'Calibri', size: 10, bold: true, color: { argb: 'FF15803D' } };
+                    } else if (item.kondisi === 'Perlu Perbaikan') {
+                        cellKondisi.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEF3C7' } }; // Soft Amber
+                        cellKondisi.font = { name: 'Calibri', size: 10, bold: true, color: { argb: 'FFB45309' } };
+                    } else {
+                        cellKondisi.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEE2E2' } }; // Soft Red
+                        cellKondisi.font = { name: 'Calibri', size: 10, bold: true, color: { argb: 'FFB91C1C' } };
+                    }
+
+                    // Highlight Status Cell (Col 10 / J)
+                    const cellStatus = row.getCell(10);
+                    if (item.status === 'Done') {
+                        cellStatus.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFECFDF5' } };
+                        cellStatus.font = { name: 'Calibri', size: 9, bold: true, color: { argb: 'FF047857' } };
+                    } else {
+                        cellStatus.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFBEB' } };
+                        cellStatus.font = { name: 'Calibri', size: 9, bold: true, color: { argb: 'FFB45309' } };
+                    }
+                });
+
+                // --- SUMMARY FOOTER ROW ---
+                const footerRowNum = 9 + dataToExport.length;
+                const footerRow = worksheet.getRow(footerRowNum);
+                footerRow.height = 25;
+
+                worksheet.mergeCells(`A${footerRowNum}:I${footerRowNum}`);
+                const totalLabelCell = worksheet.getCell(`A${footerRowNum}`);
+                totalLabelCell.value = 'TOTAL DATA INSPEKSI APD';
+                totalLabelCell.font = { name: 'Calibri', size: 10, bold: true, color: { argb: 'FF1E293B' } };
+                totalLabelCell.alignment = { vertical: 'middle', horizontal: 'right' };
+                totalLabelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } };
+
+                const totalValCell = worksheet.getCell(`J${footerRowNum}`);
+                totalValCell.value = `${dataToExport.length} Laporan`;
+                totalValCell.font = { name: 'Calibri', size: 10, bold: true, color: { argb: 'FF4338CA' } };
+                totalValCell.alignment = { vertical: 'middle', horizontal: 'center' };
+                totalValCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } };
+
+                const doubleBottomBorder = {
+                    top: { style: 'thin', color: { argb: 'FF94A3B8' } },
+                    left: { style: 'thin', color: { argb: 'FF94A3B8' } },
+                    bottom: { style: 'double', color: { argb: 'FF1E293B' } },
+                    right: { style: 'thin', color: { argb: 'FF94A3B8' } }
+                };
+
+                for (let c = 1; c <= 10; c++) {
+                    footerRow.getCell(c).border = doubleBottomBorder;
+                }
+
+                // --- SIGNATURE SECTION ---
+                const sigStartRow = footerRowNum + 3;
+                
+                // Left Signature: PIC
+                worksheet.mergeCells(`B${sigStartRow}:D${sigStartRow}`);
+                const sigLeft1 = worksheet.getCell(`B${sigStartRow}`);
+                sigLeft1.value = 'Dibuat & Diperiksa Oleh:';
+                sigLeft1.font = { name: 'Calibri', size: 10, bold: true };
+                sigLeft1.alignment = { horizontal: 'center' };
+
+                worksheet.mergeCells(`B${sigStartRow + 1}:D${sigStartRow + 1}`);
+                const sigLeftRole = worksheet.getCell(`B${sigStartRow + 1}`);
+                sigLeftRole.value = 'PIC Pemeriksa K3';
+                sigLeftRole.font = { name: 'Calibri', size: 9, italic: true, color: { argb: 'FF64748B' } };
+                sigLeftRole.alignment = { horizontal: 'center' };
+
+                worksheet.mergeCells(`B${sigStartRow + 4}:D${sigStartRow + 4}`);
+                const sigLeftName = worksheet.getCell(`B${sigStartRow + 4}`);
+                sigLeftName.value = '( .................................................... )';
+                sigLeftName.font = { name: 'Calibri', size: 10, bold: true };
+                sigLeftName.alignment = { horizontal: 'center' };
+
+                worksheet.mergeCells(`B${sigStartRow + 5}:D${sigStartRow + 5}`);
+                const sigLeftDate = worksheet.getCell(`B${sigStartRow + 5}`);
+                sigLeftDate.value = 'Tanggal: .......................................';
+                sigLeftDate.font = { name: 'Calibri', size: 9, color: { argb: 'FF64748B' } };
+                sigLeftDate.alignment = { horizontal: 'center' };
+
+                // Right Signature: SPV
+                worksheet.mergeCells(`G${sigStartRow}:I${sigStartRow}`);
+                const sigRight1 = worksheet.getCell(`G${sigStartRow}`);
+                sigRight1.value = 'Mengetahui & Menyetujui:';
+                sigRight1.font = { name: 'Calibri', size: 10, bold: true };
+                sigRight1.alignment = { horizontal: 'center' };
+
+                worksheet.mergeCells(`G${sigStartRow + 1}:I${sigStartRow + 1}`);
+                const sigRightRole = worksheet.getCell(`G${sigStartRow + 1}`);
+                sigRightRole.value = 'Supervisor / Section Head K3';
+                sigRightRole.font = { name: 'Calibri', size: 9, italic: true, color: { argb: 'FF64748B' } };
+                sigRightRole.alignment = { horizontal: 'center' };
+
+                worksheet.mergeCells(`G${sigStartRow + 4}:I${sigStartRow + 4}`);
+                const sigRightName = worksheet.getCell(`G${sigStartRow + 4}`);
+                sigRightName.value = '( .................................................... )';
+                sigRightName.font = { name: 'Calibri', size: 10, bold: true };
+                sigRightName.alignment = { horizontal: 'center' };
+
+                worksheet.mergeCells(`G${sigStartRow + 5}:I${sigStartRow + 5}`);
+                const sigRightDate = worksheet.getCell(`G${sigStartRow + 5}`);
+                sigRightDate.value = 'Tanggal: .......................................';
+                sigRightDate.font = { name: 'Calibri', size: 9, color: { argb: 'FF64748B' } };
+                sigRightDate.alignment = { horizontal: 'center' };
+
+                // Generate Buffer & Download
+                const buffer = await workbook.xlsx.writeBuffer();
+                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                const fileDate = now.toISOString().slice(0, 10);
+                a.download = `Laporan_Inspeksi_APD_K3_${fileDate}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                showToast('File Excel (.xlsx) berhasil diunduh dengan format rapi!', 'success');
+            } catch (err) {
+                console.error('Error generating Excel:', err);
+                showToast('Terjadi kendala pembuatan Excel, mengunduh format cadangan...', 'warning');
+                exportExcelFallback(dataToExport);
+            }
+        }
+
+        // Fallback Formatted HTML/XML Spreadsheet (.xls)
+        function exportExcelFallback(dataToExport) {
+            const now = new Date();
+            const tglCetak = now.toLocaleDateString('id-ID', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            }) + ', ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+            
+            const filterKuartalText = currentFilter.kuartal === 'all' ? 'Semua Kuartal' : currentFilter.kuartal;
+            const filterStatusText = currentFilter.status === 'all' ? 'Semua Status' : (currentFilter.status === 'Done' ? 'Disetujui' : 'Menunggu SPV');
+
+            let html = `
+            <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+            <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                <!--[if gte mso 9]>
+                <xml>
+                    <x:ExcelWorkbook>
+                        <x:ExcelWorksheets>
+                            <x:ExcelWorksheet>
+                                <x:Name>Laporan Inspeksi APD</x:Name>
+                                <x:WorksheetOptions>
+                                    <x:DisplayGridlines/>
+                                </x:WorksheetOptions>
+                            </x:ExcelWorksheet>
+                        </x:ExcelWorksheets>
+                    </x:ExcelWorkbook>
+                </xml>
+                <![endif]-->
+                <style>
+                    table { border-collapse: collapse; font-family: 'Segoe UI', Calibri, sans-serif; font-size: 10pt; }
+                    th { background-color: #4338CA; color: #FFFFFF; font-weight: bold; border: 1px solid #1E293B; padding: 10px; text-align: center; }
+                    td { border: 1px solid #CBD5E1; padding: 8px; vertical-align: middle; }
+                    .title-main { background-color: #1E293B; color: #FFFFFF; font-size: 16pt; font-weight: bold; text-align: center; height: 40px; }
+                    .title-sub { background-color: #1E293B; color: #94A3B8; font-size: 10pt; font-style: italic; text-align: center; height: 24px; }
+                    .meta-label { font-weight: bold; color: #475569; }
+                    .kondisi-good { background-color: #DCFCE7; color: #15803D; font-weight: bold; text-align: center; }
+                    .kondisi-warn { background-color: #FEF3C7; color: #B45309; font-weight: bold; text-align: center; }
+                    .kondisi-danger { background-color: #FEE2E2; color: #B91C1C; font-weight: bold; text-align: center; }
+                    .status-done { background-color: #ECFDF5; color: #047857; font-weight: bold; text-align: center; }
+                    .status-pending { background-color: #FFFBEB; color: #B45309; font-weight: bold; text-align: center; }
+                    .text-center { text-align: center; }
+                    .total-row { background-color: #F1F5F9; font-weight: bold; border-top: 1px solid #94A3B8; border-bottom: 3px double #1E293B; }
+                </style>
+            </head>
+            <body>
+                <table border="1">
+                    <tr>
+                        <td colspan="10" class="title-main">LAPORAN HASIL INSPEKSI & PEMERIKSAAN APD (K3)</td>
+                    </tr>
+                    <tr>
+                        <td colspan="10" class="title-sub">Sistem Manajemen Keselamatan dan Kesehatan Kerja (SMK3) • SafeGuard K3</td>
+                    </tr>
+                    <tr><td colspan="10" style="border:none; height:10px;"></td></tr>
+                    <tr>
+                        <td class="meta-label">Tanggal Cetak</td>
+                        <td colspan="4">: ${tglCetak}</td>
+                        <td class="meta-label">Total Data</td>
+                        <td colspan="4">: ${dataToExport.length} Laporan</td>
+                    </tr>
+                    <tr>
+                        <td class="meta-label">Periode Kuartal</td>
+                        <td colspan="4">: ${filterKuartalText}</td>
+                        <td class="meta-label">Disetujui (Done)</td>
+                        <td colspan="4">: ${dataToExport.filter(x => x.status === 'Done').length} Laporan</td>
+                    </tr>
+                    <tr>
+                        <td class="meta-label">Filter Status</td>
+                        <td colspan="4">: ${filterStatusText}</td>
+                        <td class="meta-label">Menunggu SPV</td>
+                        <td colspan="4">: ${dataToExport.filter(x => x.status === 'Pending').length} Laporan</td>
+                    </tr>
+                    <tr><td colspan="10" style="border:none; height:10px;"></td></tr>
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">NO</th>
+                            <th style="width: 130px;">KUARTAL</th>
+                            <th style="width: 110px;">TANGGAL</th>
+                            <th style="width: 220px;">NAMA APD</th>
+                            <th style="width: 180px;">PEMILIK APD</th>
+                            <th style="width: 160px;">NO. SERI (SN/ID)</th>
+                            <th style="width: 140px;">KONDISI FISIK</th>
+                            <th style="width: 160px;">PIC PEMERIKSA</th>
+                            <th style="width: 180px;">SPV / LEADER</th>
+                            <th style="width: 150px;">STATUS LAPORAN</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+            dataToExport.forEach((item, idx) => {
+                let kondisiClass = 'kondisi-good';
+                if (item.kondisi === 'Perlu Perbaikan') kondisiClass = 'kondisi-warn';
+                else if (item.kondisi === 'Rusak / Ganti') kondisiClass = 'kondisi-danger';
+
+                const statusClass = item.status === 'Done' ? 'status-done' : 'status-pending';
+                const statusText = item.status === 'Done' ? 'SELESAI (APPROVED)' : 'MENUNGGU SPV';
+                const bgRow = idx % 2 === 0 ? '#FFFFFF' : '#F8FAFC';
+
+                html += `
+                    <tr style="background-color: ${bgRow};">
+                        <td class="text-center">${idx + 1}</td>
+                        <td class="text-center">${escapeHtml(item.kuartal || '-')}</td>
+                        <td class="text-center">${escapeHtml(item.tgl_inspeksi || '-')}</td>
+                        <td>${escapeHtml(item.nama_apd || '-')}</td>
+                        <td>${escapeHtml(item.pemilik || '-')}</td>
+                        <td class="text-center" style="mso-number-format:'\\@';">${escapeHtml(item.sn || '-')}</td>
+                        <td class="${kondisiClass}">${escapeHtml(item.kondisi || 'Layak Pakai')}</td>
+                        <td>${escapeHtml(item.pic || '-')}</td>
+                        <td>${escapeHtml(item.spv || '-')}</td>
+                        <td class="${statusClass}">${statusText}</td>
+                    </tr>`;
+            });
+
+            html += `
+                    <tr class="total-row">
+                        <td colspan="9" style="text-align: right; padding-right: 12px;">TOTAL DATA INSPEKSI APD</td>
+                        <td class="text-center">${dataToExport.length} Laporan</td>
+                    </tr>
+                    <tr><td colspan="10" style="border:none; height:20px;"></td></tr>
+                    <tr>
+                        <td colspan="4" style="border:none; text-align:center; font-weight:bold;">
+                            Dibuat & Diperiksa Oleh:<br>
+                            <span style="font-weight:normal; font-size:9pt; color:#666;">PIC Pemeriksa K3</span><br><br><br><br>
+                            ( .................................................... )<br>
+                            <span style="font-weight:normal; font-size:9pt; color:#666;">Tanggal: .......................................</span>
+                        </td>
+                        <td colspan="2" style="border:none;"></td>
+                        <td colspan="4" style="border:none; text-align:center; font-weight:bold;">
+                            Mengetahui & Menyetujui:<br>
+                            <span style="font-weight:normal; font-size:9pt; color:#666;">Supervisor / Section Head K3</span><br><br><br><br>
+                            ( .................................................... )<br>
+                            <span style="font-weight:normal; font-size:9pt; color:#666;">Tanggal: .......................................</span>
+                        </td>
+                    </tr>
+                </table>
+            </body>
+            </html>`;
+
+            const blob = new Blob(['\uFEFF' + html], { type: 'application/vnd.ms-excel;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Laporan_Inspeksi_APD_K3_${now.toISOString().slice(0,10)}.xls`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Ekspor Excel (.xls) berhasil didownload!', 'success');
+        }
+
         // Export to CSV
         function exportCSV() {
-            if (dataInspeksi.length === 0) {
+            const dataToExport = getFilteredData();
+
+            if (dataToExport.length === 0) {
                 showToast('Belum ada data untuk diekspor!', 'warning');
                 return;
             }
 
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "ID,Kuartal,Tanggal,Nama APD,Pemilik,Serial Number,Kondisi,PIC,SPV,Status\n";
+            let csvContent = "\uFEFF"; // UTF-8 BOM so Excel opens CSV in UTF-8 without garbled characters
+            csvContent += "No,Kuartal,Tanggal Inspeksi,Nama APD,Pemilik APD,Serial Number,Kondisi Fisik,PIC Pemeriksa,SPV / Leader,Status\n";
 
-            dataInspeksi.forEach(row => {
+            dataToExport.forEach((row, idx) => {
                 const clean = (text) => `"${(text || '').toString().replace(/"/g, '""')}"`;
                 csvContent += [
-                    row.id,
+                    idx + 1,
                     clean(row.kuartal),
                     clean(row.tgl_inspeksi),
                     clean(row.nama_apd),
@@ -2156,17 +2885,19 @@
                     clean(row.kondisi || 'Layak Pakai'),
                     clean(row.pic),
                     clean(row.spv),
-                    clean(row.status)
+                    clean(row.status === 'Done' ? 'Selesai (Approved)' : 'Menunggu SPV')
                 ].join(",") + "\n";
             });
 
-            const encodedUri = encodeURI(csvContent);
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
+            link.setAttribute("href", url);
             link.setAttribute("download", `laporan_inspeksi_k3_${new Date().toISOString().slice(0,10)}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            URL.revokeObjectURL(url);
             showToast('Ekspor CSV berhasil didownload!', 'success');
         }
 
