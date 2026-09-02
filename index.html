@@ -964,61 +964,153 @@
             margin-bottom: 4px;
         }
 
-        /* Master Data Grid */
-        .master-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+        /* Master Data Sub-Navigation & Full Card Layout */
+        .master-tabs-nav {
+            display: flex;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 6px;
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+        }
+
+        .master-tabs-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .master-tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 18px;
+            border: 1px solid transparent;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .master-tab-btn:hover {
+            color: var(--text-main);
+            background: var(--bg-input);
+        }
+
+        .master-tab-btn.active {
+            background: var(--primary-soft);
+            color: var(--primary);
+            border-color: rgba(79, 70, 229, 0.25);
+            box-shadow: 0 1px 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .master-tab-badge {
+            font-size: 0.72rem;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            background: var(--bg-input);
+            color: var(--text-muted);
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .master-tab-btn.active .master-tab-badge {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        /* Master Sub-View Container */
+        .master-sub-view {
+            display: none;
+            flex-direction: column;
             gap: 20px;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .master-sub-view.active {
+            display: flex;
+        }
+
+        /* Full Card Form Section */
+        .master-form-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .master-form-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .master-form-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr) auto;
+            gap: 14px;
+            align-items: flex-end;
+        }
+
+        .master-form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 14px;
+            align-items: flex-end;
         }
 
         @media (max-width: 1024px) {
-            .master-grid {
+            .master-form-grid-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .master-form-grid-2 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .master-form-grid-3,
+            .master-form-grid-2 {
                 grid-template-columns: 1fr;
             }
         }
 
-        .master-form-box {
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-
-        .master-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 480px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-
-        .master-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 10px 14px;
+        .master-table-toolbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: var(--transition);
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 14px;
         }
 
-        .master-item:hover {
-            border-color: var(--border-hover);
-            transform: translateX(2px);
+        .master-table-search {
+            position: relative;
+            flex: 1;
+            max-width: 380px;
+            min-width: 240px;
         }
 
-        .master-item-info h4 {
-            font-size: 0.88rem;
-            font-weight: 600;
-            color: var(--text-main);
+        .master-table-search input {
+            padding-left: 36px;
+            background: var(--bg-input);
         }
 
-        .master-item-info p {
-            font-size: 0.74rem;
-            color: var(--text-muted);
+        .master-table-search .input-icon {
+            left: 10px;
         }
 
         .toggle-form-btn {
@@ -1729,186 +1821,366 @@
         <!-- PAGE 2: MASTER DATA K3 MANAGEMENT -->
         <div class="page-view" id="pageMaster">
 
-            <div style="margin-bottom: 4px;">
-                <h2 style="font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700;">Kelola Data Master K3
-                </h2>
+            <div style="margin-bottom: 8px;">
+                <h2 style="font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700;">Kelola Data Master K3</h2>
                 <p style="font-size: 0.85rem; color: var(--text-muted);">
-                    Data yang ditambahkan di sini akan otomatis muncul sebagai pilihan rekomendasi (*autocomplete*) di
-                    halaman form inspeksi. Anda juga tetap bisa mengetik nama baru secara manual kapan saja.
+                    Kelola data master Karyawan/Pemilik APD, SPV Approver, PIC Pemeriksa, dan Jenis APD. Data ini otomatis menjadi pilihan rekomendasi (*autocomplete*) di Form Laporan Inspeksi.
                 </p>
             </div>
 
-            <!-- Master Data 3-Card Grid -->
-            <div class="master-grid">
+            <!-- Sub-Menu Navigation Tabs inside Page Master -->
+            <div class="master-tabs-nav">
+                <button type="button" class="master-tab-btn active" id="tabMasterPemilik" onclick="switchMasterTab('pemilik')">
+                    <i data-lucide="user" style="width: 16px; height: 16px;"></i>
+                    <span>Master Karyawan / Pemilik APD</span>
+                    <span class="master-tab-badge" id="badgeTabPemilik">0</span>
+                </button>
+                <button type="button" class="master-tab-btn" id="tabMasterSpv" onclick="switchMasterTab('spv')">
+                    <i data-lucide="award" style="width: 16px; height: 16px;"></i>
+                    <span>Master SPV / Leader (Approver)</span>
+                    <span class="master-tab-badge" id="badgeTabSpv">0</span>
+                </button>
+                <button type="button" class="master-tab-btn" id="tabMasterPic" onclick="switchMasterTab('pic')">
+                    <i data-lucide="user-check" style="width: 16px; height: 16px;"></i>
+                    <span>Master PIC Pemeriksa</span>
+                    <span class="master-tab-badge" id="badgeTabPic">0</span>
+                </button>
+                <button type="button" class="master-tab-btn" id="tabMasterApd" onclick="switchMasterTab('apd')">
+                    <i data-lucide="hard-hat" style="width: 16px; height: 16px;"></i>
+                    <span>Master Jenis APD</span>
+                    <span class="master-tab-badge" id="badgeTabApd">0</span>
+                </button>
+            </div>
 
-                <!-- Card 1: Master Pemilik APD (Karyawan) -->
+            <!-- TAB 1: MASTER PEMILIK APD / KARYAWAN (FULL CARD) -->
+            <div class="master-sub-view active" id="masterViewPemilik">
                 <div class="card">
                     <div class="card-header">
                         <div class="card-header-title">
-                            <i data-lucide="user" class="card-header-icon" style="width: 18px; height: 18px;"></i>
-                            <h3>Master Karyawan / Pemilik APD</h3>
+                            <i data-lucide="user" class="card-header-icon" style="width: 20px; height: 20px;"></i>
+                            <h3>Master Karyawan & Pemilik APD</h3>
                         </div>
-                        <span class="badge badge-good" id="countPemilik">0 Orang</span>
+                        <span class="badge badge-good" id="countPemilik">0 Orang Terdaftar</span>
                     </div>
 
                     <div class="card-body">
-                        <!-- Add Form -->
-                        <form id="formAddPemilik" class="master-form-box" onsubmit="addMasterItem(event, 'pemilik')">
-                            <div class="form-group" style="margin-bottom: 10px;">
-                                <label for="m_pemilik_nama">Nama Karyawan</label>
-                                <input type="text" id="m_pemilik_nama" placeholder="Misal: Budi Santoso" required
-                                    style="padding-left: 12px;">
+                        <!-- Full Width Form Card -->
+                        <div class="master-form-card">
+                            <div class="master-form-title">
+                                <i data-lucide="user-plus" style="width: 16px; height: 16px; color: var(--primary);"></i>
+                                Form Tambah Karyawan / Pemilik APD Baru
                             </div>
-                            <div class="form-group" style="margin-bottom: 10px;">
-                                <label for="m_pemilik_dept">Departemen / Divisi</label>
-                                <input type="text" id="m_pemilik_dept" placeholder="Misal: Produksi / Maintenance"
-                                    style="padding-left: 12px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="m_pemilik_sn">Default Serial Number (SN)</label>
-                                <input type="text" id="m_pemilik_sn" placeholder="Misal: SN-HLM-2024-001"
-                                    style="padding-left: 12px;">
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm btn-block">
-                                <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Tambah Karyawan
-                            </button>
-                        </form>
+                            <form id="formAddPemilik" onsubmit="addMasterItem(event, 'pemilik')">
+                                <div class="master-form-grid-3">
+                                    <div class="form-group">
+                                        <label for="m_pemilik_nama">Nama Lengkap Karyawan</label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="user" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="text" id="m_pemilik_nama" placeholder="Misal: Budi Santoso" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="m_pemilik_dept">Departemen / Divisi</label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="building-2" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="text" id="m_pemilik_dept" placeholder="Misal: Maintenance / Workshop">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="m_pemilik_sn">Default Serial Number (SN) / ID APD</label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="hash" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="text" id="m_pemilik_sn" placeholder="Misal: SN-HLM-2024-001">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary" style="height: 42px; width: 100%;">
+                                            <i data-lucide="plus" style="width: 16px; height: 16px;"></i> Simpan Karyawan
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
 
-                        <!-- List Items -->
-                        <div class="master-list" id="listMasterPemilik">
-                            <!-- Items populated by JS -->
+                        <!-- Search & Table Header Toolbar -->
+                        <div class="master-table-toolbar">
+                            <div class="master-table-search">
+                                <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="searchPemilik" placeholder="Cari nama karyawan, divisi, atau SN..." oninput="handleMasterSearch('pemilik', this.value)">
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                Data otomatis sinkron dengan rekomendasi pilihan form inspeksi
+                            </div>
+                        </div>
+
+                        <!-- Full Width Table -->
+                        <div class="table-full-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 8%;">No</th>
+                                        <th style="width: 32%;">Nama Karyawan</th>
+                                        <th style="width: 28%;">Departemen / Divisi</th>
+                                        <th style="width: 22%;">Default Serial Number (SN)</th>
+                                        <th style="width: 10%; text-align: right;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableMasterPemilik">
+                                    <!-- populated by JS -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Card 2: Master SPV / Leader Approver -->
+            <!-- TAB 2: MASTER SPV / LEADER APPROVER (FULL CARD) -->
+            <div class="master-sub-view" id="masterViewSpv">
                 <div class="card">
                     <div class="card-header">
                         <div class="card-header-title">
-                            <i data-lucide="award" class="card-header-icon" style="width: 18px; height: 18px;"></i>
+                            <i data-lucide="award" class="card-header-icon" style="width: 20px; height: 20px;"></i>
                             <h3>Master SPV / Leader (Approver)</h3>
                         </div>
-                        <span class="badge badge-warning" id="countSpv">0 Orang</span>
+                        <span class="badge badge-warning" id="countSpv">0 Orang Terdaftar</span>
                     </div>
 
                     <div class="card-body">
-                        <!-- Add Form -->
-                        <form id="formAddSpv" class="master-form-box" onsubmit="addMasterItem(event, 'spv')">
-                            <div class="form-group" style="margin-bottom: 10px;">
-                                <label for="m_spv_nama">Nama SPV / Leader</label>
-                                <input type="text" id="m_spv_nama" placeholder="Misal: Ir. Hendra Wijaya" required
-                                    style="padding-left: 12px;">
+                        <!-- Full Width Form Card -->
+                        <div class="master-form-card">
+                            <div class="master-form-title">
+                                <i data-lucide="user-plus" style="width: 16px; height: 16px; color: var(--warning);"></i>
+                                Form Tambah SPV / Section Head / Leader Baru
                             </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="m_spv_jabatan">Jabatan / Divisi</label>
-                                <input type="text" id="m_spv_jabatan" placeholder="Misal: Supervisor K3 / Section Head"
-                                    style="padding-left: 12px;">
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm btn-block">
-                                <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Tambah SPV / Leader
-                            </button>
-                        </form>
+                            <form id="formAddSpv" onsubmit="addMasterItem(event, 'spv')">
+                                <div class="master-form-grid-2">
+                                    <div class="form-group">
+                                        <label for="m_spv_nama">Nama Lengkap SPV / Leader</label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="award" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="text" id="m_spv_nama" placeholder="Misal: Ir. Hendra Wijaya" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="m_spv_jabatan">Jabatan / Bagian</label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="briefcase" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="text" id="m_spv_jabatan" placeholder="Misal: Section Head Safety & K3">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary" style="height: 42px; width: 100%;">
+                                            <i data-lucide="plus" style="width: 16px; height: 16px;"></i> Simpan SPV
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
 
-                        <!-- List Items -->
-                        <div class="master-list" id="listMasterSpv">
-                            <!-- Items populated by JS -->
+                        <!-- Search & Table Header Toolbar -->
+                        <div class="master-table-toolbar">
+                            <div class="master-table-search">
+                                <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="searchSpv" placeholder="Cari nama SPV atau jabatan..." oninput="handleMasterSearch('spv', this.value)">
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                Bertugas sebagai approver / penandatangan laporan inspeksi
+                            </div>
+                        </div>
+
+                        <!-- Full Width Table -->
+                        <div class="table-full-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 8%;">No</th>
+                                        <th style="width: 42%;">Nama SPV / Leader</th>
+                                        <th style="width: 40%;">Jabatan / Posisi</th>
+                                        <th style="width: 10%; text-align: right;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableMasterSpv">
+                                    <!-- populated by JS -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-
-                <!-- Card 3: Master PIC Pemeriksa -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-header-title">
-                            <i data-lucide="user-check" class="card-header-icon" style="width: 18px; height: 18px;"></i>
-                            <h3>Master PIC Pemeriksa</h3>
-                        </div>
-                        <span class="badge badge-quarter" id="countPic">0 Orang</span>
-                    </div>
-
-                    <div class="card-body">
-                        <!-- Add Form -->
-                        <form id="formAddPic" class="master-form-box" onsubmit="addMasterItem(event, 'pic')">
-                            <div class="form-group" style="margin-bottom: 10px;">
-                                <label for="m_pic_nama">Nama PIC Pemeriksa</label>
-                                <input type="text" id="m_pic_nama" placeholder="Misal: Ahmad Fauzi" required
-                                    style="padding-left: 12px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="m_pic_id">ID / Nomor Reg. K3</label>
-                                <input type="text" id="m_pic_id" placeholder="Misal: PIC-K3-007"
-                                    style="padding-left: 12px;">
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm btn-block">
-                                <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Tambah PIC
-                            </button>
-                        </form>
-
-                        <!-- List Items -->
-                        <div class="master-list" id="listMasterPic">
-                            <!-- Items populated by JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4: Master APD -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-header-title">
-                            <i data-lucide="hard-hat" class="card-header-icon" style="width: 18px; height: 18px;"></i>
-                            <h3>Master Jenis APD</h3>
-                        </div>
-                        <span class="badge badge-quarter" id="countApd">0 Jenis</span>
-                    </div>
-
-                    <div class="card-body">
-                        <!-- Add Form -->
-                        <form id="formAddApd" class="master-form-box" onsubmit="addMasterItem(event, 'apd')">
-                            <div class="form-group" style="margin-bottom: 10px;">
-                                <label for="m_apd_nama">Nama APD</label>
-                                <input type="text" id="m_apd_nama" placeholder="Misal: Helm Safety" required
-                                    style="padding-left: 12px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 10px;">
-                                <label for="m_apd_kategori">Kategori / Fungsi</label>
-                                <input type="text" id="m_apd_kategori" placeholder="Misal: Pelindung Kepala"
-                                    style="padding-left: 12px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="m_apd_standar">Standar / Sertifikasi</label>
-                                <input type="text" id="m_apd_standar" placeholder="Misal: SNI / ANSI / CE"
-                                    style="padding-left: 12px;">
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm btn-block">
-                                <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Tambah APD
-                            </button>
-                        </form>
-
-                        <!-- Quick Add Preset APD -->
-                        <div style="margin-top: 10px; padding: 10px; background: var(--primary-soft); border-radius: var(--radius-sm); border: 1px dashed rgba(79,70,229,0.3);">
-                            <div style="font-size: 0.75rem; font-weight: 600; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-                                <i data-lucide="zap" style="width: 13px; height: 13px;"></i> Tambah Cepat Standar APD K3
-                            </div>
-                            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                                <button type="button" class="tag-pill" onclick="quickAddApd('Helm Safety', 'Pelindung Kepala', 'SNI 8011:2014')">+ Helm Safety</button>
-                                <button type="button" class="tag-pill" onclick="quickAddApd('Safety Shoes', 'Pelindung Kaki', 'SNI ISO 20345')">+ Safety Shoes</button>
-                                <button type="button" class="tag-pill" onclick="quickAddApd('Safety Glasses', 'Pelindung Mata', 'ANSI Z87.1')">+ Safety Glasses</button>
-                                <button type="button" class="tag-pill" onclick="quickAddApd('Hearing Protection', 'Pelindung Pendengaran', 'SNI 7326:2008')">+ Hearing Protection</button>
-                                <button type="button" class="tag-pill" onclick="quickAddApd('Hand Protection', 'Pelindung Tangan', 'EN 388')">+ Hand Protection</button>
-                                <button type="button" class="tag-pill" onclick="quickAddApd('Respiratory Protection', 'Pelindung Pernapasan', 'NIOSH / EN 149')">+ Respiratory Protection</button>
-                                <button type="button" class="tag-pill" onclick="quickAddApd('Eye &amp; Face Protection', 'Pelindung Mata &amp; Wajah', 'ANSI Z87.1')">+ Eye &amp; Face Protection</button>
-                                <button type="button" class="tag-pill" onclick="quickAddApd('Body Protection', 'Pelindung Tubuh', 'EN ISO 13688')">+ Body Protection</button>
-                            </div>
-                        </div>
-
-                        <!-- List Items -->
-                        <div class="master-list" id="listMasterApd">
-                            <!-- Items populated by JS -->
-                        </div>
-                    </div>
-                </div>
-
             </div>
+
+            <!-- TAB 3: MASTER PIC PEMERIKSA (FULL CARD) -->
+            <div class="master-sub-view" id="masterViewPic">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-header-title">
+                            <i data-lucide="user-check" class="card-header-icon" style="width: 20px; height: 20px;"></i>
+                            <h3>Master PIC Pemeriksa K3</h3>
+                        </div>
+                        <span class="badge badge-quarter" id="countPic">0 Orang Terdaftar</span>
+                    </div>
+
+                    <div class="card-body">
+                        <!-- Full Width Form Card -->
+                        <div class="master-form-card">
+                            <div class="master-form-title">
+                                <i data-lucide="user-plus" style="width: 16px; height: 16px; color: var(--primary);"></i>
+                                Form Tambah PIC Petugas Pemeriksa K3 Baru
+                            </div>
+                            <form id="formAddPic" onsubmit="addMasterItem(event, 'pic')">
+                                <div class="master-form-grid-2">
+                                    <div class="form-group">
+                                        <label for="m_pic_nama">Nama Lengkap PIC Pemeriksa</label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="user-check" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="text" id="m_pic_nama" placeholder="Misal: Ahmad Fauzi" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="m_pic_id">ID / Nomor Registrasi Petugas K3</label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="badge-check" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="text" id="m_pic_id" placeholder="Misal: PIC-K3-007">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary" style="height: 42px; width: 100%;">
+                                            <i data-lucide="plus" style="width: 16px; height: 16px;"></i> Simpan PIC
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Search & Table Header Toolbar -->
+                        <div class="master-table-toolbar">
+                            <div class="master-table-search">
+                                <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="searchPic" placeholder="Cari nama PIC atau ID registrasi..." oninput="handleMasterSearch('pic', this.value)">
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                Petugas yang melakukan inspeksi fisik APD di lapangan
+                            </div>
+                        </div>
+
+                        <!-- Full Width Table -->
+                        <div class="table-full-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 8%;">No</th>
+                                        <th style="width: 42%;">Nama PIC Pemeriksa</th>
+                                        <th style="width: 40%;">ID / Nomor Registrasi K3</th>
+                                        <th style="width: 10%; text-align: right;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableMasterPic">
+                                    <!-- populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: MASTER JENIS APD (FULL CARD) -->
+            <div class="master-sub-view" id="masterViewApd">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-header-title">
+                            <i data-lucide="hard-hat" class="card-header-icon" style="width: 20px; height: 20px;"></i>
+                            <h3>Master Jenis APD (Alat Pelindung Diri)</h3>
+                        </div>
+                        <span class="badge badge-quarter" id="countApd">0 Jenis Terdaftar</span>
+                    </div>
+
+                    <div class="card-body">
+                        <!-- Full Width Form Card -->
+                        <div class="master-form-card">
+                            <div class="master-form-title">
+                                <i data-lucide="shield-plus" style="width: 16px; height: 16px; color: var(--primary);"></i>
+                                Form Tambah Jenis APD Baru
+                            </div>
+                            <form id="formAddApd" onsubmit="addMasterItem(event, 'apd')">
+                                <div class="master-form-grid-3">
+                                    <div class="form-group">
+                                        <label for="m_apd_nama">Nama APD</label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="hard-hat" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="text" id="m_apd_nama" placeholder="Misal: Helm Safety" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="m_apd_kategori">Kategori / Bagian Tubuh</label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="shield" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="text" id="m_apd_kategori" placeholder="Misal: Pelindung Kepala">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="m_apd_standar">Standar / Regulasi / Sertifikasi</label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="check-circle-2" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="text" id="m_apd_standar" placeholder="Misal: SNI 8011:2014 / ANSI Z87.1">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary" style="height: 42px; width: 100%;">
+                                            <i data-lucide="plus" style="width: 16px; height: 16px;"></i> Simpan APD
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- Quick Add Presets Bar -->
+                            <div style="margin-top: 14px; padding: 12px 16px; background: var(--primary-soft); border-radius: var(--radius-sm); border: 1px dashed rgba(79,70,229,0.3);">
+                                <div style="font-size: 0.78rem; font-weight: 700; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                    <i data-lucide="zap" style="width: 14px; height: 14px;"></i> Tambah Cepat Standar 8 APD K3:
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                    <button type="button" class="tag-pill" onclick="quickAddApd('Helm Safety', 'Pelindung Kepala', 'SNI 8011:2014')">+ Helm Safety</button>
+                                    <button type="button" class="tag-pill" onclick="quickAddApd('Safety Shoes', 'Pelindung Kaki', 'SNI ISO 20345')">+ Safety Shoes</button>
+                                    <button type="button" class="tag-pill" onclick="quickAddApd('Safety Glasses', 'Pelindung Mata', 'ANSI Z87.1')">+ Safety Glasses</button>
+                                    <button type="button" class="tag-pill" onclick="quickAddApd('Hearing Protection', 'Pelindung Pendengaran', 'SNI 7326:2008')">+ Hearing Protection</button>
+                                    <button type="button" class="tag-pill" onclick="quickAddApd('Hand Protection', 'Pelindung Tangan', 'EN 388')">+ Hand Protection</button>
+                                    <button type="button" class="tag-pill" onclick="quickAddApd('Respiratory Protection', 'Pelindung Pernapasan', 'NIOSH / EN 149')">+ Respiratory Protection</button>
+                                    <button type="button" class="tag-pill" onclick="quickAddApd('Eye &amp; Face Protection', 'Pelindung Mata &amp; Wajah', 'ANSI Z87.1')">+ Eye &amp; Face Protection</button>
+                                    <button type="button" class="tag-pill" onclick="quickAddApd('Body Protection', 'Pelindung Tubuh', 'EN ISO 13688')">+ Body Protection</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Search & Table Header Toolbar -->
+                        <div class="master-table-toolbar">
+                            <div class="master-table-search">
+                                <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="searchApd" placeholder="Cari nama APD, kategori, standar..." oninput="handleMasterSearch('apd', this.value)">
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                Otomatis muncul pada autocomplete & quick tags form inspeksi
+                            </div>
+                        </div>
+
+                        <!-- Full Width Table -->
+                        <div class="table-full-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 8%;">No</th>
+                                        <th style="width: 32%;">Nama APD</th>
+                                        <th style="width: 28%;">Kategori / Bagian Tubuh</th>
+                                        <th style="width: 22%;">Standar / Sertifikasi</th>
+                                        <th style="width: 10%; text-align: right;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableMasterApd">
+                                    <!-- populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </main>
@@ -2098,98 +2370,285 @@
             }
         }
 
-        // Render Master Data Lists on Page 2
+        let currentMasterTab = 'pemilik';
+        let masterSearchQuery = { pemilik: '', spv: '', pic: '', apd: '' };
+
+        // Sub-Navigation Switcher inside Master Data
+        function switchMasterTab(tabName) {
+            currentMasterTab = tabName;
+            const tabs = ['pemilik', 'spv', 'pic', 'apd'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tabMaster${t.charAt(0).toUpperCase() + t.slice(1)}`);
+                const view = document.getElementById(`masterView${t.charAt(0).toUpperCase() + t.slice(1)}`);
+                if (btn) btn.classList.toggle('active', t === tabName);
+                if (view) view.classList.toggle('active', t === tabName);
+            });
+            lucide.createIcons();
+        }
+
+        // Live Search Handler for Master Data
+        function handleMasterSearch(category, val) {
+            masterSearchQuery[category] = (val || '').trim().toLowerCase();
+            renderMasterLists();
+        }
+
+        // Render Master Data Lists on Page 2 (Full Card & Table)
         function renderMasterLists() {
-            // 1. Pemilik List
-            const listPemilik = document.getElementById('listMasterPemilik');
-            document.getElementById('countPemilik').innerText = `${masterData.pemilik.length} Orang`;
-            listPemilik.innerHTML = '';
-            if (masterData.pemilik.length === 0) {
-                listPemilik.innerHTML = '<p style="font-size:0.8rem; color:var(--text-muted); text-align:center; padding:12px;">Belum ada master karyawan.</p>';
-            } else {
-                masterData.pemilik.forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'master-item';
-                    div.innerHTML = `
-                        <div class="master-item-info">
-                            <h4>${escapeHtml(item.nama)}</h4>
-                            <p>${escapeHtml(item.dept || 'Umum')} • SN: ${escapeHtml(item.sn || '-')}</p>
-                        </div>
-                        <button class="btn btn-danger btn-sm" onclick="deleteMasterItem('pemilik', ${item.id})" title="Hapus">
-                            <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
-                        </button>
-                    `;
-                    listPemilik.appendChild(div);
+            // Update tab badges & card header counts
+            const totalPemilik = (masterData.pemilik || []).length;
+            const totalSpv = (masterData.spv || []).length;
+            const totalPic = (masterData.pic || []).length;
+            const totalApd = (masterData.apd || []).length;
+
+            const bPemilik = document.getElementById('badgeTabPemilik');
+            const bSpv = document.getElementById('badgeTabSpv');
+            const bPic = document.getElementById('badgeTabPic');
+            const bApd = document.getElementById('badgeTabApd');
+
+            if (bPemilik) bPemilik.innerText = totalPemilik;
+            if (bSpv) bSpv.innerText = totalSpv;
+            if (bPic) bPic.innerText = totalPic;
+            if (bApd) bApd.innerText = totalApd;
+
+            const cPemilik = document.getElementById('countPemilik');
+            const cSpv = document.getElementById('countSpv');
+            const cPic = document.getElementById('countPic');
+            const cApd = document.getElementById('countApd');
+
+            if (cPemilik) cPemilik.innerText = `${totalPemilik} Orang Terdaftar`;
+            if (cSpv) cSpv.innerText = `${totalSpv} Orang Terdaftar`;
+            if (cPic) cPic.innerText = `${totalPic} Orang Terdaftar`;
+            if (cApd) cApd.innerText = `${totalApd} Jenis Terdaftar`;
+
+            // 1. Table Pemilik
+            const tbodyPemilik = document.getElementById('tableMasterPemilik');
+            if (tbodyPemilik) {
+                tbodyPemilik.innerHTML = '';
+                const qPemilik = masterSearchQuery.pemilik;
+                const filteredPemilik = (masterData.pemilik || []).filter(item => {
+                    if (!qPemilik) return true;
+                    return (item.nama && item.nama.toLowerCase().includes(qPemilik)) ||
+                           (item.dept && item.dept.toLowerCase().includes(qPemilik)) ||
+                           (item.sn && item.sn.toLowerCase().includes(qPemilik));
                 });
+
+                if (filteredPemilik.length === 0) {
+                    tbodyPemilik.innerHTML = `
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state" style="padding: 24px;">
+                                    <div class="empty-icon"><i data-lucide="user-x"></i></div>
+                                    <h4>${qPemilik ? 'Karyawan tidak ditemukan' : 'Belum ada data master karyawan'}</h4>
+                                    <p style="font-size: 0.8rem;">${qPemilik ? 'Coba gunakan kata kunci pencarian yang lain.' : 'Gunakan form di atas untuk menambahkan karyawan baru.'}</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    filteredPemilik.forEach((item, index) => {
+                        const tr = document.createElement('tr');
+                        const initial = item.nama ? item.nama.charAt(0).toUpperCase() : 'K';
+                        tr.innerHTML = `
+                            <td style="color: var(--text-muted); font-weight: 600;">${index + 1}</td>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="avatar-initial">${initial}</div>
+                                    <div>
+                                        <div class="user-name">${escapeHtml(item.nama)}</div>
+                                        <div class="user-sub">Terdaftar di sistem K3</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge badge-quarter" style="font-size: 0.8rem; font-weight: 500;">
+                                    <i data-lucide="building-2" style="width: 12px; height: 12px;"></i>
+                                    ${escapeHtml(item.dept || 'Umum')}
+                                </span>
+                            </td>
+                            <td>
+                                <code style="background: var(--bg-input); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); font-size: 0.82rem; font-weight: 600;">
+                                    ${escapeHtml(item.sn || '-')}
+                                </code>
+                            </td>
+                            <td style="text-align: right;">
+                                <button class="btn btn-danger btn-sm" onclick="deleteMasterItem('pemilik', ${item.id})" title="Hapus Karyawan" style="padding: 6px 10px;">
+                                    <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Hapus
+                                </button>
+                            </td>
+                        `;
+                        tbodyPemilik.appendChild(tr);
+                    });
+                }
             }
 
-            // 2. SPV List
-            const listSpv = document.getElementById('listMasterSpv');
-            document.getElementById('countSpv').innerText = `${masterData.spv.length} Orang`;
-            listSpv.innerHTML = '';
-            if (masterData.spv.length === 0) {
-                listSpv.innerHTML = '<p style="font-size:0.8rem; color:var(--text-muted); text-align:center; padding:12px;">Belum ada master SPV.</p>';
-            } else {
-                masterData.spv.forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'master-item';
-                    div.innerHTML = `
-                        <div class="master-item-info">
-                            <h4>${escapeHtml(item.nama)}</h4>
-                            <p>${escapeHtml(item.jabatan || 'Supervisor / Leader')}</p>
-                        </div>
-                        <button class="btn btn-danger btn-sm" onclick="deleteMasterItem('spv', ${item.id})" title="Hapus">
-                            <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
-                        </button>
-                    `;
-                    listSpv.appendChild(div);
+            // 2. Table SPV
+            const tbodySpv = document.getElementById('tableMasterSpv');
+            if (tbodySpv) {
+                tbodySpv.innerHTML = '';
+                const qSpv = masterSearchQuery.spv;
+                const filteredSpv = (masterData.spv || []).filter(item => {
+                    if (!qSpv) return true;
+                    return (item.nama && item.nama.toLowerCase().includes(qSpv)) ||
+                           (item.jabatan && item.jabatan.toLowerCase().includes(qSpv));
                 });
+
+                if (filteredSpv.length === 0) {
+                    tbodySpv.innerHTML = `
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-state" style="padding: 24px;">
+                                    <div class="empty-icon"><i data-lucide="award"></i></div>
+                                    <h4>${qSpv ? 'SPV tidak ditemukan' : 'Belum ada data master SPV'}</h4>
+                                    <p style="font-size: 0.8rem;">${qSpv ? 'Coba gunakan kata kunci pencarian yang lain.' : 'Gunakan form di atas untuk menambahkan SPV / Leader baru.'}</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    filteredSpv.forEach((item, index) => {
+                        const tr = document.createElement('tr');
+                        const initial = item.nama ? item.nama.charAt(0).toUpperCase() : 'S';
+                        tr.innerHTML = `
+                            <td style="color: var(--text-muted); font-weight: 600;">${index + 1}</td>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="avatar-initial" style="background: var(--warning-soft); color: var(--warning); border-color: rgba(245, 158, 11, 0.3);">${initial}</div>
+                                    <div>
+                                        <div class="user-name">${escapeHtml(item.nama)}</div>
+                                        <div class="user-sub">Supervisor / Section Head</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge badge-warning" style="font-size: 0.8rem; font-weight: 500;">
+                                    <i data-lucide="briefcase" style="width: 12px; height: 12px;"></i>
+                                    ${escapeHtml(item.jabatan || 'Supervisor / Leader')}
+                                </span>
+                            </td>
+                            <td style="text-align: right;">
+                                <button class="btn btn-danger btn-sm" onclick="deleteMasterItem('spv', ${item.id})" title="Hapus SPV" style="padding: 6px 10px;">
+                                    <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Hapus
+                                </button>
+                            </td>
+                        `;
+                        tbodySpv.appendChild(tr);
+                    });
+                }
             }
 
-            // 3. PIC List
-            const listPic = document.getElementById('listMasterPic');
-            document.getElementById('countPic').innerText = `${masterData.pic.length} Orang`;
-            listPic.innerHTML = '';
-            if (masterData.pic.length === 0) {
-                listPic.innerHTML = '<p style="font-size:0.8rem; color:var(--text-muted); text-align:center; padding:12px;">Belum ada master PIC.</p>';
-            } else {
-                masterData.pic.forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'master-item';
-                    div.innerHTML = `
-                        <div class="master-item-info">
-                            <h4>${escapeHtml(item.nama)}</h4>
-                            <p>ID: ${escapeHtml(item.idPic || '-')}</p>
-                        </div>
-                        <button class="btn btn-danger btn-sm" onclick="deleteMasterItem('pic', ${item.id})" title="Hapus">
-                            <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
-                        </button>
-                    `;
-                    listPic.appendChild(div);
+            // 3. Table PIC
+            const tbodyPic = document.getElementById('tableMasterPic');
+            if (tbodyPic) {
+                tbodyPic.innerHTML = '';
+                const qPic = masterSearchQuery.pic;
+                const filteredPic = (masterData.pic || []).filter(item => {
+                    if (!qPic) return true;
+                    return (item.nama && item.nama.toLowerCase().includes(qPic)) ||
+                           (item.idPic && item.idPic.toLowerCase().includes(qPic));
                 });
+
+                if (filteredPic.length === 0) {
+                    tbodyPic.innerHTML = `
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-state" style="padding: 24px;">
+                                    <div class="empty-icon"><i data-lucide="user-x"></i></div>
+                                    <h4>${qPic ? 'PIC tidak ditemukan' : 'Belum ada data master PIC'}</h4>
+                                    <p style="font-size: 0.8rem;">${qPic ? 'Coba gunakan kata kunci pencarian yang lain.' : 'Gunakan form di atas untuk menambahkan PIC Pemeriksa baru.'}</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    filteredPic.forEach((item, index) => {
+                        const tr = document.createElement('tr');
+                        const initial = item.nama ? item.nama.charAt(0).toUpperCase() : 'P';
+                        tr.innerHTML = `
+                            <td style="color: var(--text-muted); font-weight: 600;">${index + 1}</td>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="avatar-initial" style="background: var(--primary-soft); color: var(--primary); border-color: rgba(79, 70, 229, 0.3);">${initial}</div>
+                                    <div>
+                                        <div class="user-name">${escapeHtml(item.nama)}</div>
+                                        <div class="user-sub">Petugas Pemeriksa Lapangan</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <code style="background: var(--bg-input); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); font-size: 0.82rem; font-weight: 600; color: var(--primary);">
+                                    ${escapeHtml(item.idPic || '-')}
+                                </code>
+                            </td>
+                            <td style="text-align: right;">
+                                <button class="btn btn-danger btn-sm" onclick="deleteMasterItem('pic', ${item.id})" title="Hapus PIC" style="padding: 6px 10px;">
+                                    <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Hapus
+                                </button>
+                            </td>
+                        `;
+                        tbodyPic.appendChild(tr);
+                    });
+                }
             }
 
-            // 4. APD List
-            const listApd = document.getElementById('listMasterApd');
-            document.getElementById('countApd').innerText = `${(masterData.apd || []).length} Jenis`;
-            listApd.innerHTML = '';
-            if (!masterData.apd || masterData.apd.length === 0) {
-                listApd.innerHTML = '<p style="font-size:0.8rem; color:var(--text-muted); text-align:center; padding:12px;">Belum ada master APD.</p>';
-            } else {
-                masterData.apd.forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'master-item';
-                    div.innerHTML = `
-                        <div class="master-item-info">
-                            <h4>${escapeHtml(item.nama)}</h4>
-                            <p>${escapeHtml(item.kategori || '-')}${item.standar ? ' • ' + escapeHtml(item.standar) : ''}</p>
-                        </div>
-                        <button class="btn btn-danger btn-sm" onclick="deleteMasterItem('apd', ${item.id})" title="Hapus">
-                            <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
-                        </button>
-                    `;
-                    listApd.appendChild(div);
+            // 4. Table APD
+            const tbodyApd = document.getElementById('tableMasterApd');
+            if (tbodyApd) {
+                tbodyApd.innerHTML = '';
+                const qApd = masterSearchQuery.apd;
+                const filteredApd = (masterData.apd || []).filter(item => {
+                    if (!qApd) return true;
+                    return (item.nama && item.nama.toLowerCase().includes(qApd)) ||
+                           (item.kategori && item.kategori.toLowerCase().includes(qApd)) ||
+                           (item.standar && item.standar.toLowerCase().includes(qApd));
                 });
+
+                if (filteredApd.length === 0) {
+                    tbodyApd.innerHTML = `
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state" style="padding: 24px;">
+                                    <div class="empty-icon"><i data-lucide="hard-hat"></i></div>
+                                    <h4>${qApd ? 'APD tidak ditemukan' : 'Belum ada data master APD'}</h4>
+                                    <p style="font-size: 0.8rem;">${qApd ? 'Coba gunakan kata kunci pencarian yang lain.' : 'Gunakan form atau tombol Tambah Cepat di atas.'}</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    filteredApd.forEach((item, index) => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="color: var(--text-muted); font-weight: 600;">${index + 1}</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="width: 32px; height: 32px; border-radius: var(--radius-sm); background: var(--primary-soft); color: var(--primary); display: flex; align-items: center; justify-content: center;">
+                                        <i data-lucide="shield" style="width: 16px; height: 16px;"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 700; color: var(--text-main); font-size: 0.9rem;">${escapeHtml(item.nama)}</div>
+                                        <div style="font-size: 0.74rem; color: var(--text-muted);">Standar K3 SafeGuard</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge badge-good" style="font-size: 0.8rem; font-weight: 500;">
+                                    ${escapeHtml(item.kategori || 'Umum')}
+                                </span>
+                            </td>
+                            <td>
+                                <code style="background: var(--bg-input); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); font-size: 0.82rem; font-weight: 600;">
+                                    ${escapeHtml(item.standar || 'Standar K3')}
+                                </code>
+                            </td>
+                            <td style="text-align: right;">
+                                <button class="btn btn-danger btn-sm" onclick="deleteMasterItem('apd', ${item.id})" title="Hapus APD" style="padding: 6px 10px;">
+                                    <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Hapus
+                                </button>
+                            </td>
+                        `;
+                        tbodyApd.appendChild(tr);
+                    });
+                }
             }
 
             updateDatalists();
@@ -3272,6 +3731,7 @@
         // Initial setup
         updateDatalists();
         renderTable();
+        renderMasterLists();
         lucide.createIcons();
     </script>
 </body>
