@@ -1959,11 +1959,12 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th style="width: 6%;">No</th>
-                                        <th style="width: 26%;">Nama Karyawan</th>
-                                        <th style="width: 22%;">Departemen / Divisi</th>
-                                        <th style="width: 22%;">Email Notifikasi</th>
-                                        <th style="width: 16%;">Serial Number (SN)</th>
+                                        <th style="width: 5%;">No</th>
+                                        <th style="width: 24%;">Nama Karyawan</th>
+                                        <th style="width: 18%;">Departemen / Divisi</th>
+                                        <th style="width: 20%;">Email Notifikasi</th>
+                                        <th style="width: 13%;">Serial Number (SN)</th>
+                                        <th style="width: 12%; text-align: center;">Kirim Email</th>
                                         <th style="width: 8%; text-align: right;">Aksi</th>
                                     </tr>
                                 </thead>
@@ -2052,10 +2053,11 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th style="width: 8%;">No</th>
-                                        <th style="width: 32%;">Nama SPV / Leader</th>
-                                        <th style="width: 28%;">Jabatan / Posisi</th>
-                                        <th style="width: 22%;">Email Notifikasi</th>
+                                        <th style="width: 6%;">No</th>
+                                        <th style="width: 28%;">Nama SPV / Leader</th>
+                                        <th style="width: 24%;">Jabatan / Posisi</th>
+                                        <th style="width: 20%;">Email Notifikasi</th>
+                                        <th style="width: 12%; text-align: center;">Kirim Email</th>
                                         <th style="width: 10%; text-align: right;">Aksi</th>
                                     </tr>
                                 </thead>
@@ -2144,10 +2146,11 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th style="width: 8%;">No</th>
-                                        <th style="width: 32%;">Nama PIC Pemeriksa</th>
-                                        <th style="width: 28%;">ID / Nomor Registrasi K3</th>
-                                        <th style="width: 22%;">Email Notifikasi</th>
+                                        <th style="width: 6%;">No</th>
+                                        <th style="width: 28%;">Nama PIC Pemeriksa</th>
+                                        <th style="width: 24%;">ID / Nomor Registrasi K3</th>
+                                        <th style="width: 20%;">Email Notifikasi</th>
+                                        <th style="width: 12%; text-align: center;">Kirim Email</th>
                                         <th style="width: 10%; text-align: right;">Aksi</th>
                                     </tr>
                                 </thead>
@@ -2791,7 +2794,7 @@
                 if (filteredPemilik.length === 0) {
                     tbodyPemilik.innerHTML = `
                         <tr>
-                            <td colspan="6">
+                            <td colspan="7">
                                 <div class="empty-state" style="padding: 24px;">
                                     <div class="empty-icon"><i data-lucide="user-x"></i></div>
                                     <h4>${qPemilik ? 'Karyawan tidak ditemukan' : 'Belum ada data master karyawan'}</h4>
@@ -2804,6 +2807,7 @@
                     filteredPemilik.forEach((item, index) => {
                         const tr = document.createElement('tr');
                         const initial = item.nama ? item.nama.charAt(0).toUpperCase() : 'K';
+                        const isSend = item.sendEmail !== false;
                         tr.innerHTML = `
                             <td style="color: var(--text-muted); font-weight: 600;">${index + 1}</td>
                             <td>
@@ -2836,6 +2840,14 @@
                                     ${escapeHtml(item.sn || '-')}
                                 </code>
                             </td>
+                            <td style="text-align: center;">
+                                <label style="display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; user-select: none;" title="${isSend ? 'Email aktif (masuk daftar kirim email)' : 'Email tidak aktif (dikecualikan dari kirim)'}">
+                                    <input type="checkbox" ${isSend ? 'checked' : ''} onchange="toggleMasterEmailStatus('pemilik', ${item.id}, this.checked)" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary);">
+                                    <span class="badge ${isSend ? 'badge-layak' : 'badge-quarter'}" style="font-size: 0.72rem; padding: 2px 6px;">
+                                        ${isSend ? '✓ Kirim' : '✕ Tidak'}
+                                    </span>
+                                </label>
+                            </td>
                             <td style="text-align: right;">
                                 <button class="btn btn-danger btn-sm" onclick="deleteMasterItem('pemilik', ${item.id})" title="Hapus Karyawan" style="padding: 6px 10px;">
                                     <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Hapus
@@ -2862,7 +2874,7 @@
                 if (filteredSpv.length === 0) {
                     tbodySpv.innerHTML = `
                         <tr>
-                            <td colspan="5">
+                            <td colspan="6">
                                 <div class="empty-state" style="padding: 24px;">
                                     <div class="empty-icon"><i data-lucide="award"></i></div>
                                     <h4>${qSpv ? 'SPV tidak ditemukan' : 'Belum ada data master SPV'}</h4>
@@ -2875,6 +2887,7 @@
                     filteredSpv.forEach((item, index) => {
                         const tr = document.createElement('tr');
                         const initial = item.nama ? item.nama.charAt(0).toUpperCase() : 'S';
+                        const isSend = item.sendEmail !== false;
                         tr.innerHTML = `
                             <td style="color: var(--text-muted); font-weight: 600;">${index + 1}</td>
                             <td>
@@ -2902,6 +2915,14 @@
                                     <span style="font-size: 0.78rem; color: var(--text-muted); font-style: italic;">Belum diatur</span>
                                 `}
                             </td>
+                            <td style="text-align: center;">
+                                <label style="display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; user-select: none;" title="${isSend ? 'Email aktif (masuk daftar kirim email)' : 'Email tidak aktif (dikecualikan dari kirim)'}">
+                                    <input type="checkbox" ${isSend ? 'checked' : ''} onchange="toggleMasterEmailStatus('spv', ${item.id}, this.checked)" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary);">
+                                    <span class="badge ${isSend ? 'badge-layak' : 'badge-quarter'}" style="font-size: 0.72rem; padding: 2px 6px;">
+                                        ${isSend ? '✓ Kirim' : '✕ Tidak'}
+                                    </span>
+                                </label>
+                            </td>
                             <td style="text-align: right;">
                                 <button class="btn btn-danger btn-sm" onclick="deleteMasterItem('spv', ${item.id})" title="Hapus SPV" style="padding: 6px 10px;">
                                     <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Hapus
@@ -2928,7 +2949,7 @@
                 if (filteredPic.length === 0) {
                     tbodyPic.innerHTML = `
                         <tr>
-                            <td colspan="5">
+                            <td colspan="6">
                                 <div class="empty-state" style="padding: 24px;">
                                     <div class="empty-icon"><i data-lucide="user-x"></i></div>
                                     <h4>${qPic ? 'PIC tidak ditemukan' : 'Belum ada data master PIC'}</h4>
@@ -2941,6 +2962,7 @@
                     filteredPic.forEach((item, index) => {
                         const tr = document.createElement('tr');
                         const initial = item.nama ? item.nama.charAt(0).toUpperCase() : 'P';
+                        const isSend = item.sendEmail !== false;
                         tr.innerHTML = `
                             <td style="color: var(--text-muted); font-weight: 600;">${index + 1}</td>
                             <td>
@@ -2966,6 +2988,14 @@
                                 ` : `
                                     <span style="font-size: 0.78rem; color: var(--text-muted); font-style: italic;">Belum diatur</span>
                                 `}
+                            </td>
+                            <td style="text-align: center;">
+                                <label style="display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; user-select: none;" title="${isSend ? 'Email aktif (masuk daftar kirim email)' : 'Email tidak aktif (dikecualikan dari kirim)'}">
+                                    <input type="checkbox" ${isSend ? 'checked' : ''} onchange="toggleMasterEmailStatus('pic', ${item.id}, this.checked)" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary);">
+                                    <span class="badge ${isSend ? 'badge-layak' : 'badge-quarter'}" style="font-size: 0.72rem; padding: 2px 6px;">
+                                        ${isSend ? '✓ Kirim' : '✕ Tidak'}
+                                    </span>
+                                </label>
                             </td>
                             <td style="text-align: right;">
                                 <button class="btn btn-danger btn-sm" onclick="deleteMasterItem('pic', ${item.id})" title="Hapus PIC" style="padding: 6px 10px;">
@@ -3075,6 +3105,20 @@
             }
         }
 
+        // Toggle Send Email Status for Master Item (Daftar Kirim Email)
+        function toggleMasterEmailStatus(category, id, isChecked) {
+            if (!masterData || !masterData[category]) return;
+            const item = masterData[category].find(x => x.id === id);
+            if (item) {
+                item.sendEmail = isChecked;
+                localStorage.setItem('k3_master_data', JSON.stringify(masterData));
+                renderMasterLists();
+                if (typeof updateModalEmailList === 'function') updateModalEmailList();
+                if (typeof renderRecipientCheckboxes === 'function') renderRecipientCheckboxes();
+                showToast(`Status kirim email "${escapeHtml(item.nama)}": ${isChecked ? 'Dicentang (Masuk daftar kirim email)' : 'Dilewati (Tidak dikirimi email)'}`, isChecked ? 'success' : 'info');
+            }
+        }
+
         // Add Master Item
         function addMasterItem(e, category) {
             e.preventDefault();
@@ -3085,7 +3129,7 @@
                 const sn = document.getElementById('m_pemilik_sn').value.trim();
                 if (!nama) return;
 
-                masterData.pemilik.push({ id: Date.now(), nama, dept, email, sn });
+                masterData.pemilik.push({ id: Date.now(), nama, dept, email, sn, sendEmail: true });
                 document.getElementById('formAddPemilik').reset();
                 showToast(`Karyawan "${nama}" ditambahkan ke master!`, 'success');
             } else if (category === 'spv') {
@@ -3094,7 +3138,7 @@
                 const email = document.getElementById('m_spv_email').value.trim();
                 if (!nama) return;
 
-                masterData.spv.push({ id: Date.now(), nama, jabatan, email });
+                masterData.spv.push({ id: Date.now(), nama, jabatan, email, sendEmail: true });
                 document.getElementById('formAddSpv').reset();
                 showToast(`SPV "${nama}" ditambahkan ke master!`, 'success');
             } else if (category === 'pic') {
@@ -3103,7 +3147,7 @@
                 const email = document.getElementById('m_pic_email').value.trim();
                 if (!nama) return;
 
-                masterData.pic.push({ id: Date.now(), nama, idPic, email });
+                masterData.pic.push({ id: Date.now(), nama, idPic, email, sendEmail: true });
                 document.getElementById('formAddPic').reset();
                 showToast(`PIC "${nama}" ditambahkan ke master!`, 'success');
             } else if (category === 'apd') {
@@ -4288,13 +4332,13 @@
             lucide.createIcons();
         }
 
-        // Get all unique registered emails with details from Master Data
+        // Get all unique registered emails with details from Master Data (Filtered by sendEmail status)
         function getAllRegisteredRecipients() {
             const emailMap = new Map();
 
             // 1. SPV / Supervisors
             (masterData.spv || []).forEach(s => {
-                if (s.email && isValidEmail(s.email)) {
+                if (s.email && isValidEmail(s.email) && s.sendEmail !== false) {
                     const key = s.email.trim().toLowerCase();
                     if (!emailMap.has(key)) {
                         emailMap.set(key, {
@@ -4309,7 +4353,7 @@
 
             // 2. Karyawan / Pemilik APD
             (masterData.pemilik || []).forEach(p => {
-                if (p.email && isValidEmail(p.email)) {
+                if (p.email && isValidEmail(p.email) && p.sendEmail !== false) {
                     const key = p.email.trim().toLowerCase();
                     if (!emailMap.has(key)) {
                         emailMap.set(key, {
@@ -4324,7 +4368,7 @@
 
             // 3. PIC Pemeriksa
             (masterData.pic || []).forEach(pi => {
-                if (pi.email && isValidEmail(pi.email)) {
+                if (pi.email && isValidEmail(pi.email) && pi.sendEmail !== false) {
                     const key = pi.email.trim().toLowerCase();
                     if (!emailMap.has(key)) {
                         emailMap.set(key, {
@@ -4760,7 +4804,7 @@
 
             // 1. Leader / SPV of this inspection
             const mainSpv = (masterData.spv || []).find(s => s.nama && s.nama.toLowerCase() === (item.spv || '').toLowerCase().trim());
-            if (mainSpv && mainSpv.email) {
+            if (mainSpv && mainSpv.email && mainSpv.sendEmail !== false) {
                 addRecipient(
                     mainSpv.email,
                     mainSpv.nama,
@@ -4772,7 +4816,7 @@
 
             // 2. Pemilik / Pekerja of this APD
             const mainPemilik = (masterData.pemilik || []).find(p => p.nama && p.nama.toLowerCase() === (item.pemilik || '').toLowerCase().trim());
-            if (mainPemilik && mainPemilik.email) {
+            if (mainPemilik && mainPemilik.email && mainPemilik.sendEmail !== false) {
                 addRecipient(
                     mainPemilik.email,
                     mainPemilik.nama,
@@ -4784,7 +4828,7 @@
 
             // 3. PIC Inspector of this inspection
             const mainPic = (masterData.pic || []).find(pi => pi.nama && pi.nama.toLowerCase() === (item.pic || '').toLowerCase().trim());
-            if (mainPic && mainPic.email) {
+            if (mainPic && mainPic.email && mainPic.sendEmail !== false) {
                 addRecipient(
                     mainPic.email,
                     mainPic.nama,
@@ -4794,9 +4838,9 @@
                 );
             }
 
-            // 4. All Other Registered SPVs
+            // 4. All Other Registered SPVs (with sendEmail !== false)
             (masterData.spv || []).forEach(s => {
-                if (s.email) {
+                if (s.email && s.sendEmail !== false) {
                     addRecipient(
                         s.email,
                         s.nama,
@@ -4807,9 +4851,9 @@
                 }
             });
 
-            // 5. All Other Registered Karyawan / Pemilik
+            // 5. All Other Registered Karyawan / Pemilik (with sendEmail !== false)
             (masterData.pemilik || []).forEach(p => {
-                if (p.email) {
+                if (p.email && p.sendEmail !== false) {
                     addRecipient(
                         p.email,
                         p.nama,
@@ -4820,9 +4864,9 @@
                 }
             });
 
-            // 6. All Other Registered PICs
+            // 6. All Other Registered PICs (with sendEmail !== false)
             (masterData.pic || []).forEach(pi => {
-                if (pi.email) {
+                if (pi.email && pi.sendEmail !== false) {
                     addRecipient(
                         pi.email,
                         pi.nama,
