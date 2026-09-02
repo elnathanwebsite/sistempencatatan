@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,93 +8,95 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- ExcelJS for High Quality Excel Generation -->
     <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-    
+
     <style>
         :root {
             --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             --font-heading: 'Outfit', sans-serif;
-            
+
             /* Light Theme Palette */
             --bg-body: #f1f5f9;
             --bg-body-gradient: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.07) 0px, transparent 50%),
-                                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.07) 0px, transparent 50%);
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.07) 0px, transparent 50%);
             --bg-card: rgba(255, 255, 255, 0.98);
             --bg-card-glass: rgba(255, 255, 255, 0.85);
             --bg-input: #f8fafc;
             --border: #e2e8f0;
             --border-hover: #cbd5e1;
             --border-focus: #4f46e5;
-            
+
             --text-main: #0f172a;
             --text-muted: #64748b;
             --text-subtle: #94a3b8;
-            
+
             --primary: #4f46e5;
             --primary-light: #6366f1;
             --primary-soft: #eef2ff;
             --primary-glow: rgba(79, 70, 229, 0.25);
-            
+
             --success: #10b981;
             --success-soft: #ecfdf5;
             --success-text: #047857;
-            
+
             --warning: #f59e0b;
             --warning-soft: #fffbeb;
             --warning-text: #b45309;
-            
+
             --danger: #ef4444;
             --danger-soft: #fef2f2;
             --danger-text: #b91c1c;
 
             --info: #0ea5e9;
             --info-soft: #f0f9ff;
-            
+
             --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
             --shadow-lg: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
             --shadow-glow: 0 0 25px -5px var(--primary-glow);
-            
+
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 18px;
             --radius-full: 9999px;
-            
+
             --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         [data-theme="dark"] {
             --bg-body: #0b0f19;
             --bg-body-gradient: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-                                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.12) 0px, transparent 50%);
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.12) 0px, transparent 50%);
             --bg-card: rgba(17, 24, 39, 0.95);
             --bg-card-glass: rgba(17, 24, 39, 0.8);
             --bg-input: #1e293b;
             --border: #334155;
             --border-hover: #475569;
             --border-focus: #818cf8;
-            
+
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --text-subtle: #64748b;
-            
+
             --primary: #6366f1;
             --primary-light: #818cf8;
             --primary-soft: rgba(99, 102, 241, 0.15);
             --primary-glow: rgba(99, 102, 241, 0.35);
-            
+
             --success: #10b981;
             --success-soft: rgba(16, 185, 129, 0.15);
             --success-text: #34d399;
-            
+
             --warning: #f59e0b;
             --warning-soft: rgba(245, 158, 11, 0.15);
             --warning-text: #fbbf24;
-            
+
             --danger: #f43f5e;
             --danger-soft: rgba(244, 63, 94, 0.15);
             --danger-text: #fb7185;
@@ -263,9 +266,20 @@
         }
 
         @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
         }
 
         /* Main Workspace Container */
@@ -291,8 +305,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Stats Cards Grid */
@@ -357,10 +378,25 @@
             justify-content: center;
         }
 
-        .icon-total { background: var(--primary-soft); color: var(--primary); }
-        .icon-pending { background: var(--warning-soft); color: var(--warning); }
-        .icon-done { background: var(--success-soft); color: var(--success); }
-        .icon-rate { background: var(--info-soft); color: var(--info); }
+        .icon-total {
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+
+        .icon-pending {
+            background: var(--warning-soft);
+            color: var(--warning);
+        }
+
+        .icon-done {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+
+        .icon-rate {
+            background: var(--info-soft);
+            color: var(--info);
+        }
 
         /* Card Container */
         .card {
@@ -389,7 +425,8 @@
             gap: 10px;
         }
 
-        .card-header-title h2, .card-header-title h3 {
+        .card-header-title h2,
+        .card-header-title h3 {
             font-family: var(--font-heading);
             font-size: 1.15rem;
             font-weight: 700;
@@ -537,7 +574,8 @@
             min-height: 56px;
         }
 
-        .upload-area-horizontal:hover, .upload-area-horizontal.dragover {
+        .upload-area-horizontal:hover,
+        .upload-area-horizontal.dragover {
             border-color: var(--primary);
             background: var(--primary-soft);
         }
@@ -632,6 +670,7 @@
             background: var(--success);
             color: white;
         }
+
         .btn-success:hover {
             filter: brightness(1.1);
         }
@@ -641,6 +680,7 @@
             color: white;
             box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
         }
+
         .btn-excel:hover {
             filter: brightness(1.08);
             box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45);
@@ -652,6 +692,7 @@
             color: var(--danger-text);
             border-color: rgba(239, 68, 68, 0.2);
         }
+
         .btn-danger:hover {
             background: var(--danger);
             color: white;
@@ -662,6 +703,7 @@
             border-color: var(--border);
             color: var(--text-main);
         }
+
         .btn-outline:hover {
             border-color: var(--border-hover);
             background: var(--bg-input);
@@ -876,9 +918,20 @@
             display: inline-block;
         }
 
-        .badge-good { background: var(--success-soft); color: var(--success-text); }
-        .badge-warning { background: var(--warning-soft); color: var(--warning-text); }
-        .badge-danger { background: var(--danger-soft); color: var(--danger-text); }
+        .badge-good {
+            background: var(--success-soft);
+            color: var(--success-text);
+        }
+
+        .badge-warning {
+            background: var(--warning-soft);
+            color: var(--warning-text);
+        }
+
+        .badge-danger {
+            background: var(--danger-soft);
+            color: var(--danger-text);
+        }
 
         .action-cell {
             display: flex;
@@ -1020,8 +1073,15 @@
         }
 
         @keyframes modalPop {
-            0% { transform: scale(0.92); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+            0% {
+                transform: scale(0.92);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .modal-header {
@@ -1098,13 +1158,27 @@
         }
 
         @keyframes slideIn {
-            to { transform: translateX(0); opacity: 1; }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
-        .toast-success { border-left: 4px solid var(--success); }
-        .toast-warning { border-left: 4px solid var(--warning); }
-        .toast-danger { border-left: 4px solid var(--danger); }
-        .toast-info { border-left: 4px solid var(--primary); }
+        .toast-success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast-warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .toast-danger {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast-info {
+            border-left: 4px solid var(--primary);
+        }
 
         .print-only {
             display: none;
@@ -1112,14 +1186,15 @@
 
         /* Print styles */
         @media print {
-            .navbar, 
-            .theme-toggle-btn, 
-            #formCard, 
-            .filter-bar, 
-            .action-cell, 
-            th:last-child, 
+
+            .navbar,
+            .theme-toggle-btn,
+            #formCard,
+            .filter-bar,
+            .action-cell,
+            th:last-child,
             td:last-child,
-            .stats-grid, 
+            .stats-grid,
             .nav-tabs-wrapper,
             .toast-container,
             .modal,
@@ -1270,12 +1345,14 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- Datalists for Form Autocomplete & Auto-suggestion -->
     <datalist id="datalistPemilik"></datalist>
     <datalist id="datalistSpv"></datalist>
     <datalist id="datalistPic"></datalist>
+    <datalist id="datalistApd"></datalist>
 
     <!-- Navigation Bar -->
     <header class="navbar">
@@ -1317,10 +1394,10 @@
 
     <!-- Main Workspace Container -->
     <main class="main-container">
-        
+
         <!-- PAGE 1: DASHBOARD & INSPEKSI APD -->
         <div class="page-view active" id="pageInspeksi">
-            
+
             <!-- Summary Stats Cards -->
             <section class="stats-grid">
                 <div class="stat-card">
@@ -1371,22 +1448,23 @@
                         <i data-lucide="plus-circle" class="card-header-icon" style="width: 20px; height: 20px;"></i>
                         <h2>Form Input Laporan Inspeksi APD</h2>
                     </div>
-                    
+
                     <button type="button" class="toggle-form-btn" id="toggleFormBtn" onclick="toggleFormVisibility()">
                         <i data-lucide="chevron-up" id="toggleFormIcon" style="width: 16px; height: 16px;"></i>
                         <span id="toggleFormText">Sembunyikan Form</span>
                     </button>
                 </div>
-                
+
                 <div class="card-body" id="formBody">
                     <form id="formInspeksi">
-                        
+
                         <!-- Row 1: 4 Columns -->
                         <div class="form-grid-4">
                             <div class="form-group">
                                 <label for="kuartal">Periode Kuartal</label>
                                 <div class="input-wrapper">
-                                    <span class="input-icon"><i data-lucide="calendar" style="width: 16px; height: 16px;"></i></span>
+                                    <span class="input-icon"><i data-lucide="calendar"
+                                            style="width: 16px; height: 16px;"></i></span>
                                     <select id="kuartal" required>
                                         <option value="Q1 (Jan-Mar)">Q1 (Jan-Mar)</option>
                                         <option value="Q2 (Apr-Jun)">Q2 (Apr-Jun)</option>
@@ -1399,30 +1477,38 @@
                             <div class="form-group">
                                 <label for="nama_apd">Nama APD</label>
                                 <div class="input-wrapper">
-                                    <span class="input-icon"><i data-lucide="hard-hat" style="width: 16px; height: 16px;"></i></span>
-                                    <input type="text" id="nama_apd" placeholder="Misal: Helm Safety" required>
+                                    <span class="input-icon"><i data-lucide="hard-hat"
+                                            style="width: 16px; height: 16px;"></i></span>
+                                    <input type="text" id="nama_apd" list="datalistApd" placeholder="Misal: Helm Safety" required>
                                 </div>
                                 <div class="quick-tags">
                                     <span class="tag-pill" onclick="setApdName('Helm Safety')">Helm</span>
-                                    <span class="tag-pill" onclick="setApdName('Rompi Reflektif')">Rompi</span>
-                                    <span class="tag-pill" onclick="setApdName('Safety Shoes')">Sepatu</span>
-                                    <span class="tag-pill" onclick="setApdName('Goggles')">Goggles</span>
-                                    <span class="tag-pill" onclick="setApdName('Body Harness')">Harness</span>
+                                    <span class="tag-pill" onclick="setApdName('Safety Shoes')">Safety Shoes</span>
+                                    <span class="tag-pill" onclick="setApdName('Safety Glasses')">Glasses</span>
+                                    <span class="tag-pill" onclick="setApdName('Hearing Protection')">Hearing</span>
+                                    <span class="tag-pill" onclick="setApdName('Hand Protection')">Hand</span>
+                                    <span class="tag-pill" onclick="setApdName('Respiratory Protection')">Respirator</span>
+                                    <span class="tag-pill" onclick="setApdName('Eye &amp; Face Protection')">Eye &amp; Face</span>
+                                    <span class="tag-pill" onclick="setApdName('Body Protection')">Body</span>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="pemilik">Nama Pemilik APD (Pilih / Ketik Manual)</label>
                                 <div class="input-wrapper">
-                                    <span class="input-icon"><i data-lucide="user" style="width: 16px; height: 16px;"></i></span>
-                                    <input type="text" id="pemilik" list="datalistPemilik" placeholder="Pilih atau ketik nama karyawan" oninput="handlePemilikChange(this.value)" required>
+                                    <span class="input-icon"><i data-lucide="user"
+                                            style="width: 16px; height: 16px;"></i></span>
+                                    <input type="text" id="pemilik" list="datalistPemilik"
+                                        placeholder="Pilih atau ketik nama karyawan"
+                                        oninput="handlePemilikChange(this.value)" required>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="sn">Serial Number (SN) / ID APD</label>
                                 <div class="input-wrapper">
-                                    <span class="input-icon"><i data-lucide="hash" style="width: 16px; height: 16px;"></i></span>
+                                    <span class="input-icon"><i data-lucide="hash"
+                                            style="width: 16px; height: 16px;"></i></span>
                                     <input type="text" id="sn" placeholder="Nomor SN/ID APD" required>
                                 </div>
                             </div>
@@ -1433,7 +1519,8 @@
                             <div class="form-group">
                                 <label for="kondisi">Kondisi Fisik APD</label>
                                 <div class="input-wrapper">
-                                    <span class="input-icon"><i data-lucide="check-square" style="width: 16px; height: 16px;"></i></span>
+                                    <span class="input-icon"><i data-lucide="check-square"
+                                            style="width: 16px; height: 16px;"></i></span>
                                     <select id="kondisi">
                                         <option value="Layak Pakai">Layak Pakai</option>
                                         <option value="Perlu Perbaikan">Perlu Perbaikan</option>
@@ -1445,7 +1532,8 @@
                             <div class="form-group">
                                 <label for="tgl_inspeksi">Tanggal Inspeksi</label>
                                 <div class="input-wrapper">
-                                    <span class="input-icon"><i data-lucide="calendar-days" style="width: 16px; height: 16px;"></i></span>
+                                    <span class="input-icon"><i data-lucide="calendar-days"
+                                            style="width: 16px; height: 16px;"></i></span>
                                     <input type="date" id="tgl_inspeksi" required>
                                 </div>
                             </div>
@@ -1453,16 +1541,20 @@
                             <div class="form-group">
                                 <label for="pic">PIC Pemeriksa (Pilih / Ketik Manual)</label>
                                 <div class="input-wrapper">
-                                    <span class="input-icon"><i data-lucide="user-check" style="width: 16px; height: 16px;"></i></span>
-                                    <input type="text" id="pic" list="datalistPic" placeholder="Pilih atau ketik nama pemeriksa" required>
+                                    <span class="input-icon"><i data-lucide="user-check"
+                                            style="width: 16px; height: 16px;"></i></span>
+                                    <input type="text" id="pic" list="datalistPic"
+                                        placeholder="Pilih atau ketik nama pemeriksa" required>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="spv">SPV / Leader (Pilih / Ketik Manual)</label>
                                 <div class="input-wrapper">
-                                    <span class="input-icon"><i data-lucide="award" style="width: 16px; height: 16px;"></i></span>
-                                    <input type="text" id="spv" list="datalistSpv" placeholder="Pilih atau ketik nama SPV/Leader" required>
+                                    <span class="input-icon"><i data-lucide="award"
+                                            style="width: 16px; height: 16px;"></i></span>
+                                    <input type="text" id="spv" list="datalistSpv"
+                                        placeholder="Pilih atau ketik nama SPV/Leader" required>
                                 </div>
                             </div>
                         </div>
@@ -1473,21 +1565,26 @@
                                 <label style="margin-bottom: 6px;">Foto Bukti Fisik APD</label>
                                 <div class="upload-area-horizontal" id="dropArea">
                                     <input type="file" id="foto" accept="image/*" required>
-                                    
+
                                     <div class="upload-horizontal-content" id="uploadPlaceholder">
-                                        <i data-lucide="upload-cloud" style="width: 24px; height: 24px; color: var(--primary);"></i>
+                                        <i data-lucide="upload-cloud"
+                                            style="width: 24px; height: 24px; color: var(--primary);"></i>
                                         <div>
-                                            <div style="font-size: 0.85rem; font-weight: 600;">Klik atau Tarik Foto Bukti ke sini</div>
-                                            <div style="font-size: 0.72rem; color: var(--text-muted);">Format JPG, PNG, WebP (Maks 2MB)</div>
+                                            <div style="font-size: 0.85rem; font-weight: 600;">Klik atau Tarik Foto
+                                                Bukti ke sini</div>
+                                            <div style="font-size: 0.72rem; color: var(--text-muted);">Format JPG, PNG,
+                                                WebP (Maks 2MB)</div>
                                         </div>
                                     </div>
 
                                     <div class="upload-preview-inline" id="previewContainer">
                                         <div style="display: flex; align-items: center; gap: 10px;">
                                             <img src="" id="imagePreview" class="upload-thumb" alt="Preview">
-                                            <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-main);">Foto Bukti Terpilih</div>
+                                            <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-main);">
+                                                Foto Bukti Terpilih</div>
                                         </div>
-                                        <button type="button" class="upload-remove-btn" onclick="removeImage(event)" title="Hapus foto">
+                                        <button type="button" class="upload-remove-btn" onclick="removeImage(event)"
+                                            title="Hapus foto">
                                             <i data-lucide="x" style="width: 16px; height: 16px;"></i>
                                         </button>
                                     </div>
@@ -1511,16 +1608,19 @@
             <section class="card">
                 <div class="card-header">
                     <div class="card-header-title">
-                        <i data-lucide="file-spreadsheet" class="card-header-icon" style="width: 20px; height: 20px;"></i>
+                        <i data-lucide="file-spreadsheet" class="card-header-icon"
+                            style="width: 20px; height: 20px;"></i>
                         <h3>Daftar Laporan Inspeksi K3</h3>
                     </div>
-                    
+
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <button class="btn btn-excel btn-sm" onclick="exportExcel()" id="btnExportExcel" title="Download Laporan Format Excel (.xlsx) Rapi & Lengkap">
+                        <button class="btn btn-excel btn-sm" onclick="exportExcel()" id="btnExportExcel"
+                            title="Download Laporan Format Excel (.xlsx) Rapi & Lengkap">
                             <i data-lucide="file-spreadsheet" style="width: 15px; height: 15px;"></i>
                             Export Excel (.xlsx)
                         </button>
-                        <button class="btn btn-outline btn-sm" onclick="printReport()" title="Cetak Laporan / Simpan PDF Resmi">
+                        <button class="btn btn-outline btn-sm" onclick="printReport()"
+                            title="Cetak Laporan / Simpan PDF Resmi">
                             <i data-lucide="printer" style="width: 14px; height: 14px;"></i>
                             Cetak / Print
                         </button>
@@ -1536,13 +1636,14 @@
                 </div>
 
                 <div class="card-body">
-                    
+
                     <!-- Print-Only Official Letterhead / Header -->
                     <div class="print-only" id="printHeaderSection">
                         <div class="print-header-container">
                             <div>
                                 <div class="print-title">SafeGuard K3 • Laporan Inspeksi APD</div>
-                                <div class="print-subtitle">Sistem Manajemen Keselamatan dan Kesehatan Kerja (SMK3)</div>
+                                <div class="print-subtitle">Sistem Manajemen Keselamatan dan Kesehatan Kerja (SMK3)
+                                </div>
                             </div>
                             <div class="print-meta-box" id="printMetaContent">
                                 <!-- Populated dynamically by JS -->
@@ -1553,8 +1654,10 @@
                     <!-- Search & Filter Controls -->
                     <div class="filter-bar">
                         <div class="search-box">
-                            <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
-                            <input type="text" id="searchInput" placeholder="Cari nama karyawan, SN, APD, PIC, atau SPV..." oninput="handleSearch()">
+                            <span class="input-icon"><i data-lucide="search"
+                                    style="width: 16px; height: 16px;"></i></span>
+                            <input type="text" id="searchInput"
+                                placeholder="Cari nama karyawan, SN, APD, PIC, atau SPV..." oninput="handleSearch()">
                         </div>
 
                         <div class="filter-controls">
@@ -1601,15 +1704,20 @@
                                 <div>Dibuat & Diperiksa Oleh,</div>
                                 <div style="font-size: 8pt; color: #666; margin-bottom: 4px;">PIC Pemeriksa K3</div>
                                 <div class="print-sig-space"></div>
-                                <div class="print-sig-line">( .................................................... )</div>
-                                <div style="font-size: 8pt; color: #666;">Tanggal: .......................................</div>
+                                <div class="print-sig-line">( .................................................... )
+                                </div>
+                                <div style="font-size: 8pt; color: #666;">Tanggal:
+                                    .......................................</div>
                             </div>
                             <div class="print-sig-box">
                                 <div>Mengetahui & Menyetujui,</div>
-                                <div style="font-size: 8pt; color: #666; margin-bottom: 4px;">Supervisor / Section Head K3</div>
+                                <div style="font-size: 8pt; color: #666; margin-bottom: 4px;">Supervisor / Section Head
+                                    K3</div>
                                 <div class="print-sig-space"></div>
-                                <div class="print-sig-line">( .................................................... )</div>
-                                <div style="font-size: 8pt; color: #666;">Tanggal: .......................................</div>
+                                <div class="print-sig-line">( .................................................... )
+                                </div>
+                                <div style="font-size: 8pt; color: #666;">Tanggal:
+                                    .......................................</div>
                             </div>
                         </div>
                     </div>
@@ -1620,17 +1728,19 @@
 
         <!-- PAGE 2: MASTER DATA K3 MANAGEMENT -->
         <div class="page-view" id="pageMaster">
-            
+
             <div style="margin-bottom: 4px;">
-                <h2 style="font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700;">Kelola Data Master K3</h2>
+                <h2 style="font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700;">Kelola Data Master K3
+                </h2>
                 <p style="font-size: 0.85rem; color: var(--text-muted);">
-                    Data yang ditambahkan di sini akan otomatis muncul sebagai pilihan rekomendasi (*autocomplete*) di halaman form inspeksi. Anda juga tetap bisa mengetik nama baru secara manual kapan saja.
+                    Data yang ditambahkan di sini akan otomatis muncul sebagai pilihan rekomendasi (*autocomplete*) di
+                    halaman form inspeksi. Anda juga tetap bisa mengetik nama baru secara manual kapan saja.
                 </p>
             </div>
 
             <!-- Master Data 3-Card Grid -->
             <div class="master-grid">
-                
+
                 <!-- Card 1: Master Pemilik APD (Karyawan) -->
                 <div class="card">
                     <div class="card-header">
@@ -1640,21 +1750,24 @@
                         </div>
                         <span class="badge badge-good" id="countPemilik">0 Orang</span>
                     </div>
-                    
+
                     <div class="card-body">
                         <!-- Add Form -->
                         <form id="formAddPemilik" class="master-form-box" onsubmit="addMasterItem(event, 'pemilik')">
                             <div class="form-group" style="margin-bottom: 10px;">
                                 <label for="m_pemilik_nama">Nama Karyawan</label>
-                                <input type="text" id="m_pemilik_nama" placeholder="Misal: Budi Santoso" required style="padding-left: 12px;">
+                                <input type="text" id="m_pemilik_nama" placeholder="Misal: Budi Santoso" required
+                                    style="padding-left: 12px;">
                             </div>
                             <div class="form-group" style="margin-bottom: 10px;">
                                 <label for="m_pemilik_dept">Departemen / Divisi</label>
-                                <input type="text" id="m_pemilik_dept" placeholder="Misal: Produksi / Maintenance" style="padding-left: 12px;">
+                                <input type="text" id="m_pemilik_dept" placeholder="Misal: Produksi / Maintenance"
+                                    style="padding-left: 12px;">
                             </div>
                             <div class="form-group" style="margin-bottom: 12px;">
                                 <label for="m_pemilik_sn">Default Serial Number (SN)</label>
-                                <input type="text" id="m_pemilik_sn" placeholder="Misal: SN-HLM-2024-001" style="padding-left: 12px;">
+                                <input type="text" id="m_pemilik_sn" placeholder="Misal: SN-HLM-2024-001"
+                                    style="padding-left: 12px;">
                             </div>
                             <button type="submit" class="btn btn-primary btn-sm btn-block">
                                 <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Tambah Karyawan
@@ -1677,17 +1790,19 @@
                         </div>
                         <span class="badge badge-warning" id="countSpv">0 Orang</span>
                     </div>
-                    
+
                     <div class="card-body">
                         <!-- Add Form -->
                         <form id="formAddSpv" class="master-form-box" onsubmit="addMasterItem(event, 'spv')">
                             <div class="form-group" style="margin-bottom: 10px;">
                                 <label for="m_spv_nama">Nama SPV / Leader</label>
-                                <input type="text" id="m_spv_nama" placeholder="Misal: Ir. Hendra Wijaya" required style="padding-left: 12px;">
+                                <input type="text" id="m_spv_nama" placeholder="Misal: Ir. Hendra Wijaya" required
+                                    style="padding-left: 12px;">
                             </div>
                             <div class="form-group" style="margin-bottom: 12px;">
                                 <label for="m_spv_jabatan">Jabatan / Divisi</label>
-                                <input type="text" id="m_spv_jabatan" placeholder="Misal: Supervisor K3 / Section Head" style="padding-left: 12px;">
+                                <input type="text" id="m_spv_jabatan" placeholder="Misal: Supervisor K3 / Section Head"
+                                    style="padding-left: 12px;">
                             </div>
                             <button type="submit" class="btn btn-primary btn-sm btn-block">
                                 <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Tambah SPV / Leader
@@ -1710,17 +1825,19 @@
                         </div>
                         <span class="badge badge-quarter" id="countPic">0 Orang</span>
                     </div>
-                    
+
                     <div class="card-body">
                         <!-- Add Form -->
                         <form id="formAddPic" class="master-form-box" onsubmit="addMasterItem(event, 'pic')">
                             <div class="form-group" style="margin-bottom: 10px;">
                                 <label for="m_pic_nama">Nama PIC Pemeriksa</label>
-                                <input type="text" id="m_pic_nama" placeholder="Misal: Ahmad Fauzi" required style="padding-left: 12px;">
+                                <input type="text" id="m_pic_nama" placeholder="Misal: Ahmad Fauzi" required
+                                    style="padding-left: 12px;">
                             </div>
                             <div class="form-group" style="margin-bottom: 12px;">
                                 <label for="m_pic_id">ID / Nomor Reg. K3</label>
-                                <input type="text" id="m_pic_id" placeholder="Misal: PIC-K3-007" style="padding-left: 12px;">
+                                <input type="text" id="m_pic_id" placeholder="Misal: PIC-K3-007"
+                                    style="padding-left: 12px;">
                             </div>
                             <button type="submit" class="btn btn-primary btn-sm btn-block">
                                 <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Tambah PIC
@@ -1729,6 +1846,63 @@
 
                         <!-- List Items -->
                         <div class="master-list" id="listMasterPic">
+                            <!-- Items populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Master APD -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-header-title">
+                            <i data-lucide="hard-hat" class="card-header-icon" style="width: 18px; height: 18px;"></i>
+                            <h3>Master Jenis APD</h3>
+                        </div>
+                        <span class="badge badge-quarter" id="countApd">0 Jenis</span>
+                    </div>
+
+                    <div class="card-body">
+                        <!-- Add Form -->
+                        <form id="formAddApd" class="master-form-box" onsubmit="addMasterItem(event, 'apd')">
+                            <div class="form-group" style="margin-bottom: 10px;">
+                                <label for="m_apd_nama">Nama APD</label>
+                                <input type="text" id="m_apd_nama" placeholder="Misal: Helm Safety" required
+                                    style="padding-left: 12px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 10px;">
+                                <label for="m_apd_kategori">Kategori / Fungsi</label>
+                                <input type="text" id="m_apd_kategori" placeholder="Misal: Pelindung Kepala"
+                                    style="padding-left: 12px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label for="m_apd_standar">Standar / Sertifikasi</label>
+                                <input type="text" id="m_apd_standar" placeholder="Misal: SNI / ANSI / CE"
+                                    style="padding-left: 12px;">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm btn-block">
+                                <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Tambah APD
+                            </button>
+                        </form>
+
+                        <!-- Quick Add Preset APD -->
+                        <div style="margin-top: 10px; padding: 10px; background: var(--primary-soft); border-radius: var(--radius-sm); border: 1px dashed rgba(79,70,229,0.3);">
+                            <div style="font-size: 0.75rem; font-weight: 600; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                <i data-lucide="zap" style="width: 13px; height: 13px;"></i> Tambah Cepat Standar APD K3
+                            </div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                <button type="button" class="tag-pill" onclick="quickAddApd('Helm Safety', 'Pelindung Kepala', 'SNI 8011:2014')">+ Helm Safety</button>
+                                <button type="button" class="tag-pill" onclick="quickAddApd('Safety Shoes', 'Pelindung Kaki', 'SNI ISO 20345')">+ Safety Shoes</button>
+                                <button type="button" class="tag-pill" onclick="quickAddApd('Safety Glasses', 'Pelindung Mata', 'ANSI Z87.1')">+ Safety Glasses</button>
+                                <button type="button" class="tag-pill" onclick="quickAddApd('Hearing Protection', 'Pelindung Pendengaran', 'SNI 7326:2008')">+ Hearing Protection</button>
+                                <button type="button" class="tag-pill" onclick="quickAddApd('Hand Protection', 'Pelindung Tangan', 'EN 388')">+ Hand Protection</button>
+                                <button type="button" class="tag-pill" onclick="quickAddApd('Respiratory Protection', 'Pelindung Pernapasan', 'NIOSH / EN 149')">+ Respiratory Protection</button>
+                                <button type="button" class="tag-pill" onclick="quickAddApd('Eye &amp; Face Protection', 'Pelindung Mata &amp; Wajah', 'ANSI Z87.1')">+ Eye &amp; Face Protection</button>
+                                <button type="button" class="tag-pill" onclick="quickAddApd('Body Protection', 'Pelindung Tubuh', 'EN ISO 13688')">+ Body Protection</button>
+                            </div>
+                        </div>
+
+                        <!-- List Items -->
+                        <div class="master-list" id="listMasterApd">
                             <!-- Items populated by JS -->
                         </div>
                     </div>
@@ -1750,7 +1924,8 @@
             </div>
             <div class="modal-body">
                 <img src="" id="modalImg" class="modal-img" alt="Bukti Foto">
-                <div style="margin-top: 14px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-muted);">
+                <div
+                    style="margin-top: 14px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-muted);">
                     <span id="modalMeta"></span>
                     <a id="modalDownload" href="#" download="inspeksi_k3.jpg" class="btn btn-outline btn-sm">
                         <i data-lucide="download" style="width: 14px; height: 14px;"></i> Unduh Foto
@@ -1766,7 +1941,7 @@
     <script>
         // State Management
         let dataInspeksi = JSON.parse(localStorage.getItem('k3_data')) || [];
-        
+
         // Master Data Initial Structure & Storage
         let masterData = JSON.parse(localStorage.getItem('k3_master_data')) || {
             pemilik: [
@@ -1784,8 +1959,33 @@
                 { id: 1, nama: 'Ahmad Fauzi', idPic: 'PIC-K3-001' },
                 { id: 2, nama: 'Dian Permana', idPic: 'PIC-K3-004' },
                 { id: 3, nama: 'Eko Prasetyo', idPic: 'PIC-K3-009' }
+            ],
+            apd: [
+                { id: 1, nama: 'Helm Safety', kategori: 'Pelindung Kepala', standar: 'SNI 8011:2014' },
+                { id: 2, nama: 'Safety Shoes', kategori: 'Pelindung Kaki', standar: 'SNI ISO 20345' },
+                { id: 3, nama: 'Safety Glasses', kategori: 'Pelindung Mata', standar: 'ANSI Z87.1' },
+                { id: 4, nama: 'Hearing Protection', kategori: 'Pelindung Pendengaran', standar: 'SNI 7326:2008' },
+                { id: 5, nama: 'Hand Protection', kategori: 'Pelindung Tangan', standar: 'EN 388' },
+                { id: 6, nama: 'Respiratory Protection', kategori: 'Pelindung Pernapasan', standar: 'NIOSH / EN 149' },
+                { id: 7, nama: 'Eye & Face Protection', kategori: 'Pelindung Mata & Wajah', standar: 'ANSI Z87.1' },
+                { id: 8, nama: 'Body Protection', kategori: 'Pelindung Tubuh', standar: 'EN ISO 13688' }
             ]
         };
+
+        // Migrate: add apd key if missing from existing localStorage data
+        if (!masterData.apd) {
+            masterData.apd = [
+                { id: 1, nama: 'Helm Safety', kategori: 'Pelindung Kepala', standar: 'SNI 8011:2014' },
+                { id: 2, nama: 'Safety Shoes', kategori: 'Pelindung Kaki', standar: 'SNI ISO 20345' },
+                { id: 3, nama: 'Safety Glasses', kategori: 'Pelindung Mata', standar: 'ANSI Z87.1' },
+                { id: 4, nama: 'Hearing Protection', kategori: 'Pelindung Pendengaran', standar: 'SNI 7326:2008' },
+                { id: 5, nama: 'Hand Protection', kategori: 'Pelindung Tangan', standar: 'EN 388' },
+                { id: 6, nama: 'Respiratory Protection', kategori: 'Pelindung Pernapasan', standar: 'NIOSH / EN 149' },
+                { id: 7, nama: 'Eye & Face Protection', kategori: 'Pelindung Mata & Wajah', standar: 'ANSI Z87.1' },
+                { id: 8, nama: 'Body Protection', kategori: 'Pelindung Tubuh', standar: 'EN ISO 13688' }
+            ];
+            localStorage.setItem('k3_master_data', JSON.stringify(masterData));
+        }
 
         // Save default master if not existing
         if (!localStorage.getItem('k3_master_data')) {
@@ -1875,6 +2075,16 @@
                 opt.label = item.idPic || 'PIC Pemeriksa';
                 dlPic.appendChild(opt);
             });
+
+            // APD Datalist
+            const dlApd = document.getElementById('datalistApd');
+            dlApd.innerHTML = '';
+            (masterData.apd || []).forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.nama;
+                opt.label = `${item.kategori || ''}${item.standar ? ' | ' + item.standar : ''}`;
+                dlApd.appendChild(opt);
+            });
         }
 
         // Auto fill SN when choosing registered Pemilik APD
@@ -1959,6 +2169,29 @@
                 });
             }
 
+            // 4. APD List
+            const listApd = document.getElementById('listMasterApd');
+            document.getElementById('countApd').innerText = `${(masterData.apd || []).length} Jenis`;
+            listApd.innerHTML = '';
+            if (!masterData.apd || masterData.apd.length === 0) {
+                listApd.innerHTML = '<p style="font-size:0.8rem; color:var(--text-muted); text-align:center; padding:12px;">Belum ada master APD.</p>';
+            } else {
+                masterData.apd.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'master-item';
+                    div.innerHTML = `
+                        <div class="master-item-info">
+                            <h4>${escapeHtml(item.nama)}</h4>
+                            <p>${escapeHtml(item.kategori || '-')}${item.standar ? ' • ' + escapeHtml(item.standar) : ''}</p>
+                        </div>
+                        <button class="btn btn-danger btn-sm" onclick="deleteMasterItem('apd', ${item.id})" title="Hapus">
+                            <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                        </button>
+                    `;
+                    listApd.appendChild(div);
+                });
+            }
+
             updateDatalists();
             lucide.createIcons();
         }
@@ -1991,10 +2224,40 @@
                 masterData.pic.push({ id: Date.now(), nama, idPic });
                 document.getElementById('formAddPic').reset();
                 showToast(`PIC "${nama}" ditambahkan ke master!`, 'success');
+            } else if (category === 'apd') {
+                const nama = document.getElementById('m_apd_nama').value.trim();
+                const kategori = document.getElementById('m_apd_kategori').value.trim();
+                const standar = document.getElementById('m_apd_standar').value.trim();
+                if (!nama) return;
+
+                // Cek duplikat nama APD
+                const exists = masterData.apd.some(a => a.nama.toLowerCase() === nama.toLowerCase());
+                if (exists) {
+                    showToast(`APD "${nama}" sudah ada di daftar master!`, 'warning');
+                    return;
+                }
+
+                masterData.apd.push({ id: Date.now(), nama, kategori, standar });
+                document.getElementById('formAddApd').reset();
+                showToast(`APD "${nama}" ditambahkan ke master!`, 'success');
             }
 
             localStorage.setItem('k3_master_data', JSON.stringify(masterData));
             renderMasterLists();
+        }
+
+        // Quick Add Preset APD (from buttons)
+        function quickAddApd(nama, kategori, standar) {
+            if (!masterData.apd) masterData.apd = [];
+            const exists = masterData.apd.some(a => a.nama.toLowerCase() === nama.toLowerCase());
+            if (exists) {
+                showToast(`APD "${nama}" sudah ada di daftar!`, 'warning');
+                return;
+            }
+            masterData.apd.push({ id: Date.now(), nama, kategori, standar });
+            localStorage.setItem('k3_master_data', JSON.stringify(masterData));
+            renderMasterLists();
+            showToast(`APD "${nama}" berhasil ditambahkan!`, 'success');
         }
 
         // Delete Master Item
@@ -2062,7 +2325,7 @@
             }
         });
 
-        fileInput.addEventListener('change', function(e) {
+        fileInput.addEventListener('change', function (e) {
             if (this.files && this.files[0]) {
                 handleFileSelect(this.files[0]);
             }
@@ -2081,7 +2344,7 @@
             }
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 tempBase64Image = e.target.result;
                 imagePreview.src = tempBase64Image;
                 previewContainer.style.display = 'flex';
@@ -2115,7 +2378,7 @@
         // Filter logic helper
         function getFilteredData() {
             return dataInspeksi.filter(item => {
-                const matchQuery = !currentFilter.query || 
+                const matchQuery = !currentFilter.query ||
                     (item.pemilik && item.pemilik.toLowerCase().includes(currentFilter.query.toLowerCase())) ||
                     (item.nama_apd && item.nama_apd.toLowerCase().includes(currentFilter.query.toLowerCase())) ||
                     (item.sn && item.sn.toLowerCase().includes(currentFilter.query.toLowerCase())) ||
@@ -2277,7 +2540,7 @@
         }
 
         // Form Submit Handler
-        document.getElementById('formInspeksi').addEventListener('submit', function(e) {
+        document.getElementById('formInspeksi').addEventListener('submit', function (e) {
             e.preventDefault();
 
             if (!tempBase64Image) {
@@ -2640,7 +2903,7 @@
 
                 // --- SIGNATURE SECTION ---
                 const sigStartRow = footerRowNum + 3;
-                
+
                 // Left Signature: PIC
                 worksheet.mergeCells(`B${sigStartRow}:D${sigStartRow}`);
                 const sigLeft1 = worksheet.getCell(`B${sigStartRow}`);
@@ -2718,7 +2981,7 @@
             const tglCetak = now.toLocaleDateString('id-ID', {
                 weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
             }) + ', ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
-            
+
             const filterKuartalText = currentFilter.kuartal === 'all' ? 'Semua Kuartal' : currentFilter.kuartal;
             const filterStatusText = currentFilter.status === 'all' ? 'Semua Status' : (currentFilter.status === 'Done' ? 'Disetujui' : 'Menunggu SPV');
 
@@ -2853,7 +3116,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Laporan_Inspeksi_APD_K3_${now.toISOString().slice(0,10)}.xls`;
+            a.download = `Laporan_Inspeksi_APD_K3_${now.toISOString().slice(0, 10)}.xls`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -2893,7 +3156,7 @@
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.setAttribute("href", url);
-            link.setAttribute("download", `laporan_inspeksi_k3_${new Date().toISOString().slice(0,10)}.csv`);
+            link.setAttribute("download", `laporan_inspeksi_k3_${new Date().toISOString().slice(0, 10)}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -2972,7 +3235,7 @@
         // Initial Data Demo Seeder (if local storage is completely empty)
         if (dataInspeksi.length === 0) {
             const dummySvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="100%" height="100%" fill="%234f46e5"/><text x="50%" y="50%" fill="white" font-family="sans-serif" font-size="20" font-weight="bold" text-anchor="middle" dominant-baseline="middle">Sample APD K3</text></svg>`;
-            
+
             dataInspeksi = [
                 {
                     id: 1709366000000,
@@ -2981,7 +3244,7 @@
                     pemilik: 'Budi Santoso',
                     sn: 'SN-HLM-2024-089',
                     kondisi: 'Layak Pakai',
-                    tgl_inspeksi: new Date().toISOString().slice(0,10),
+                    tgl_inspeksi: new Date().toISOString().slice(0, 10),
                     pic: 'Ahmad Fauzi',
                     spv: 'Ir. Hendra Wijaya',
                     foto: dummySvg,
@@ -2995,7 +3258,7 @@
                     pemilik: 'Rian Pratama',
                     sn: 'SN-BH-99120',
                     kondisi: 'Perlu Perbaikan',
-                    tgl_inspeksi: new Date().toISOString().slice(0,10),
+                    tgl_inspeksi: new Date().toISOString().slice(0, 10),
                     pic: 'Ahmad Fauzi',
                     spv: 'Ir. Hendra Wijaya',
                     foto: dummySvg,
@@ -3012,4 +3275,5 @@
         lucide.createIcons();
     </script>
 </body>
+
 </html>
