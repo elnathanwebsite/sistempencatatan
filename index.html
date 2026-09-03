@@ -1447,10 +1447,467 @@
 
             .print-sig-line {
                 font-weight: 700;
-                border-bottom: 1px solid #0f172a;
-                padding-bottom: 2px;
-                margin-bottom: 3px;
             }
+
+        } /* end @media print */
+
+        /* --- ROLE-BASED ACCESS CONTROL (RBAC) & AUTHENTICATION STYLES --- */
+        .badge-role {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 9px;
+            border-radius: var(--radius-full);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border: 1px solid transparent;
+        }
+
+        .badge-role-admin {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            color: #ffffff;
+            border-color: rgba(168, 85, 247, 0.3);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .badge-role-leader {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #ffffff;
+            border-color: rgba(245, 158, 11, 0.3);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .badge-role-pengawas {
+            background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
+            color: #ffffff;
+            border-color: rgba(6, 182, 212, 0.3);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .badge-role-karyawan {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            border-color: rgba(16, 185, 129, 0.3);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        /* User Profile Pill in Navbar */
+        .user-profile-wrapper {
+            position: relative;
+        }
+
+        .user-profile-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 4px 12px 4px 5px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-main);
+        }
+
+        .user-profile-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px var(--primary-glow);
+            transform: translateY(-1px);
+        }
+
+        .user-avatar-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: white;
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            flex-shrink: 0;
+        }
+
+        .user-avatar-circle.role-admin {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+
+        .user-avatar-circle.role-leader {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .user-avatar-circle.role-pengawas {
+            background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
+        }
+
+        .user-avatar-circle.role-karyawan {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .user-profile-meta {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            line-height: 1.1;
+        }
+
+        .user-profile-name {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            max-width: 130px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-profile-role-sub {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* User Dropdown Menu */
+        .user-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 270px;
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            padding: 8px;
+            z-index: 200;
+            display: none;
+            animation: dropdownFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes dropdownFade {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-dropdown-menu.active {
+            display: block;
+        }
+
+        .user-dropdown-header {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 6px;
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+
+        .dropdown-item:hover {
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+
+        .dropdown-item.danger:hover {
+            background: var(--danger-soft);
+            color: var(--danger);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 6px 0;
+        }
+
+        /* Role Notice Banner on Dashboard */
+        .role-banner {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--primary);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .role-banner-admin { border-left-color: #a855f7; }
+        .role-banner-leader { border-left-color: #f59e0b; }
+        .role-banner-pengawas { border-left-color: #06b6d4; }
+        .role-banner-karyawan { border-left-color: #10b981; }
+
+        .role-banner-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .role-banner-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .role-banner-admin .role-banner-icon { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
+        .role-banner-leader .role-banner-icon { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .role-banner-pengawas .role-banner-icon { background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%); }
+        .role-banner-karyawan .role-banner-icon { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+
+        .role-banner-text h4 {
+            font-size: 0.96rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .role-banner-text p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .role-banner-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Quick Switch Role Pills */
+        .quick-switch-pills {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .quick-switch-btn {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-full);
+            padding: 4px 10px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .quick-switch-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        .quick-switch-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Auth Modal Specific Styles */
+        .auth-modal-dialog {
+            max-width: 520px;
+            width: 100%;
+        }
+
+        .auth-tabs-nav {
+            display: flex;
+            background: var(--bg-input);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            margin-bottom: 18px;
+            gap: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .auth-tab-btn {
+            flex: 1;
+            padding: 9px;
+            text-align: center;
+            border-radius: var(--radius-sm);
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .auth-tab-btn.active {
+            background: var(--bg-card);
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .quick-roles-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .quick-role-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-role-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px var(--primary-glow);
+            background: var(--bg-card);
+        }
+
+        .quick-role-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .quick-role-card-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .quick-role-card-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin: 16px 0;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .auth-divider span {
+            padding: 0 10px;
+        }
+
+        /* Role Selector in Register Form */
+        .role-selector-wrapper {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 4px;
+            margin-bottom: 14px;
+        }
+
+        .role-select-chip {
+            border: 2px solid var(--border);
+            background: var(--bg-input);
+            border-radius: var(--radius-md);
+            padding: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .role-select-chip:hover {
+            border-color: var(--border-focus);
+            background: var(--primary-soft);
+        }
+
+        .role-select-chip.selected {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+
+        .role-select-chip input[type="radio"] {
+            margin-top: 2px;
+            accent-color: var(--primary);
+        }
+
+        /* Personal APD Karyawan Card */
+        .karyawan-apd-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .karyawan-apd-item-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .karyawan-apd-item-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
     </style>
 </head>
@@ -1489,7 +1946,7 @@
             </div>
 
             <div class="nav-actions">
-                <button type="button" class="btn btn-outline btn-sm" onclick="openEmailConfigModal()"
+                <button type="button" class="btn btn-outline btn-sm" id="btnNavEmail" onclick="openEmailConfigModal()"
                     title="Pengaturan Email Notifikasi (EmailJS & Gmail)"
                     style="padding: 7px 14px; font-size: 0.8rem; border-radius: var(--radius-full);">
                     <i data-lucide="mail" style="width: 15px; height: 15px; color: var(--primary);"></i>
@@ -1504,6 +1961,73 @@
                 <button class="theme-toggle-btn" id="themeToggle" title="Ganti Mode Gelap/Terang">
                     <i data-lucide="moon" id="themeIcon" style="width: 18px; height: 18px;"></i>
                 </button>
+
+                <!-- User Profile Pill & Dropdown -->
+                <div class="user-profile-wrapper" id="userProfileWrapper">
+                    <button type="button" class="user-profile-btn" id="userProfileBtn" onclick="toggleUserDropdown(event)" title="Menu Profil & Hak Akses">
+                        <div class="user-avatar-circle" id="navUserAvatar">AD</div>
+                        <div class="user-profile-meta">
+                            <span class="user-profile-name" id="navUserName">Admin SafeGuard</span>
+                            <span class="user-profile-role-sub" id="navUserRoleSub">Administrator</span>
+                        </div>
+                        <i data-lucide="chevron-down" style="width: 14px; height: 14px; color: var(--text-muted);"></i>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div class="user-dropdown-menu" id="userDropdownMenu" onclick="event.stopPropagation()">
+                        <div class="user-dropdown-header">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                <div class="user-avatar-circle" id="dropUserAvatar" style="width: 32px; height: 32px;">AD</div>
+                                <div>
+                                    <div style="font-weight: 700; font-size: 0.85rem; color: var(--text-main);" id="dropUserName">Admin SafeGuard</div>
+                                    <div style="font-size: 0.72rem; color: var(--text-muted);" id="dropUserEmail">admin@k3.com</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px;">
+                                <span class="badge-role badge-role-admin" id="dropUserRoleBadge">👑 Admin</span>
+                                <span style="font-size: 0.7rem; color: var(--text-muted);" id="dropUserDept">HSE Dept</span>
+                            </div>
+                        </div>
+
+                        <div style="padding: 4px 6px; font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Ganti Peran Cepat (Demo):</div>
+                        <div class="quick-switch-pills" style="padding: 2px 6px 8px 6px;">
+                            <button type="button" class="quick-switch-btn" onclick="quickLogin('admin')" title="Login sebagai Administrator">👑 Admin</button>
+                            <button type="button" class="quick-switch-btn" onclick="quickLogin('leader')" title="Login sebagai Leader / SPV">⭐ Leader</button>
+                            <button type="button" class="quick-switch-btn" onclick="quickLogin('pengawas')" title="Login sebagai Pengawas / PIC">🔍 Pengawas</button>
+                            <button type="button" class="quick-switch-btn" onclick="quickLogin('karyawan')" title="Login sebagai Karyawan">👷 Karyawan</button>
+                        </div>
+
+                        <div class="dropdown-divider"></div>
+
+                        <button type="button" class="dropdown-item" onclick="openProfileModal()">
+                            <i data-lucide="user" style="width: 15px; height: 15px;"></i>
+                            <span>Profil & Akun Saya</span>
+                        </button>
+
+                        <button type="button" class="dropdown-item" id="btnDropdownManageUsers" onclick="switchPage('master'); switchMasterTab('users'); toggleUserDropdown();" style="display: none;">
+                            <i data-lucide="users" style="width: 15px; height: 15px;"></i>
+                            <span>Kelola Pengguna Sistem</span>
+                        </button>
+
+                        <button type="button" class="dropdown-item" onclick="openAuthModal('login')">
+                            <i data-lucide="key-round" style="width: 15px; height: 15px;"></i>
+                            <span>Ganti / Masuk Akun Lain</span>
+                        </button>
+
+                        <button type="button" class="dropdown-item" onclick="openAuthModal('register')">
+                            <i data-lucide="user-plus" style="width: 15px; height: 15px;"></i>
+                            <span>Daftar Akun Baru</span>
+                        </button>
+
+                        <div class="dropdown-divider"></div>
+
+                        <button type="button" class="dropdown-item danger" onclick="logoutUser()">
+                            <i data-lucide="log-out" style="width: 15px; height: 15px;"></i>
+                            <span>Keluar (Logout)</span>
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </header>
@@ -1513,6 +2037,48 @@
 
         <!-- PAGE 1: DASHBOARD & INSPEKSI APD -->
         <div class="page-view active" id="pageInspeksi">
+
+            <!-- Dynamic Role Status & Privilege Banner -->
+            <div id="roleBannerContainer">
+                <div class="role-banner role-banner-admin" id="roleBanner">
+                    <div class="role-banner-content">
+                        <div class="role-banner-icon" id="roleBannerIcon">
+                            <i data-lucide="shield-check" style="width: 22px; height: 22px;"></i>
+                        </div>
+                        <div class="role-banner-text">
+                            <h4 id="roleBannerTitle">
+                                <span>Selamat Datang, Admin SafeGuard!</span>
+                                <span class="badge-role badge-role-admin" id="roleBannerBadge">👑 Administrator</span>
+                            </h4>
+                            <p id="roleBannerDesc">Akses penuh: Input inspeksi, persetujuan (approval) SPV, kelola data master K3, pengaturan email, dan manajemen akun pengguna.</p>
+                        </div>
+                    </div>
+                    <div class="role-banner-actions" id="roleBannerActions">
+                        <!-- Dynamic role buttons -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Karyawan Personal APD Summary Overview (Visible for Karyawan role) -->
+            <div id="karyawanPersonalSection" style="display: none; margin-bottom: 20px;">
+                <div class="card" style="border-left: 4px solid var(--success); background: var(--bg-card);">
+                    <div class="card-header" style="padding: 12px 18px;">
+                        <div class="card-header-title">
+                            <i data-lucide="hard-hat" class="card-header-icon" style="color: var(--success); width: 20px; height: 20px;"></i>
+                            <h3>Status & Kepatuhan APD Pribadi Anda</h3>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="openKaryawanReportModal()">
+                            <i data-lucide="alert-circle" style="width: 15px; height: 15px;"></i>
+                            Lapor Kerusakan / Minta APD Baru
+                        </button>
+                    </div>
+                    <div class="card-body" style="padding: 16px 18px;">
+                        <div class="karyawan-apd-summary-grid" id="karyawanApdCardsContainer">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Summary Stats Cards -->
             <section class="stats-grid">
@@ -1885,6 +2451,11 @@
                     <i data-lucide="hard-hat" style="width: 16px; height: 16px;"></i>
                     <span>Master Jenis APD</span>
                     <span class="master-tab-badge" id="badgeTabApd">0</span>
+                </button>
+                <button type="button" class="master-tab-btn" id="tabMasterUsers" onclick="switchMasterTab('users')">
+                    <i data-lucide="shield-alert" style="width: 16px; height: 16px;"></i>
+                    <span>Master Pengguna & Role</span>
+                    <span class="master-tab-badge" id="badgeTabUsers">0</span>
                 </button>
             </div>
 
@@ -2306,6 +2877,115 @@
                 </div>
             </div>
 
+            <!-- TAB 5: MASTER PENGGUNA & ROLE (ADMIN ONLY) -->
+            <div class="master-sub-view" id="masterViewUsers">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-header-title">
+                            <i data-lucide="shield-alert" class="card-header-icon" style="width: 20px; height: 20px; color: var(--primary);"></i>
+                            <h3>Master Pengguna & Manajemen Hak Akses (Role)</h3>
+                        </div>
+                        <span class="badge badge-good" id="countUsers">4 Pengguna Terdaftar</span>
+                    </div>
+
+                    <div class="card-body">
+                        <!-- Full Width Form Card -->
+                        <div class="master-form-card">
+                            <div class="master-form-title">
+                                <i data-lucide="user-plus" style="width: 16px; height: 16px; color: var(--primary);"></i>
+                                Form Tambah Akun Pengguna Baru
+                            </div>
+                            <form id="formAddUser" onsubmit="addMasterUser(event)">
+                                <div class="master-form-grid-3">
+                                    <div class="form-group">
+                                        <label for="m_user_nama">Nama Lengkap Pengguna <span style="color: var(--danger);">*</span></label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="user" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="text" id="m_user_nama" placeholder="Misal: Denny Wahyudi" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="m_user_email">Alamat Email (Login) <span style="color: var(--danger);">*</span></label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="mail" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="email" id="m_user_email" placeholder="Misal: denny@perusahaan.com" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="m_user_password">Password Awal <span style="color: var(--danger);">*</span></label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="lock" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="password" id="m_user_password" placeholder="Minimal 6 karakter" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="m_user_role">Hak Akses / Peran (Role) <span style="color: var(--danger);">*</span></label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="shield" style="width: 16px; height: 16px;"></i></span>
+                                            <select id="m_user_role" required>
+                                                <option value="karyawan">👷 Karyawan (Pekerja / Pemilik APD)</option>
+                                                <option value="pengawas">🔍 Pengawas (PIC Safety Inspector)</option>
+                                                <option value="leader">⭐ Leader (Supervisor / Approver)</option>
+                                                <option value="admin">👑 Administrator K3 (Full Akses)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="m_user_dept">Departemen / Divisi / Jabatan</label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="building-2" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="text" id="m_user_dept" placeholder="Misal: Fabrikasi & QC">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="m_user_nik">Nomor Induk Karyawan (NIK / ID)</label>
+                                        <div class="input-wrapper">
+                                            <span class="input-icon"><i data-lucide="badge-check" style="width: 16px; height: 16px;"></i></span>
+                                            <input type="text" id="m_user_nik" placeholder="Misal: NIK-2024-88">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
+                                    <button type="submit" class="btn btn-primary" style="height: 40px; padding: 0 24px;">
+                                        <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i> Simpan Pengguna Baru
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Search & Table Header Toolbar -->
+                        <div class="master-table-toolbar">
+                            <div class="master-table-search">
+                                <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="searchUsers" placeholder="Cari nama pengguna, email, role, atau divisi..." oninput="handleMasterSearch('users', this.value)">
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                Admin dapat mengubah role, mereset password, atau menghapus akun terdaftar
+                            </div>
+                        </div>
+
+                        <!-- Full Width Table -->
+                        <div class="table-full-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%;">No</th>
+                                        <th style="width: 22%;">Nama Pengguna</th>
+                                        <th style="width: 22%;">Email & NIK</th>
+                                        <th style="width: 16%;">Role / Peran</th>
+                                        <th style="width: 18%;">Departemen / Jabatan</th>
+                                        <th style="width: 17%; text-align: right;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableMasterUsers">
+                                    <!-- populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </main>
@@ -2596,6 +3276,353 @@
         </div>
     </div>
 
+    <!-- ========================================================================= -->
+    <!-- AUTHENTICATION MODAL (LOGIN & REGISTER WITH QUICK DEMO ROLES) -->
+    <!-- ========================================================================= -->
+    <div class="modal" id="authModal" onclick="closeAuthModal(event)">
+        <div class="modal-content auth-modal-dialog" onclick="event.stopPropagation()">
+            <div class="modal-header" style="padding: 16px 22px; border-bottom: 1px solid var(--border);">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%); color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">
+                        <i data-lucide="shield-check" style="width: 22px; height: 22px;"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--text-main);" id="authModalTitle">Masuk ke Sistem PPE Compliance</h4>
+                        <p style="font-size: 0.76rem; color: var(--text-muted); margin: 0;">Sistem Pengawasan Kepatuhan & Data Master APD K3</p>
+                    </div>
+                </div>
+                <button class="modal-close-btn" onclick="closeAuthModalDirect()" id="authModalCloseBtn">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                </button>
+            </div>
+
+            <div class="modal-body" style="text-align: left; padding: 22px; max-height: 80vh; overflow-y: auto;">
+                
+                <!-- Auth Tabs Toggle -->
+                <div class="auth-tabs-nav">
+                    <button type="button" class="auth-tab-btn active" id="tabAuthLogin" onclick="switchAuthTab('login')">
+                        <i data-lucide="log-in" style="width: 16px; height: 16px;"></i> Masuk (Login)
+                    </button>
+                    <button type="button" class="auth-tab-btn" id="tabAuthRegister" onclick="switchAuthTab('register')">
+                        <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i> Daftar Akun Baru (Register)
+                    </button>
+                </div>
+
+                <!-- TAB 1: LOGIN -->
+                <div id="authViewLogin">
+                    
+                    <div style="margin-bottom: 10px;">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px;">⚡ Login Cepat 1-Klik (Mode Demo):</div>
+                        <div style="font-size: 0.74rem; color: var(--text-muted);">Klik salah satu peran di bawah untuk langsung mencoba sistem sesuai hak akses:</div>
+                    </div>
+
+                    <!-- 4 Quick Role Cards -->
+                    <div class="quick-roles-grid">
+                        <div class="quick-role-card" onclick="quickLogin('admin')" style="border-left: 3px solid #6366f1;">
+                            <div class="quick-role-card-header">
+                                <span class="quick-role-card-title">👑 Admin K3</span>
+                                <span class="badge-role badge-role-admin" style="font-size: 0.65rem;">Full</span>
+                            </div>
+                            <div class="quick-role-card-desc">Akses penuh input, approval, master data, dan kelola user.</div>
+                        </div>
+
+                        <div class="quick-role-card" onclick="quickLogin('leader')" style="border-left: 3px solid #f59e0b;">
+                            <div class="quick-role-card-header">
+                                <span class="quick-role-card-title">⭐ Leader / SPV</span>
+                                <span class="badge-role badge-role-leader" style="font-size: 0.65rem;">Approval</span>
+                            </div>
+                            <div class="quick-role-card-desc">Review & persetujuan laporan inspeksi serta export data.</div>
+                        </div>
+
+                        <div class="quick-role-card" onclick="quickLogin('pengawas')" style="border-left: 3px solid #06b6d4;">
+                            <div class="quick-role-card-header">
+                                <span class="quick-role-card-title">🔍 Pengawas / PIC</span>
+                                <span class="badge-role badge-role-pengawas" style="font-size: 0.65rem;">Inspeksi</span>
+                            </div>
+                            <div class="quick-role-card-desc">Pemeriksaan fisik APD lapangan, foto bukti, & input form.</div>
+                        </div>
+
+                        <div class="quick-role-card" onclick="quickLogin('karyawan')" style="border-left: 3px solid #10b981;">
+                            <div class="quick-role-card-header">
+                                <span class="quick-role-card-title">👷 Karyawan</span>
+                                <span class="badge-role badge-role-karyawan" style="font-size: 0.65rem;">Pribadi</span>
+                            </div>
+                            <div class="quick-role-card-desc">Monitoring kepatuhan APD milik sendiri & lapor kerusakan.</div>
+                        </div>
+                    </div>
+
+                    <div class="auth-divider">
+                        <span>atau masuk dengan email & password</span>
+                    </div>
+
+                    <!-- Standard Login Form -->
+                    <form id="formLogin" onsubmit="handleLoginSubmit(event)">
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="loginEmail" style="font-size: 0.8rem;">Alamat Email</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i data-lucide="mail" style="width: 16px; height: 16px;"></i></span>
+                                <input type="email" id="loginEmail" placeholder="Misal: admin@k3.com" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <label for="loginPassword" style="font-size: 0.8rem; margin: 0;">Password</label>
+                            </div>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i data-lucide="lock" style="width: 16px; height: 16px;"></i></span>
+                                <input type="password" id="loginPassword" placeholder="Masukkan password Anda" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block" style="height: 42px; font-weight: 700; font-size: 0.9rem;">
+                            <i data-lucide="log-in" style="width: 18px; height: 18px;"></i>
+                            Masuk ke Sistem
+                        </button>
+                    </form>
+
+                    <div style="margin-top: 16px; text-align: center; font-size: 0.8rem; color: var(--text-muted);">
+                        Belum memiliki akun? <a href="javascript:void(0)" onclick="switchAuthTab('register')" style="color: var(--primary); font-weight: 700; text-decoration: none;">Daftar Akun Baru</a>
+                    </div>
+                </div>
+
+                <!-- TAB 2: REGISTER -->
+                <div id="authViewRegister" style="display: none;">
+                    
+                    <form id="formRegister" onsubmit="handleRegisterSubmit(event)">
+                        
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="regNama" style="font-size: 0.8rem;">Nama Lengkap <span style="color: var(--danger);">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i data-lucide="user" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="regNama" placeholder="Nama lengkap Anda" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label for="regEmail" style="font-size: 0.8rem;">Alamat Email <span style="color: var(--danger);">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i data-lucide="mail" style="width: 16px; height: 16px;"></i></span>
+                                <input type="email" id="regEmail" placeholder="email@perusahaan.com" required>
+                            </div>
+                        </div>
+
+                        <!-- Role Selection Radio Grid -->
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label style="font-size: 0.8rem; display: block; margin-bottom: 4px;">Pilih Peran / Hak Akses (Role) <span style="color: var(--danger);">*</span></label>
+                            
+                            <div class="role-selector-wrapper">
+                                <label class="role-select-chip selected" id="chipRoleKaryawan" onclick="selectRegisterRole('karyawan')">
+                                    <input type="radio" name="regRoleRadio" value="karyawan" checked>
+                                    <div>
+                                        <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">👷 Karyawan</div>
+                                        <div style="font-size: 0.68rem; color: var(--text-muted);">Pekerja & Pemilik APD</div>
+                                    </div>
+                                </label>
+
+                                <label class="role-select-chip" id="chipRolePengawas" onclick="selectRegisterRole('pengawas')">
+                                    <input type="radio" name="regRoleRadio" value="pengawas">
+                                    <div>
+                                        <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">🔍 Pengawas (PIC)</div>
+                                        <div style="font-size: 0.68rem; color: var(--text-muted);">Inspektur Fisik APD</div>
+                                    </div>
+                                </label>
+
+                                <label class="role-select-chip" id="chipRoleLeader" onclick="selectRegisterRole('leader')">
+                                    <input type="radio" name="regRoleRadio" value="leader">
+                                    <div>
+                                        <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">⭐ Leader (SPV)</div>
+                                        <div style="font-size: 0.68rem; color: var(--text-muted);">Approver & Supervisor</div>
+                                    </div>
+                                </label>
+
+                                <label class="role-select-chip" id="chipRoleAdmin" onclick="selectRegisterRole('admin')">
+                                    <input type="radio" name="regRoleRadio" value="admin">
+                                    <div>
+                                        <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">👑 Administrator</div>
+                                        <div style="font-size: 0.68rem; color: var(--text-muted);">Full Akses Sistem K3</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                            <div class="form-group">
+                                <label for="regNik" style="font-size: 0.8rem;">NIK / ID Pegawai</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon"><i data-lucide="badge-check" style="width: 16px; height: 16px;"></i></span>
+                                    <input type="text" id="regNik" placeholder="Misal: NIK-1029">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="regDept" style="font-size: 0.8rem;">Departemen / Divisi</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon"><i data-lucide="building-2" style="width: 16px; height: 16px;"></i></span>
+                                    <input type="text" id="regDept" placeholder="Misal: Maintenance">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+                            <div class="form-group">
+                                <label for="regPassword" style="font-size: 0.8rem;">Password <span style="color: var(--danger);">*</span></label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon"><i data-lucide="lock" style="width: 16px; height: 16px;"></i></span>
+                                    <input type="password" id="regPassword" placeholder="Min. 6 karakter" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="regPasswordConfirm" style="font-size: 0.8rem;">Ulangi Password <span style="color: var(--danger);">*</span></label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon"><i data-lucide="shield-check" style="width: 16px; height: 16px;"></i></span>
+                                    <input type="password" id="regPasswordConfirm" placeholder="Konfirmasi password" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; margin-bottom: 16px; font-size: 0.74rem; color: var(--text-muted);">
+                            <i data-lucide="info" style="width: 14px; height: 14px; color: var(--primary); vertical-align: middle; margin-right: 4px;"></i>
+                            Data akun Anda otomatis tersimpan di <strong>Penyimpanan Lokal (localStorage)</strong> dan tersinkronisasi dengan Data Master K3.
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block" style="height: 42px; font-weight: 700; font-size: 0.9rem;">
+                            <i data-lucide="user-check" style="width: 18px; height: 18px;"></i>
+                            Daftar & Masuk Sekarang
+                        </button>
+                    </form>
+
+                    <div style="margin-top: 16px; text-align: center; font-size: 0.8rem; color: var(--text-muted);">
+                        Sudah punya akun? <a href="javascript:void(0)" onclick="switchAuthTab('login')" style="color: var(--primary); font-weight: 700; text-decoration: none;">Masuk di sini</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- KARYAWAN REPORT MODAL (LAPOR KERUSAKAN / PERMINTAAN APD BARU) -->
+    <!-- ========================================================================= -->
+    <div class="modal" id="karyawanReportModal" onclick="closeKaryawanReportModal(event)">
+        <div class="modal-content" style="max-width: 540px;" onclick="event.stopPropagation()">
+            <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="alert-triangle" style="width: 20px; height: 20px;"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0; font-size: 1.05rem; font-weight: 700; color: var(--text-main);">Lapor Kerusakan / Permintaan APD Baru</h4>
+                        <p style="font-size: 0.76rem; color: var(--text-muted); margin: 0;">Laporan akan diteruskan ke Tim Pengawas & Leader K3</p>
+                    </div>
+                </div>
+                <button class="modal-close-btn" onclick="closeKaryawanReportModalDirect()">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                </button>
+            </div>
+
+            <div class="modal-body" style="text-align: left; padding: 20px;">
+                <form id="formKaryawanReport" onsubmit="handleKaryawanReportSubmit(event)">
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label for="repNamaApd">Jenis Alat Pelindung Diri (APD) <span style="color: var(--danger);">*</span></label>
+                        <div class="input-wrapper">
+                            <span class="input-icon"><i data-lucide="hard-hat" style="width: 16px; height: 16px;"></i></span>
+                            <input type="text" id="repNamaApd" list="datalistApd" placeholder="Misal: Helm Safety / Body Harness" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label for="repSn">Serial Number (SN) / ID APD (Jika Ada)</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon"><i data-lucide="hash" style="width: 16px; height: 16px;"></i></span>
+                            <input type="text" id="repSn" placeholder="Misal: SN-HLM-2024-089">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label for="repKondisi">Kondisi / Masalah yang Ditemukan <span style="color: var(--danger);">*</span></label>
+                        <div class="input-wrapper">
+                            <span class="input-icon"><i data-lucide="alert-circle" style="width: 16px; height: 16px;"></i></span>
+                            <select id="repKondisi" required>
+                                <option value="Perlu Perbaikan">Perlu Perbaikan (Tali aus / Pengait kendor)</option>
+                                <option value="Rusak / Ganti">Rusak Total / Butuh Penggantian Segera</option>
+                                <option value="Hilang / Permintaan Baru">Hilang / Pengajuan Unit Baru</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label for="repCatatan">Deskripsi Kerusakan / Catatan untuk Petugas K3</label>
+                        <textarea id="repCatatan" rows="3" placeholder="Jelaskan bagian APD yang rusak dan lokasi kerja Anda..." style="width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; background: var(--bg-input); font-size: 0.85rem; color: var(--text-main); font-family: inherit;"></textarea>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--border); padding-top: 14px;">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="closeKaryawanReportModalDirect()">
+                            Batal
+                        </button>
+                        <button type="submit" class="btn btn-primary btn-sm" style="padding: 0 20px;">
+                            <i data-lucide="send" style="width: 15px; height: 15px;"></i>
+                            Kirimkan Laporan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- USER PROFILE MODAL -->
+    <!-- ========================================================================= -->
+    <div class="modal" id="profileModal" onclick="closeProfileModal(event)">
+        <div class="modal-content" style="max-width: 480px;" onclick="event.stopPropagation()">
+            <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border);">
+                <h4 style="margin: 0; font-size: 1.05rem; font-weight: 700; color: var(--text-main);">Profil & Akun Pengguna</h4>
+                <button class="modal-close-btn" onclick="closeProfileModalDirect()">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                </button>
+            </div>
+
+            <div class="modal-body" style="text-align: left; padding: 20px;">
+                <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px; background: var(--bg-input); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                    <div class="user-avatar-circle" id="profAvatar" style="width: 52px; height: 52px; font-size: 1.2rem;">AD</div>
+                    <div>
+                        <h3 id="profName" style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px;">Admin SafeGuard</h3>
+                        <div id="profEmail" style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">admin@k3.com</div>
+                        <span class="badge-role badge-role-admin" id="profBadge">👑 Administrator</span>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; font-size: 0.82rem;">
+                    <div style="background: var(--bg-card); border: 1px solid var(--border); padding: 10px; border-radius: var(--radius-sm);">
+                        <span style="color: var(--text-muted); font-size: 0.72rem; display: block;">Departemen / Divisi:</span>
+                        <strong id="profDept" style="color: var(--text-main);">-</strong>
+                    </div>
+                    <div style="background: var(--bg-card); border: 1px solid var(--border); padding: 10px; border-radius: var(--radius-sm);">
+                        <span style="color: var(--text-muted); font-size: 0.72rem; display: block;">NIK / Nomor Pegawai:</span>
+                        <strong id="profNik" style="color: var(--text-main);">-</strong>
+                    </div>
+                </div>
+
+                <!-- Change Password Form -->
+                <form id="formChangePassword" onsubmit="handleChangePasswordSubmit(event)">
+                    <div style="font-weight: 700; font-size: 0.85rem; margin-bottom: 10px; color: var(--text-main);">Ganti Password:</div>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label for="profNewPass" style="font-size: 0.78rem;">Password Baru</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon"><i data-lucide="lock" style="width: 15px; height: 15px;"></i></span>
+                            <input type="password" id="profNewPass" placeholder="Minimal 6 karakter" required>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px;">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="closeProfileModalDirect()">Tutup</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Simpan Password Baru</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification Container -->
     <div class="toast-container" id="toastContainer"></div>
 
@@ -2688,8 +3715,647 @@
             localStorage.setItem('k3_master_data', JSON.stringify(masterData));
         }
 
+        // =========================================================================
+        // 2. USER AUTHENTICATION & MULTI-ROLE SYSTEM (LOCALSTORAGE)
+        // =========================================================================
+        const DEFAULT_USERS = [
+            {
+                id: 1,
+                nama: 'Admin SafeGuard K3',
+                email: 'admin@k3.com',
+                password: 'admin123',
+                role: 'admin',
+                dept: 'HSE & Safety Management',
+                nik: 'ADM-001',
+                createdAt: '2024-01-01T08:00:00.000Z'
+            },
+            {
+                id: 2,
+                nama: 'Ir. Hendra Wijaya',
+                email: 'hendra@k3.com',
+                password: 'leader123',
+                role: 'leader',
+                dept: 'Section Head Safety & K3',
+                nik: 'SPV-102',
+                createdAt: '2024-01-02T08:00:00.000Z'
+            },
+            {
+                id: 3,
+                nama: 'Ahmad Fauzi',
+                email: 'ahmad@k3.com',
+                password: 'pengawas123',
+                role: 'pengawas',
+                dept: 'Field Safety Inspector',
+                nik: 'PIC-001',
+                createdAt: '2024-01-03T08:00:00.000Z'
+            },
+            {
+                id: 4,
+                nama: 'Budi Santoso',
+                email: 'budi@k3.com',
+                password: 'karyawan123',
+                role: 'karyawan',
+                dept: 'Workshop / Mesin',
+                nik: 'EMP-2024-089',
+                createdAt: '2024-01-04T08:00:00.000Z'
+            }
+        ];
+
+        let usersList = JSON.parse(localStorage.getItem('k3_users')) || DEFAULT_USERS;
+        if (!localStorage.getItem('k3_users')) {
+            localStorage.setItem('k3_users', JSON.stringify(usersList));
+        }
+
+        // Active authenticated user
+        let currentUser = JSON.parse(localStorage.getItem('k3_auth_user')) || usersList[0];
+        if (!localStorage.getItem('k3_auth_user')) {
+            localStorage.setItem('k3_auth_user', JSON.stringify(currentUser));
+        }
+
+        let selectedRegRole = 'karyawan';
         let currentFilter = { query: '', kuartal: 'all', status: 'all' };
         let tempBase64Image = '';
+
+        // Helper to get users
+        function getRegisteredUsers() {
+            return JSON.parse(localStorage.getItem('k3_users')) || DEFAULT_USERS;
+        }
+
+        function saveRegisteredUsers(list) {
+            usersList = list;
+            localStorage.setItem('k3_users', JSON.stringify(list));
+        }
+
+        // Quick 1-Click Demo Login
+        function quickLogin(role) {
+            const list = getRegisteredUsers();
+            let targetUser = list.find(u => u.role === role);
+            if (!targetUser) {
+                targetUser = DEFAULT_USERS.find(u => u.role === role) || DEFAULT_USERS[0];
+                list.push(targetUser);
+                saveRegisteredUsers(list);
+            }
+
+            currentUser = targetUser;
+            localStorage.setItem('k3_auth_user', JSON.stringify(currentUser));
+            closeAuthModalDirect();
+            closeUserDropdown();
+            applyRolePermissions();
+            showToast(`🎉 Berhasil masuk sebagai ${targetUser.nama} (${role.toUpperCase()})!`, 'success');
+        }
+
+        // Handle Standard Login Submit
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const pass = document.getElementById('loginPassword').value;
+
+            const list = getRegisteredUsers();
+            const matchedUser = list.find(u => u.email.toLowerCase() === email && u.password === pass);
+
+            if (matchedUser) {
+                currentUser = matchedUser;
+                localStorage.setItem('k3_auth_user', JSON.stringify(currentUser));
+                closeAuthModalDirect();
+                applyRolePermissions();
+                showToast(`🎉 Selamat datang kembali, ${matchedUser.nama}!`, 'success');
+                document.getElementById('formLogin').reset();
+            } else {
+                showToast('Email atau password salah! Silakan coba lagi.', 'danger');
+            }
+        }
+
+        // Handle Register Submit
+        function handleRegisterSubmit(e) {
+            e.preventDefault();
+            const nama = document.getElementById('regNama').value.trim();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const nik = document.getElementById('regNik').value.trim() || `ID-${Math.floor(1000 + Math.random() * 9000)}`;
+            const dept = document.getElementById('regDept').value.trim() || 'Umum';
+            const pass = document.getElementById('regPassword').value;
+            const passConfirm = document.getElementById('regPasswordConfirm').value;
+
+            if (pass.length < 6) {
+                showToast('Password minimal harus 6 karakter!', 'warning');
+                return;
+            }
+
+            if (pass !== passConfirm) {
+                showToast('Konfirmasi password tidak cocok!', 'warning');
+                return;
+            }
+
+            const list = getRegisteredUsers();
+            if (list.some(u => u.email.toLowerCase() === email)) {
+                showToast('Alamat email sudah terdaftar! Silakan gunakan email lain atau login.', 'warning');
+                return;
+            }
+
+            const newUser = {
+                id: Date.now(),
+                nama: nama,
+                email: email,
+                password: pass,
+                role: selectedRegRole,
+                dept: dept,
+                nik: nik,
+                createdAt: new Date().toISOString()
+            };
+
+            list.push(newUser);
+            saveRegisteredUsers(list);
+
+            // Auto sync to Master Data K3
+            if (selectedRegRole === 'karyawan') {
+                if (!masterData.pemilik.some(p => p.nama.toLowerCase() === nama.toLowerCase())) {
+                    masterData.pemilik.push({ id: Date.now(), nama: nama, dept: dept, email: email, sn: `SN-${nama.substring(0,3).toUpperCase()}-001`, sendEmail: true });
+                }
+            } else if (selectedRegRole === 'leader') {
+                if (!masterData.spv.some(s => s.nama.toLowerCase() === nama.toLowerCase())) {
+                    masterData.spv.push({ id: Date.now(), nama: nama, jabatan: dept || 'Supervisor / Leader', email: email, sendEmail: true });
+                }
+            } else if (selectedRegRole === 'pengawas') {
+                if (!masterData.pic.some(pi => pi.nama.toLowerCase() === nama.toLowerCase())) {
+                    masterData.pic.push({ id: Date.now(), nama: nama, idPic: nik || 'PIC-K3-NEW', email: email, sendEmail: true });
+                }
+            }
+            localStorage.setItem('k3_master_data', JSON.stringify(masterData));
+            updateDatalists();
+
+            currentUser = newUser;
+            localStorage.setItem('k3_auth_user', JSON.stringify(currentUser));
+            closeAuthModalDirect();
+            applyRolePermissions();
+            showToast(`🎉 Akun baru (${selectedRegRole.toUpperCase()}) berhasil dibuat! Selamat datang, ${nama}.`, 'success');
+            document.getElementById('formRegister').reset();
+        }
+
+        // Logout User
+        function logoutUser() {
+            if (confirm('Apakah Anda yakin ingin keluar (logout) dari sistem?')) {
+                currentUser = null;
+                localStorage.removeItem('k3_auth_user');
+                closeUserDropdown();
+                openAuthModal('login');
+                showToast('Anda telah keluar dari akun.', 'info');
+            }
+        }
+
+        // Register Role Selector Chips
+        function selectRegisterRole(role) {
+            selectedRegRole = role;
+            const chips = ['karyawan', 'pengawas', 'leader', 'admin'];
+            chips.forEach(r => {
+                const el = document.getElementById(`chipRole${r.charAt(0).toUpperCase() + r.slice(1)}`);
+                if (el) {
+                    el.classList.toggle('selected', r === role);
+                    const radio = el.querySelector('input[type="radio"]');
+                    if (radio) radio.checked = (r === role);
+                }
+            });
+        }
+
+        // Auth Modal Controls
+        function openAuthModal(tab = 'login') {
+            const modal = document.getElementById('authModal');
+            if (modal) {
+                switchAuthTab(tab);
+                modal.classList.add('active');
+                lucide.createIcons();
+            }
+        }
+
+        function closeAuthModal(e) {
+            if (e.target.id === 'authModal' && currentUser) {
+                closeAuthModalDirect();
+            }
+        }
+
+        function closeAuthModalDirect() {
+            if (!currentUser) {
+                showToast('Silakan login terlebih dahulu untuk mengakses sistem!', 'warning');
+                return;
+            }
+            const modal = document.getElementById('authModal');
+            if (modal) modal.classList.remove('active');
+        }
+
+        function switchAuthTab(tab) {
+            const tabLogin = document.getElementById('tabAuthLogin');
+            const tabRegister = document.getElementById('tabAuthRegister');
+            const viewLogin = document.getElementById('authViewLogin');
+            const viewRegister = document.getElementById('authViewRegister');
+            const titleEl = document.getElementById('authModalTitle');
+
+            if (tab === 'login') {
+                if (tabLogin) tabLogin.classList.add('active');
+                if (tabRegister) tabRegister.classList.remove('active');
+                if (viewLogin) viewLogin.style.display = 'block';
+                if (viewRegister) viewRegister.style.display = 'none';
+                if (titleEl) titleEl.innerText = 'Masuk ke Sistem PPE Compliance';
+            } else {
+                if (tabLogin) tabLogin.classList.remove('active');
+                if (tabRegister) tabRegister.classList.add('active');
+                if (viewLogin) viewLogin.style.display = 'none';
+                if (viewRegister) viewRegister.style.display = 'block';
+                if (titleEl) titleEl.innerText = 'Daftar Akun Pengguna Baru';
+            }
+            lucide.createIcons();
+        }
+
+        // User Dropdown Menu Controls
+        function toggleUserDropdown(e) {
+            if (e) e.stopPropagation();
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.toggle('active');
+        }
+
+        function closeUserDropdown() {
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.remove('active');
+        }
+
+        // Profile Modal Controls
+        function openProfileModal() {
+            closeUserDropdown();
+            if (!currentUser) return;
+            const modal = document.getElementById('profileModal');
+            document.getElementById('profName').innerText = currentUser.nama;
+            document.getElementById('profEmail').innerText = currentUser.email;
+            document.getElementById('profDept').innerText = currentUser.dept || '-';
+            document.getElementById('profNik').innerText = currentUser.nik || '-';
+            
+            const initials = currentUser.nama.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+            const avatar = document.getElementById('profAvatar');
+            avatar.innerText = initials;
+            avatar.className = `user-avatar-circle role-${currentUser.role}`;
+
+            const badge = document.getElementById('profBadge');
+            badge.className = `badge-role badge-role-${currentUser.role}`;
+            badge.innerText = getRoleBadgeText(currentUser.role);
+
+            modal.classList.add('active');
+            lucide.createIcons();
+        }
+
+        function closeProfileModal(e) {
+            if (e.target.id === 'profileModal') closeProfileModalDirect();
+        }
+
+        function closeProfileModalDirect() {
+            const modal = document.getElementById('profileModal');
+            if (modal) modal.classList.remove('active');
+        }
+
+        function handleChangePasswordSubmit(e) {
+            e.preventDefault();
+            const newPass = document.getElementById('profNewPass').value;
+            if (newPass.length < 6) {
+                showToast('Password minimal 6 karakter!', 'warning');
+                return;
+            }
+
+            const list = getRegisteredUsers();
+            const idx = list.findIndex(u => u.id === currentUser.id);
+            if (idx > -1) {
+                list[idx].password = newPass;
+                saveRegisteredUsers(list);
+                currentUser.password = newPass;
+                localStorage.setItem('k3_auth_user', JSON.stringify(currentUser));
+                closeProfileModalDirect();
+                document.getElementById('formChangePassword').reset();
+                showToast('Password Anda berhasil diperbarui!', 'success');
+            }
+        }
+
+        // Karyawan Report Modal
+        function openKaryawanReportModal() {
+            const modal = document.getElementById('karyawanReportModal');
+            if (modal) {
+                if (currentUser) {
+                    const matchedPemilik = (masterData.pemilik || []).find(p => p.nama.toLowerCase() === currentUser.nama.toLowerCase());
+                    if (matchedPemilik && matchedPemilik.sn) {
+                        document.getElementById('repSn').value = matchedPemilik.sn;
+                    }
+                }
+                modal.classList.add('active');
+                lucide.createIcons();
+            }
+        }
+
+        function closeKaryawanReportModal(e) {
+            if (e.target.id === 'karyawanReportModal') closeKaryawanReportModalDirect();
+        }
+
+        function closeKaryawanReportModalDirect() {
+            const modal = document.getElementById('karyawanReportModal');
+            if (modal) modal.classList.remove('active');
+        }
+
+        function handleKaryawanReportSubmit(e) {
+            e.preventDefault();
+            const namaApd = document.getElementById('repNamaApd').value.trim();
+            const sn = document.getElementById('repSn').value.trim() || `SN-${namaApd.substring(0,3).toUpperCase()}-REQ`;
+            const kondisi = document.getElementById('repKondisi').value;
+            const catatan = document.getElementById('repCatatan').value.trim();
+
+            const dummySvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="100%" height="100%" fill="%23f59e0b"/><text x="50%" y="50%" fill="white" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle" dominant-baseline="middle">Laporan APD (${kondisi})</text></svg>`;
+
+            const newLaporan = {
+                id: Date.now(),
+                kuartal: getCurrentKuartalLabel(),
+                nama_apd: namaApd,
+                pemilik: currentUser.nama,
+                sn: sn,
+                kondisi: kondisi,
+                tgl_inspeksi: new Date().toISOString().slice(0, 10),
+                pic: 'Petugas K3 Lapangan',
+                spv: masterData.spv[0] ? masterData.spv[0].nama : 'Supervisor K3',
+                foto: dummySvg,
+                catatan: catatan,
+                status: 'Pending',
+                isKaryawanReport: true,
+                createdAt: new Date().toISOString()
+            };
+
+            dataInspeksi.unshift(newLaporan);
+            localStorage.setItem('k3_data', JSON.stringify(dataInspeksi));
+
+            closeKaryawanReportModalDirect();
+            document.getElementById('formKaryawanReport').reset();
+            renderTable();
+            renderKaryawanOverview();
+            showToast('Laporan kendala APD Anda berhasil dikirimkan ke Pengawas & Leader K3!', 'success');
+        }
+
+        function getCurrentKuartalLabel() {
+            const m = new Date().getMonth() + 1;
+            if (m <= 3) return 'Q1 (Jan-Mar)';
+            if (m <= 6) return 'Q2 (Apr-Jun)';
+            if (m <= 9) return 'Q3 (Jul-Sep)';
+            return 'Q4 (Okt-Des)';
+        }
+
+        function getRoleBadgeText(role) {
+            switch(role) {
+                case 'admin': return '👑 Administrator';
+                case 'leader': return '⭐ Leader (SPV)';
+                case 'pengawas': return '🔍 Pengawas (PIC)';
+                case 'karyawan': return '👷 Karyawan';
+                default: return 'Pengguna';
+            }
+        }
+
+        // =========================================================================
+        // 3. ROLE-BASED ACCESS CONTROL (RBAC) UI ENGINE
+        // =========================================================================
+        function applyRolePermissions() {
+            if (!currentUser) {
+                openAuthModal('login');
+                return;
+            }
+
+            const role = currentUser.role;
+            const initials = currentUser.nama.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+
+            // 1. Update Top Navbar Profile Pill
+            const navAvatar = document.getElementById('navUserAvatar');
+            if (navAvatar) {
+                navAvatar.innerText = initials;
+                navAvatar.className = `user-avatar-circle role-${role}`;
+            }
+            const navName = document.getElementById('navUserName');
+            if (navName) navName.innerText = currentUser.nama;
+
+            const navSub = document.getElementById('navUserRoleSub');
+            if (navSub) {
+                const subLabels = { admin: 'Administrator K3', leader: 'Supervisor / Approver', pengawas: 'Field Inspector', karyawan: 'Pekerja / Pemilik APD' };
+                navSub.innerText = subLabels[role] || 'User';
+            }
+
+            // 2. Update User Dropdown Details
+            const dropAvatar = document.getElementById('dropUserAvatar');
+            if (dropAvatar) {
+                dropAvatar.innerText = initials;
+                dropAvatar.className = `user-avatar-circle role-${role}`;
+            }
+            const dropName = document.getElementById('dropUserName');
+            if (dropName) dropName.innerText = currentUser.nama;
+
+            const dropEmail = document.getElementById('dropUserEmail');
+            if (dropEmail) dropEmail.innerText = currentUser.email;
+
+            const dropRoleBadge = document.getElementById('dropUserRoleBadge');
+            if (dropRoleBadge) {
+                dropRoleBadge.className = `badge-role badge-role-${role}`;
+                dropRoleBadge.innerText = getRoleBadgeText(role);
+            }
+
+            const dropDept = document.getElementById('dropUserDept');
+            if (dropDept) dropDept.innerText = currentUser.dept || '-';
+
+            // 3. Role Specific Navbar Actions
+            const btnManageUsers = document.getElementById('btnDropdownManageUsers');
+            if (btnManageUsers) btnManageUsers.style.display = (role === 'admin') ? 'flex' : 'none';
+
+            const tabMasterUsers = document.getElementById('tabMasterUsers');
+            if (tabMasterUsers) tabMasterUsers.style.display = (role === 'admin') ? 'inline-flex' : 'none';
+
+            const btnNavEmail = document.getElementById('btnNavEmail');
+            if (btnNavEmail) btnNavEmail.style.display = (role === 'karyawan') ? 'none' : 'inline-flex';
+
+            const tabBtnMaster = document.getElementById('tabBtnMaster');
+            if (tabBtnMaster) {
+                if (role === 'karyawan') {
+                    tabBtnMaster.style.opacity = '0.5';
+                    tabBtnMaster.title = 'Akses terbatas untuk Administrator, Leader, dan Pengawas';
+                } else {
+                    tabBtnMaster.style.opacity = '1';
+                    tabBtnMaster.title = 'Kelola Data Master K3';
+                }
+            }
+
+            // 4. Update Role Banner on Dashboard
+            const roleBanner = document.getElementById('roleBanner');
+            const roleBannerTitle = document.getElementById('roleBannerTitle');
+            const roleBannerDesc = document.getElementById('roleBannerDesc');
+            const roleBannerBadge = document.getElementById('roleBannerBadge');
+            const roleBannerIcon = document.getElementById('roleBannerIcon');
+            const roleBannerActions = document.getElementById('roleBannerActions');
+
+            if (roleBanner && roleBannerTitle && roleBannerDesc && roleBannerBadge) {
+                roleBanner.className = `role-banner role-banner-${role}`;
+                roleBannerBadge.className = `badge-role badge-role-${role}`;
+                roleBannerBadge.innerText = getRoleBadgeText(role);
+
+                let iconHtml = '<i data-lucide="shield-check" style="width: 22px; height: 22px;"></i>';
+                let descText = '';
+                let actionsHtml = '';
+
+                if (role === 'admin') {
+                    iconHtml = '<i data-lucide="shield-check" style="width: 22px; height: 22px;"></i>';
+                    descText = 'Akses Administrator Penuh: Input laporan inspeksi, persetujuan SPV, kelola seluruh data master K3, konfigurasi email & QR code, dan manajemen akun pengguna.';
+                    actionsHtml = `
+                        <button type="button" class="btn btn-primary btn-sm" onclick="switchPage('master'); switchMasterTab('users');">
+                            <i data-lucide="users" style="width: 14px; height: 14px;"></i> Kelola User
+                        </button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="openEmailConfigModal()">
+                            <i data-lucide="mail" style="width: 14px; height: 14px;"></i> Notif Email
+                        </button>
+                    `;
+                } else if (role === 'leader') {
+                    iconHtml = '<i data-lucide="award" style="width: 22px; height: 22px;"></i>';
+                    const pendingCount = dataInspeksi.filter(x => x.status === 'Pending').length;
+                    descText = `Akses Leader / SPV Approver: Terdapat <strong>${pendingCount} laporan inspeksi APD</strong> yang menunggu verifikasi & persetujuan Anda.`;
+                    actionsHtml = `
+                        <button type="button" class="btn btn-warning btn-sm" onclick="filterByPending()">
+                            <i data-lucide="clock" style="width: 14px; height: 14px;"></i> Antrean Pending (${pendingCount})
+                        </button>
+                        <button type="button" class="btn btn-excel btn-sm" onclick="exportExcel()">
+                            <i data-lucide="file-spreadsheet" style="width: 14px; height: 14px;"></i> Export Excel
+                        </button>
+                    `;
+                } else if (role === 'pengawas') {
+                    iconHtml = '<i data-lucide="user-check" style="width: 22px; height: 22px;"></i>';
+                    descText = 'Akses Pengawas Lapangan (PIC): Lakukan pemeriksaan fisik APD, cek nomor seri & kondisi kelayakan, dokumentasikan foto bukti, dan submit laporan.';
+                    actionsHtml = `
+                        <button type="button" class="btn btn-primary btn-sm" onclick="focusFormInput()">
+                            <i data-lucide="plus-circle" style="width: 14px; height: 14px;"></i> Input Laporan Baru
+                        </button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="switchPage('master'); switchMasterTab('apd');">
+                            <i data-lucide="hard-hat" style="width: 14px; height: 14px;"></i> Master APD
+                        </button>
+                    `;
+                } else if (role === 'karyawan') {
+                    iconHtml = '<i data-lucide="hard-hat" style="width: 22px; height: 22px;"></i>';
+                    descText = `Selamat Datang, <strong>${escapeHtml(currentUser.nama)}</strong>! Pantau kepatuhan & kelayakan seluruh APD Anda di halaman ini.`;
+                    actionsHtml = `
+                        <button type="button" class="btn btn-primary btn-sm" onclick="openKaryawanReportModal()">
+                            <i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i> Lapor Kerusakan APD
+                        </button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="printReport()">
+                            <i data-lucide="printer" style="width: 14px; height: 14px;"></i> Cetak Kartu APD
+                        </button>
+                    `;
+                }
+
+                if (roleBannerIcon) roleBannerIcon.innerHTML = iconHtml;
+                roleBannerTitle.innerHTML = `<span>Selamat Datang, ${escapeHtml(currentUser.nama)}!</span> <span class="badge-role badge-role-${role}">${getRoleBadgeText(role)}</span>`;
+                roleBannerDesc.innerHTML = descText;
+                if (roleBannerActions) roleBannerActions.innerHTML = actionsHtml;
+            }
+
+            // 5. Adapt Form Input Defaults
+            const picInput = document.getElementById('pic');
+            if (picInput && role === 'pengawas') {
+                picInput.value = currentUser.nama;
+            }
+
+            const pemilikInput = document.getElementById('pemilik');
+            if (pemilikInput && role === 'karyawan') {
+                pemilikInput.value = currentUser.nama;
+            }
+
+            // 6. Karyawan Personal Section
+            const karySection = document.getElementById('karyawanPersonalSection');
+            if (karySection) {
+                if (role === 'karyawan') {
+                    karySection.style.display = 'block';
+                    renderKaryawanOverview();
+                } else {
+                    karySection.style.display = 'none';
+                }
+            }
+
+            // 7. Re-render Table and Master Lists
+            renderTable();
+            renderMasterLists();
+            lucide.createIcons();
+        }
+
+        // Render Karyawan Personal APD Cards Overview
+        function renderKaryawanOverview() {
+            if (!currentUser) return;
+            const container = document.getElementById('karyawanApdCardsContainer');
+            if (!container) return;
+
+            const myInspections = dataInspeksi.filter(x => x.pemilik && x.pemilik.toLowerCase() === currentUser.nama.toLowerCase());
+
+            if (myInspections.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 18px; background: var(--bg-input); border-radius: var(--radius-md); border: 1px dashed var(--border);">
+                        <i data-lucide="info" style="width: 24px; height: 24px; color: var(--primary); margin-bottom: 6px;"></i>
+                        <div style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">Belum Ada Riwayat Inspeksi APD atas Nama Anda</div>
+                        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">Klik tombol "Lapor Kerusakan / Minta APD Baru" di atas jika Anda ingin mendaftarkan APD untuk diperiksa petugas K3.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            container.innerHTML = '';
+            myInspections.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'karyawan-apd-item-card';
+
+                let kondisiBadge = '';
+                if (item.kondisi === 'Layak Pakai') {
+                    kondisiBadge = `<span class="badge badge-good">✓ Layak Pakai</span>`;
+                } else if (item.kondisi === 'Perlu Perbaikan') {
+                    kondisiBadge = `<span class="badge badge-warning">⚠ Perlu Perbaikan</span>`;
+                } else {
+                    kondisiBadge = `<span class="badge badge-danger">✕ Rusak / Ganti</span>`;
+                }
+
+                let statusBadge = item.status === 'Done'
+                    ? `<span class="badge badge-done" style="font-size: 0.7rem;">Approved SPV</span>`
+                    : `<span class="badge badge-pending" style="font-size: 0.7rem;">Menunggu SPV</span>`;
+
+                card.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="photo-thumb-wrapper" style="width: 44px; height: 44px;" onclick="openPhotoModal('${item.foto}', '${escapeHtml(item.nama_apd)}')">
+                            <img src="${item.foto}" alt="${escapeHtml(item.nama_apd)}" style="width: 44px; height: 44px; object-fit: cover; border-radius: 6px;">
+                        </div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 0.88rem; color: var(--text-main);">${escapeHtml(item.nama_apd)}</div>
+                            <div style="font-size: 0.74rem; color: var(--text-muted);">SN: ${escapeHtml(item.sn || '-')} • ${escapeHtml(item.kuartal)}</div>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="margin-bottom: 4px;">${kondisiBadge}</div>
+                        <div>${statusBadge}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // Helper Shortcuts
+        function filterByPending() {
+            document.getElementById('filterStatus').value = 'Pending';
+            currentFilter.status = 'Pending';
+            renderTable();
+            showToast('Menampilkan seluruh laporan yang menunggu persetujuan (Pending SPV).', 'info');
+        }
+
+        function focusFormInput() {
+            const formCard = document.getElementById('formCard');
+            const formBody = document.getElementById('formBody');
+            if (formBody.style.display === 'none') {
+                toggleFormVisibility();
+            }
+            document.getElementById('nama_apd').focus();
+            formCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const wrapper = document.getElementById('userProfileWrapper');
+            if (wrapper && !wrapper.contains(e.target)) {
+                closeUserDropdown();
+            }
+        });
 
         // Initialize Default Date Input to Today
         document.getElementById('tgl_inspeksi').valueAsDate = new Date();
@@ -2717,8 +4383,13 @@
             }
         }
 
-        // Navigation Page Switcher
+        // Navigation Page Switcher (With RBAC Guards)
         function switchPage(pageName) {
+            if (pageName === 'master' && currentUser && currentUser.role === 'karyawan') {
+                showToast('Halaman Data Master hanya dapat diakses oleh Administrator, Leader, dan Pengawas.', 'warning');
+                return;
+            }
+
             const pageInspeksi = document.getElementById('pageInspeksi');
             const pageMaster = document.getElementById('pageMaster');
             const tabBtnInspeksi = document.getElementById('tabBtnInspeksi');
@@ -2744,48 +4415,56 @@
         function updateDatalists() {
             // Pemilik Datalist
             const dlPemilik = document.getElementById('datalistPemilik');
-            dlPemilik.innerHTML = '';
-            masterData.pemilik.forEach(item => {
-                const opt = document.createElement('option');
-                opt.value = item.nama;
-                opt.label = `${item.dept ? item.dept + ' | ' : ''}SN: ${item.sn || '-'}`;
-                dlPemilik.appendChild(opt);
-            });
+            if (dlPemilik) {
+                dlPemilik.innerHTML = '';
+                (masterData.pemilik || []).forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.nama;
+                    opt.label = `${item.dept ? item.dept + ' | ' : ''}SN: ${item.sn || '-'}`;
+                    dlPemilik.appendChild(opt);
+                });
+            }
 
             // SPV Datalist
             const dlSpv = document.getElementById('datalistSpv');
-            dlSpv.innerHTML = '';
-            masterData.spv.forEach(item => {
-                const opt = document.createElement('option');
-                opt.value = item.nama;
-                opt.label = `${item.jabatan || 'Supervisor / Leader'}${item.email ? ' (' + item.email + ')' : ''}`;
-                dlSpv.appendChild(opt);
-            });
+            if (dlSpv) {
+                dlSpv.innerHTML = '';
+                (masterData.spv || []).forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.nama;
+                    opt.label = `${item.jabatan || 'Supervisor / Leader'}${item.email ? ' (' + item.email + ')' : ''}`;
+                    dlSpv.appendChild(opt);
+                });
+            }
 
             // PIC Datalist
             const dlPic = document.getElementById('datalistPic');
-            dlPic.innerHTML = '';
-            masterData.pic.forEach(item => {
-                const opt = document.createElement('option');
-                opt.value = item.nama;
-                opt.label = item.idPic || 'PIC Pemeriksa';
-                dlPic.appendChild(opt);
-            });
+            if (dlPic) {
+                dlPic.innerHTML = '';
+                (masterData.pic || []).forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.nama;
+                    opt.label = item.idPic || 'PIC Pemeriksa';
+                    dlPic.appendChild(opt);
+                });
+            }
 
             // APD Datalist
             const dlApd = document.getElementById('datalistApd');
-            dlApd.innerHTML = '';
-            (masterData.apd || []).forEach(item => {
-                const opt = document.createElement('option');
-                opt.value = item.nama;
-                opt.label = `${item.kategori || ''}${item.standar ? ' | ' + item.standar : ''}`;
-                dlApd.appendChild(opt);
-            });
+            if (dlApd) {
+                dlApd.innerHTML = '';
+                (masterData.apd || []).forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.nama;
+                    opt.label = `${item.kategori || ''}${item.standar ? ' | ' + item.standar : ''}`;
+                    dlApd.appendChild(opt);
+                });
+            }
         }
 
         // Auto fill SN when choosing registered Pemilik APD
         function handlePemilikChange(val) {
-            const match = masterData.pemilik.find(p => p.nama.toLowerCase() === val.toLowerCase().trim());
+            const match = (masterData.pemilik || []).find(p => p.nama.toLowerCase() === val.toLowerCase().trim());
             if (match && match.sn) {
                 const snInput = document.getElementById('sn');
                 if (!snInput.value || snInput.value.trim() === '') {
@@ -2795,12 +4474,17 @@
         }
 
         let currentMasterTab = 'pemilik';
-        let masterSearchQuery = { pemilik: '', spv: '', pic: '', apd: '' };
+        let masterSearchQuery = { pemilik: '', spv: '', pic: '', apd: '', users: '' };
 
         // Sub-Navigation Switcher inside Master Data
         function switchMasterTab(tabName) {
+            if (tabName === 'users' && currentUser && currentUser.role !== 'admin') {
+                showToast('Halaman Manajemen Pengguna hanya dapat diakses oleh Administrator K3!', 'warning');
+                return;
+            }
+
             currentMasterTab = tabName;
-            const tabs = ['pemilik', 'spv', 'pic', 'apd'];
+            const tabs = ['pemilik', 'spv', 'pic', 'apd', 'users'];
             tabs.forEach(t => {
                 const btn = document.getElementById(`tabMaster${t.charAt(0).toUpperCase() + t.slice(1)}`);
                 const view = document.getElementById(`masterView${t.charAt(0).toUpperCase() + t.slice(1)}`);
@@ -2818,31 +4502,35 @@
 
         // Render Master Data Lists on Page 2 (Full Card & Table)
         function renderMasterLists() {
-            // Update tab badges & card header counts
             const totalPemilik = (masterData.pemilik || []).length;
             const totalSpv = (masterData.spv || []).length;
             const totalPic = (masterData.pic || []).length;
             const totalApd = (masterData.apd || []).length;
+            const totalUsers = getRegisteredUsers().length;
 
             const bPemilik = document.getElementById('badgeTabPemilik');
             const bSpv = document.getElementById('badgeTabSpv');
             const bPic = document.getElementById('badgeTabPic');
             const bApd = document.getElementById('badgeTabApd');
+            const bUsers = document.getElementById('badgeTabUsers');
 
             if (bPemilik) bPemilik.innerText = totalPemilik;
             if (bSpv) bSpv.innerText = totalSpv;
             if (bPic) bPic.innerText = totalPic;
             if (bApd) bApd.innerText = totalApd;
+            if (bUsers) bUsers.innerText = totalUsers;
 
             const cPemilik = document.getElementById('countPemilik');
             const cSpv = document.getElementById('countSpv');
             const cPic = document.getElementById('countPic');
             const cApd = document.getElementById('countApd');
+            const cUsers = document.getElementById('countUsers');
 
             if (cPemilik) cPemilik.innerText = `${totalPemilik} Orang Terdaftar`;
             if (cSpv) cSpv.innerText = `${totalSpv} Orang Terdaftar`;
             if (cPic) cPic.innerText = `${totalPic} Orang Terdaftar`;
             if (cApd) cApd.innerText = `${totalApd} Jenis Terdaftar`;
+            if (cUsers) cUsers.innerText = `${totalUsers} Pengguna Terdaftar`;
 
             // 1. Table Pemilik
             const tbodyPemilik = document.getElementById('tableMasterPemilik');
@@ -2864,7 +4552,7 @@
                                 <div class="empty-state" style="padding: 24px;">
                                     <div class="empty-icon"><i data-lucide="user-x"></i></div>
                                     <h4>${qPemilik ? 'Karyawan tidak ditemukan' : 'Belum ada data master karyawan'}</h4>
-                                    <p style="font-size: 0.8rem;">${qPemilik ? 'Coba gunakan kata kunci pencarian yang lain.' : 'Gunakan form di atas untuk menambahkan karyawan baru.'}</p>
+                                    <p style="font-size: 0.8rem;">Gunakan form di atas untuk menambahkan karyawan baru.</p>
                                 </div>
                             </td>
                         </tr>
@@ -2907,7 +4595,7 @@
                                 </code>
                             </td>
                             <td style="text-align: center;">
-                                <label style="display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; user-select: none;" title="${isSend ? 'Email aktif (masuk daftar kirim email)' : 'Email tidak aktif (dikecualikan dari kirim)'}">
+                                <label style="display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; user-select: none;">
                                     <input type="checkbox" ${isSend ? 'checked' : ''} onchange="toggleMasterEmailStatus('pemilik', ${item.id}, this.checked)" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary);">
                                     <span class="badge ${isSend ? 'badge-layak' : 'badge-quarter'}" style="font-size: 0.72rem; padding: 2px 6px;">
                                         ${isSend ? '✓ Kirim' : '✕ Tidak'}
@@ -2944,7 +4632,6 @@
                                 <div class="empty-state" style="padding: 24px;">
                                     <div class="empty-icon"><i data-lucide="award"></i></div>
                                     <h4>${qSpv ? 'SPV tidak ditemukan' : 'Belum ada data master SPV'}</h4>
-                                    <p style="font-size: 0.8rem;">${qSpv ? 'Coba gunakan kata kunci pencarian yang lain.' : 'Gunakan form di atas untuk menambahkan SPV / Leader baru.'}</p>
                                 </div>
                             </td>
                         </tr>
@@ -3019,7 +4706,6 @@
                                 <div class="empty-state" style="padding: 24px;">
                                     <div class="empty-icon"><i data-lucide="user-x"></i></div>
                                     <h4>${qPic ? 'PIC tidak ditemukan' : 'Belum ada data master PIC'}</h4>
-                                    <p style="font-size: 0.8rem;">${qPic ? 'Coba gunakan kata kunci pencarian yang lain.' : 'Gunakan form di atas untuk menambahkan PIC Pemeriksa baru.'}</p>
                                 </div>
                             </td>
                         </tr>
@@ -3093,7 +4779,6 @@
                                 <div class="empty-state" style="padding: 24px;">
                                     <div class="empty-icon"><i data-lucide="hard-hat"></i></div>
                                     <h4>${qApd ? 'APD tidak ditemukan' : 'Belum ada data master APD'}</h4>
-                                    <p style="font-size: 0.8rem;">${qApd ? 'Coba gunakan kata kunci pencarian yang lain.' : 'Gunakan form atau tombol Tambah Cepat di atas.'}</p>
                                 </div>
                             </td>
                         </tr>
@@ -3135,43 +4820,183 @@
                 }
             }
 
-            updateDatalists();
+            // 5. Table Users (Admin Only)
+            renderMasterUsers(masterSearchQuery.users);
+
             lucide.createIcons();
         }
 
-        // Auto-update HTML datalist options from Master Data
-        function updateDatalists() {
-            const dlApd = document.getElementById('datalistApd');
-            const dlPemilik = document.getElementById('datalistPemilik');
-            const dlPic = document.getElementById('datalistPic');
-            const dlSpv = document.getElementById('datalistSpv');
+        // Render Master Users Management Table (Admin)
+        function renderMasterUsers(query = '') {
+            const tbody = document.getElementById('tableMasterUsers');
+            if (!tbody) return;
+            tbody.innerHTML = '';
 
-            if (dlApd) {
-                dlApd.innerHTML = (masterData.apd || []).map(a => `<option value="${escapeHtml(a.nama)}">${escapeHtml(a.kategori || '')} - ${escapeHtml(a.standar || '')}</option>`).join('');
+            const list = getRegisteredUsers();
+            const filtered = list.filter(u => {
+                if (!query) return true;
+                const q = query.toLowerCase();
+                return (u.nama && u.nama.toLowerCase().includes(q)) ||
+                    (u.email && u.email.toLowerCase().includes(q)) ||
+                    (u.role && u.role.toLowerCase().includes(q)) ||
+                    (u.dept && u.dept.toLowerCase().includes(q)) ||
+                    (u.nik && u.nik.toLowerCase().includes(q));
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state" style="padding: 24px;">
+                                <div class="empty-icon"><i data-lucide="user-x"></i></div>
+                                <h4>Pengguna tidak ditemukan</h4>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
             }
-            if (dlPemilik) {
-                dlPemilik.innerHTML = (masterData.pemilik || []).map(p => `<option value="${escapeHtml(p.nama)}">${escapeHtml(p.dept || '')} | ${escapeHtml(p.email || '')}</option>`).join('');
+
+            filtered.forEach((u, idx) => {
+                const tr = document.createElement('tr');
+                const initials = u.nama ? u.nama.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() : 'U';
+                const isCurrent = currentUser && currentUser.id === u.id;
+
+                tr.innerHTML = `
+                    <td style="color: var(--text-muted); font-weight: 600;">${idx + 1}</td>
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar-circle role-${u.role}" style="width: 32px; height: 32px; font-size: 0.78rem;">${initials}</div>
+                            <div>
+                                <div class="user-name">${escapeHtml(u.nama)} ${isCurrent ? '<span class="badge badge-done" style="font-size: 0.65rem; padding: 1px 5px;">Anda</span>' : ''}</div>
+                                <div class="user-sub">Terdaftar: ${new Date(u.createdAt || Date.now()).toLocaleDateString('id-ID')}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-main);">${escapeHtml(u.email)}</div>
+                        <div style="font-size: 0.74rem; color: var(--text-muted);">NIK: ${escapeHtml(u.nik || '-')}</div>
+                    </td>
+                    <td>
+                        <span class="badge-role badge-role-${u.role}">${getRoleBadgeText(u.role)}</span>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.82rem; color: var(--text-main);">${escapeHtml(u.dept || '-')}</div>
+                    </td>
+                    <td style="text-align: right;">
+                        <div style="display: flex; gap: 4px; justify-content: flex-end; flex-wrap: wrap;">
+                            <button class="btn btn-outline btn-xs" onclick="changeUserRole(${u.id})" title="Ubah Hak Akses / Role">
+                                <i data-lucide="shield" style="width: 12px; height: 12px;"></i> Role
+                            </button>
+                            <button class="btn btn-outline btn-xs" onclick="resetUserPassword(${u.id})" title="Reset Password Pengguna">
+                                <i data-lucide="key" style="width: 12px; height: 12px;"></i> Reset
+                            </button>
+                            ${!isCurrent ? `
+                                <button class="btn btn-danger btn-xs" onclick="deleteMasterUser(${u.id})" title="Hapus Akun Pengguna">
+                                    <i data-lucide="trash-2" style="width: 12px; height: 12px;"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
+
+        // Add Master User Handler
+        function addMasterUser(e) {
+            e.preventDefault();
+            const nama = document.getElementById('m_user_nama').value.trim();
+            const email = document.getElementById('m_user_email').value.trim().toLowerCase();
+            const pass = document.getElementById('m_user_password').value;
+            const role = document.getElementById('m_user_role').value;
+            const dept = document.getElementById('m_user_dept').value.trim() || 'Umum';
+            const nik = document.getElementById('m_user_nik').value.trim() || `NIK-${Math.floor(1000 + Math.random() * 9000)}`;
+
+            const list = getRegisteredUsers();
+            if (list.some(u => u.email.toLowerCase() === email)) {
+                showToast('Email sudah digunakan oleh akun lain!', 'warning');
+                return;
             }
-            if (dlPic) {
-                dlPic.innerHTML = (masterData.pic || []).map(pi => `<option value="${escapeHtml(pi.nama)}">${escapeHtml(pi.idPic || '')} | ${escapeHtml(pi.email || '')}</option>`).join('');
+
+            const newUser = {
+                id: Date.now(),
+                nama, email, password: pass, role, dept, nik,
+                createdAt: new Date().toISOString()
+            };
+
+            list.push(newUser);
+            saveRegisteredUsers(list);
+
+            // Auto sync to master list
+            if (role === 'karyawan') {
+                masterData.pemilik.push({ id: Date.now(), nama, dept, email, sn: `SN-${nama.substring(0,3).toUpperCase()}-001`, sendEmail: true });
+            } else if (role === 'leader') {
+                masterData.spv.push({ id: Date.now(), nama, jabatan: dept, email, sendEmail: true });
+            } else if (role === 'pengawas') {
+                masterData.pic.push({ id: Date.now(), nama, idPic: nik, email, sendEmail: true });
             }
-            if (dlSpv) {
-                dlSpv.innerHTML = (masterData.spv || []).map(s => `<option value="${escapeHtml(s.nama)}">${escapeHtml(s.jabatan || '')} | ${escapeHtml(s.email || '')}</option>`).join('');
+            localStorage.setItem('k3_master_data', JSON.stringify(masterData));
+            updateDatalists();
+
+            document.getElementById('formAddUser').reset();
+            renderMasterLists();
+            showToast(`Pengguna ${nama} (${role.toUpperCase()}) berhasil ditambahkan!`, 'success');
+        }
+
+        function deleteMasterUser(id) {
+            if (currentUser && currentUser.id === id) {
+                showToast('Anda tidak dapat menghapus akun Anda sendiri yang sedang aktif!', 'warning');
+                return;
+            }
+            if (confirm('Apakah Anda yakin ingin menghapus akun pengguna ini?')) {
+                let list = getRegisteredUsers();
+                list = list.filter(u => u.id !== id);
+                saveRegisteredUsers(list);
+                renderMasterLists();
+                showToast('Akun pengguna telah dihapus.', 'info');
             }
         }
 
-        // Auto-fill Serial Number when registered Pemilik is selected
-        function handlePemilikChange(val) {
-            const found = (masterData.pemilik || []).find(p => p.nama.toLowerCase() === (val || '').trim().toLowerCase());
-            if (found && found.sn) {
-                const snInput = document.getElementById('sn');
-                if (snInput && !snInput.value) {
-                    snInput.value = found.sn;
+        function resetUserPassword(id) {
+            const list = getRegisteredUsers();
+            const u = list.find(x => x.id === id);
+            if (!u) return;
+            const newPass = prompt(`Masukkan password baru untuk ${u.nama}:`, '123456');
+            if (newPass && newPass.trim() !== '') {
+                u.password = newPass.trim();
+                saveRegisteredUsers(list);
+                if (currentUser && currentUser.id === id) {
+                    currentUser.password = newPass.trim();
+                    localStorage.setItem('k3_auth_user', JSON.stringify(currentUser));
                 }
+                showToast(`Password untuk ${u.nama} berhasil diubah!`, 'success');
             }
         }
 
-        // Toggle Send Email Status for Master Item (Daftar Kirim Email)
+        function changeUserRole(id) {
+            const list = getRegisteredUsers();
+            const u = list.find(x => x.id === id);
+            if (!u) return;
+            const newRole = prompt(`Pilih Role baru untuk ${u.nama} (admin, leader, pengawas, karyawan):`, u.role);
+            if (newRole && ['admin', 'leader', 'pengawas', 'karyawan'].includes(newRole.toLowerCase().trim())) {
+                u.role = newRole.toLowerCase().trim();
+                saveRegisteredUsers(list);
+                if (currentUser && currentUser.id === id) {
+                    currentUser.role = u.role;
+                    localStorage.setItem('k3_auth_user', JSON.stringify(currentUser));
+                    applyRolePermissions();
+                } else {
+                    renderMasterLists();
+                }
+                showToast(`Role ${u.nama} diubah menjadi ${u.role.toUpperCase()}!`, 'success');
+            } else if (newRole !== null) {
+                showToast('Role tidak valid! Masukkan: admin, leader, pengawas, atau karyawan.', 'danger');
+            }
+        }
+
+        // Toggle Master Data Email Sending Status
         function toggleMasterEmailStatus(category, id, isChecked) {
             if (!masterData || !masterData[category]) return;
             const item = masterData[category].find(x => x.id === id);
@@ -3185,44 +5010,36 @@
             }
         }
 
-        // Add Master Item
+        // Master Data Add Item Generic Handler
         function addMasterItem(e, category) {
             e.preventDefault();
             if (category === 'pemilik') {
                 const nama = document.getElementById('m_pemilik_nama').value.trim();
-                const dept = document.getElementById('m_pemilik_dept').value.trim();
+                const dept = document.getElementById('m_pemilik_dept').value.trim() || 'Umum';
                 const email = document.getElementById('m_pemilik_email').value.trim();
-                const sn = document.getElementById('m_pemilik_sn').value.trim();
-                if (!nama) return;
+                const sn = document.getElementById('m_pemilik_sn').value.trim() || '-';
 
                 masterData.pemilik.push({ id: Date.now(), nama, dept, email, sn, sendEmail: true });
                 document.getElementById('formAddPemilik').reset();
-                showToast(`Karyawan "${nama}" ditambahkan ke master!`, 'success');
             } else if (category === 'spv') {
                 const nama = document.getElementById('m_spv_nama').value.trim();
-                const jabatan = document.getElementById('m_spv_jabatan').value.trim();
+                const jabatan = document.getElementById('m_spv_jabatan').value.trim() || 'Supervisor / Leader';
                 const email = document.getElementById('m_spv_email').value.trim();
-                if (!nama) return;
 
                 masterData.spv.push({ id: Date.now(), nama, jabatan, email, sendEmail: true });
                 document.getElementById('formAddSpv').reset();
-                showToast(`SPV "${nama}" ditambahkan ke master!`, 'success');
             } else if (category === 'pic') {
                 const nama = document.getElementById('m_pic_nama').value.trim();
-                const idPic = document.getElementById('m_pic_id').value.trim();
+                const idPic = document.getElementById('m_pic_id').value.trim() || 'PIC-K3';
                 const email = document.getElementById('m_pic_email').value.trim();
-                if (!nama) return;
 
                 masterData.pic.push({ id: Date.now(), nama, idPic, email, sendEmail: true });
                 document.getElementById('formAddPic').reset();
-                showToast(`PIC "${nama}" ditambahkan ke master!`, 'success');
             } else if (category === 'apd') {
                 const nama = document.getElementById('m_apd_nama').value.trim();
-                const kategori = document.getElementById('m_apd_kategori').value.trim();
-                const standar = document.getElementById('m_apd_standar').value.trim();
-                if (!nama) return;
+                const kategori = document.getElementById('m_apd_kategori').value.trim() || 'Umum';
+                const standar = document.getElementById('m_apd_standar').value.trim() || 'Standar K3';
 
-                // Cek duplikat nama APD
                 const exists = masterData.apd.some(a => a.nama.toLowerCase() === nama.toLowerCase());
                 if (exists) {
                     showToast(`APD "${nama}" sudah ada di daftar master!`, 'warning');
@@ -3231,38 +5048,39 @@
 
                 masterData.apd.push({ id: Date.now(), nama, kategori, standar });
                 document.getElementById('formAddApd').reset();
-                showToast(`APD "${nama}" ditambahkan ke master!`, 'success');
             }
 
             localStorage.setItem('k3_master_data', JSON.stringify(masterData));
+            updateDatalists();
             renderMasterLists();
+            showToast('Data master berhasil ditambahkan!', 'success');
         }
 
         // Quick Add Preset APD (from buttons)
         function quickAddApd(nama, kategori, standar) {
             if (!masterData.apd) masterData.apd = [];
-            const exists = masterData.apd.some(a => a.nama.toLowerCase() === nama.toLowerCase());
-            if (exists) {
-                showToast(`APD "${nama}" sudah ada di daftar!`, 'warning');
+            if (masterData.apd.some(a => a.nama.toLowerCase() === nama.toLowerCase())) {
+                showToast(`"${nama}" sudah ada di data master!`, 'warning');
                 return;
             }
             masterData.apd.push({ id: Date.now(), nama, kategori, standar });
             localStorage.setItem('k3_master_data', JSON.stringify(masterData));
+            updateDatalists();
             renderMasterLists();
-            showToast(`APD "${nama}" berhasil ditambahkan!`, 'success');
+            showToast(`"${nama}" berhasil ditambahkan ke Master APD!`, 'success');
         }
 
-        // Delete Master Item
         function deleteMasterItem(category, id) {
-            if (confirm('Hapus item data master ini?')) {
+            if (confirm('Apakah Anda yakin ingin menghapus data master ini?')) {
                 masterData[category] = masterData[category].filter(x => x.id !== id);
                 localStorage.setItem('k3_master_data', JSON.stringify(masterData));
+                updateDatalists();
                 renderMasterLists();
-                showToast('Data master berhasil dihapus', 'info');
+                showToast('Data master telah dihapus', 'info');
             }
         }
 
-        // Toggle Form Visibility (Collapse/Expand)
+        // Toggle Form Visibility
         function toggleFormVisibility() {
             const formBody = document.getElementById('formBody');
             const toggleIcon = document.getElementById('toggleFormIcon');
@@ -3356,9 +5174,14 @@
 
         // Update Summary Dashboard Statistics
         function updateStats() {
-            const total = dataInspeksi.length;
-            const pending = dataInspeksi.filter(x => x.status === 'Pending').length;
-            const done = dataInspeksi.filter(x => x.status === 'Done').length;
+            let list = dataInspeksi;
+            if (currentUser && currentUser.role === 'karyawan') {
+                list = dataInspeksi.filter(x => x.pemilik && x.pemilik.toLowerCase() === currentUser.nama.toLowerCase());
+            }
+
+            const total = list.length;
+            const pending = list.filter(x => x.status === 'Pending').length;
+            const done = list.filter(x => x.status === 'Done').length;
             const rate = total > 0 ? Math.round((done / total) * 100) : 0;
 
             document.getElementById('statTotal').innerText = total;
@@ -3367,9 +5190,16 @@
             document.getElementById('statRate').innerText = `${rate}%`;
         }
 
-        // Filter logic helper
+        // Filter logic helper with Role filter
         function getFilteredData() {
             return dataInspeksi.filter(item => {
+                // Karyawan role can only see their own APDs
+                if (currentUser && currentUser.role === 'karyawan') {
+                    if (!item.pemilik || item.pemilik.toLowerCase() !== currentUser.nama.toLowerCase()) {
+                        return false;
+                    }
+                }
+
                 const matchQuery = !currentFilter.query ||
                     (item.pemilik && item.pemilik.toLowerCase().includes(currentFilter.query.toLowerCase())) ||
                     (item.nama_apd && item.nama_apd.toLowerCase().includes(currentFilter.query.toLowerCase())) ||
@@ -3403,20 +5233,22 @@
 
             printMetaEl.innerHTML = `
                 <div><strong>Tgl Cetak:</strong> ${tglCetak}</div>
+                <div><strong>Pengguna:</strong> ${escapeHtml(currentUser ? currentUser.nama : 'Admin')} (${currentUser ? currentUser.role.toUpperCase() : 'ADMIN'})</div>
                 <div><strong>Filter:</strong> Periode (${filterKuartalText}) | Status (${filterStatusText})</div>
                 <div><strong>Total Data:</strong> ${filteredData.length} Laporan (Done: ${filteredData.filter(x => x.status === 'Done').length}, Pending: ${filteredData.filter(x => x.status === 'Pending').length})</div>
             `;
         }
 
-        // Render Table Rows (Full Width)
+        // Render Table Rows (Full Width with Role-based Actions)
         function renderTable() {
             const tbody = document.getElementById('tableBody');
+            if (!tbody) return;
             tbody.innerHTML = '';
             updateStats();
             updatePrintMeta();
 
-            // Filter logic
             const filteredData = getFilteredData();
+            const role = currentUser ? currentUser.role : 'admin';
 
             if (filteredData.length === 0) {
                 tbody.innerHTML = `
@@ -3427,7 +5259,7 @@
                                     <i data-lucide="clipboard-x" style="width: 32px; height: 32px;"></i>
                                 </div>
                                 <h4>Tidak ada laporan yang cocok</h4>
-                                <p style="font-size: 0.8rem;">Silakan buat laporan baru atau sesuaikan kata kunci pencarian.</p>
+                                <p style="font-size: 0.8rem;">${role === 'karyawan' ? 'Belum ada data APD atas nama Anda.' : 'Silakan buat laporan baru atau sesuaikan kata kunci pencarian.'}</p>
                             </div>
                         </td>
                     </tr>
@@ -3441,8 +5273,6 @@
 
             filteredData.forEach(item => {
                 const tr = document.createElement('tr');
-
-                // Get Initial
                 const initial = item.pemilik ? item.pemilik.charAt(0).toUpperCase() : 'U';
 
                 // Format Condition Badge
@@ -3461,22 +5291,61 @@
                     ? `<span class="badge badge-pending"><i data-lucide="clock" style="width: 12px; height: 12px;"></i> Pending SPV</span>`
                     : `<span class="badge badge-done"><i data-lucide="check-circle" style="width: 12px; height: 12px;"></i> Approved</span>`;
 
-                // Action Buttons
+                // Role-based Action Buttons
                 let aksiHtml = '';
-                if (item.status === 'Pending') {
-                    aksiHtml = `
-                        <button class="btn btn-success btn-sm" onclick="approveData(${item.id})" title="Setujui Laporan">
-                            <i data-lucide="check" style="width: 14px; height: 14px;"></i> Approve
+
+                if (role === 'admin') {
+                    if (item.status === 'Pending') {
+                        aksiHtml += `
+                            <button class="btn btn-success btn-sm" onclick="approveData(${item.id})" title="Setujui Laporan">
+                                <i data-lucide="check" style="width: 14px; height: 14px;"></i> Approve
+                            </button>
+                        `;
+                    }
+                    aksiHtml += `
+                        <button class="btn btn-danger btn-sm" onclick="deleteItem(${item.id})" title="Hapus Laporan" style="padding: 6px 8px;">
+                            <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                        </button>
+                    `;
+                } else if (role === 'leader') {
+                    if (item.status === 'Pending') {
+                        aksiHtml += `
+                            <button class="btn btn-success btn-sm" onclick="approveData(${item.id})" title="Setujui Laporan Ini">
+                                <i data-lucide="check" style="width: 14px; height: 14px;"></i> Approve
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="rejectData(${item.id})" title="Kembalikan / Minta Perbaikan" style="color: var(--warning); border-color: var(--warning); padding: 5px 8px;">
+                                <i data-lucide="rotate-ccw" style="width: 13px; height: 13px;"></i>
+                            </button>
+                        `;
+                    } else {
+                        aksiHtml += `
+                            <span style="font-size: 0.76rem; color: var(--success); font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                                <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Disetujui
+                            </span>
+                        `;
+                    }
+                } else if (role === 'pengawas') {
+                    aksiHtml += `
+                        <button class="btn btn-outline btn-sm" onclick="openPhotoModal('${item.foto}', '${escapeHtml(item.nama_apd)} - ${escapeHtml(item.pemilik)}')" title="Lihat Foto Bukti" style="padding: 5px 8px;">
+                            <i data-lucide="eye" style="width: 14px; height: 14px;"></i> Foto
+                        </button>
+                        ${item.status === 'Pending' ? `
+                            <button class="btn btn-danger btn-sm" onclick="deleteItem(${item.id})" title="Hapus Laporan Pending" style="padding: 6px 8px;">
+                                <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                            </button>
+                        ` : ''}
+                    `;
+                } else if (role === 'karyawan') {
+                    aksiHtml += `
+                        <button class="btn btn-outline btn-sm" onclick="openPhotoModal('${item.foto}', '${escapeHtml(item.nama_apd)}')" title="Lihat Foto Bukti" style="padding: 5px 8px;">
+                            <i data-lucide="eye" style="width: 14px; height: 14px;"></i> Foto
+                        </button>
+                        <button class="btn btn-warning btn-sm" onclick="openKaryawanReportModal()" title="Lapor Kerusakan / Minta Ganti" style="padding: 5px 8px;">
+                            <i data-lucide="alert-triangle" style="width: 13px; height: 13px;"></i>
                         </button>
                     `;
                 }
-                aksiHtml += `
-                    <button class="btn btn-danger btn-sm" onclick="deleteItem(${item.id})" title="Hapus Laporan Ini" style="padding: 6px 8px;">
-                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
-                    </button>
-                `;
 
-                // Date display
                 const tglDisplay = item.tgl_inspeksi ? item.tgl_inspeksi : '-';
 
                 tr.innerHTML = `
@@ -3491,7 +5360,7 @@
                             <div class="avatar-initial">${initial}</div>
                             <div>
                                 <div class="user-name">${escapeHtml(item.pemilik)}</div>
-                                <div class="user-sub">SN: ${escapeHtml(item.sn)}</div>
+                                <div class="user-sub">SN: ${escapeHtml(item.sn || '-')}</div>
                             </div>
                         </div>
                     </td>
@@ -3519,7 +5388,7 @@
                     </td>
                     <td>${statusBadge}</td>
                     <td>
-                        <div class="action-cell" style="justify-content: flex-end;">
+                        <div class="action-cell" style="justify-content: flex-end; gap: 4px;">
                             ${aksiHtml}
                         </div>
                     </td>
@@ -3529,6 +5398,21 @@
             });
 
             lucide.createIcons();
+        }
+
+        // Leader / SPV Reject or Request Revision
+        function rejectData(id) {
+            const itemIndex = dataInspeksi.findIndex(x => x.id === id);
+            if (itemIndex > -1) {
+                const reason = prompt('Masukkan catatan perbaikan untuk PIC Pemeriksa:', 'Mohon periksa kembali kondisi fisik APD atau update foto bukti yang lebih jelas.');
+                if (reason !== null) {
+                    dataInspeksi[itemIndex].status = 'Pending';
+                    dataInspeksi[itemIndex].catatanRevisi = reason;
+                    localStorage.setItem('k3_data', JSON.stringify(dataInspeksi));
+                    renderTable();
+                    showToast(`Laporan ${dataInspeksi[itemIndex].nama_apd} dikembalikan untuk revisi.`, 'warning');
+                }
+            }
         }
 
         // Form Submit Handler
@@ -5171,6 +7055,8 @@
             if (e.key === 'Escape') {
                 closeModalDirect();
                 closeEmailModalDirect();
+                closeProfileModalDirect();
+                closeKaryawanReportModalDirect();
             }
         });
 
@@ -5251,8 +7137,7 @@
 
         // Initial setup
         updateDatalists();
-        renderTable();
-        renderMasterLists();
+        applyRolePermissions();
         updateEmailStatusUI();
         lucide.createIcons();
     </script>
