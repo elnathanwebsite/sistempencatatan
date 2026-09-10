@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PPE Compliance Monitoring System - Sistem Inspeksi & Data Master APD</title>
+    <title>PPE Compliance Control System - Automated Inspection & Compliance Control</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1746,6 +1746,23 @@
         .auth-modal-dialog {
             max-width: 520px;
             width: 100%;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.4), 0 0 30px var(--primary-glow);
+        }
+
+        @keyframes fadeInDashboard {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-container.fade-in {
+            animation: fadeInDashboard 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .auth-tabs-nav {
@@ -1805,6 +1822,12 @@
             transform: translateY(-2px);
             border-color: var(--primary);
             box-shadow: 0 4px 12px var(--primary-glow);
+            background: var(--bg-card);
+        }
+
+        .quick-role-card.selected {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 2px var(--primary), 0 6px 16px var(--primary-glow);
             background: var(--bg-card);
         }
 
@@ -1909,6 +1932,109 @@
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
         }
+
+        /* Automated Schedule Engine Styling */
+        .badge-tab-count {
+            animation: pulseCount 2s infinite;
+        }
+
+        @keyframes pulseCount {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .icon-overdue {
+            background: var(--danger-soft);
+            color: var(--danger);
+        }
+
+        .icon-schedule {
+            background: rgba(99, 102, 241, 0.15);
+            color: #6366f1;
+        }
+
+        .quick-filter-pill {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: var(--radius-full);
+            padding: 6px 13px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .quick-filter-pill:hover {
+            border-color: var(--border-hover);
+            color: var(--text-main);
+        }
+
+        .quick-filter-pill.active {
+            background: var(--primary-soft);
+            border-color: var(--primary);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .quick-filter-pill.pill-danger.active {
+            background: var(--danger-soft);
+            border-color: var(--danger);
+            color: var(--danger-text);
+        }
+
+        .quick-filter-pill.pill-warning.active {
+            background: var(--warning-soft);
+            border-color: var(--warning);
+            color: var(--warning-text);
+        }
+
+        .quick-filter-pill.pill-success.active {
+            background: var(--success-soft);
+            border-color: var(--success);
+            color: var(--success-text);
+        }
+
+        .quick-filter-pill.pill-neutral.active {
+            background: var(--bg-input);
+            border-color: var(--border-hover);
+            color: var(--text-main);
+        }
+
+        .pulse-highlight {
+            animation: pulseHighlight 1.8s ease-in-out;
+        }
+
+        @keyframes pulseHighlight {
+            0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.7); border-color: var(--primary); }
+            50% { box-shadow: 0 0 0 14px rgba(79, 70, 229, 0); border-color: var(--primary-light); }
+            100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+        }
+
+        .badge-overdue-anim {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--danger-soft);
+            color: var(--danger-text);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: var(--radius-full);
+            padding: 4px 10px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            animation: pulseDangerBadge 2s infinite;
+        }
+
+        @keyframes pulseDangerBadge {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
     </style>
 </head>
 
@@ -1928,8 +2054,8 @@
                     <i data-lucide="shield-check" style="width: 24px; height: 24px;"></i>
                 </div>
                 <div class="brand-text">
-                    <h1>PPE Compliance Monitoring System</h1>
-                    <p>Sistem Inspeksi & Master Data APD</p>
+                    <h1>PPE Compliance Control System</h1>
+                    <p>Ensuring PPE Readiness, Inspection Compliance & Audit Readiness</p>
                 </div>
             </div>
 
@@ -1938,6 +2064,11 @@
                 <button type="button" class="nav-tab-btn active" id="tabBtnInspeksi" onclick="switchPage('inspeksi')">
                     <i data-lucide="clipboard-check" style="width: 16px; height: 16px;"></i>
                     <span>Dashboard & Inspeksi</span>
+                </button>
+                <button type="button" class="nav-tab-btn" id="tabBtnJadwal" onclick="switchPage('jadwal')">
+                    <i data-lucide="calendar-clock" style="width: 16px; height: 16px;"></i>
+                    <span>Jadwal Otomatis APD</span>
+                    <span class="badge-tab-count" id="badgeOverdueCount" style="display:none; background: var(--danger); color: white; border-radius: 999px; font-size: 0.68rem; padding: 2px 7px; margin-left: 6px; font-weight: 700;">0</span>
                 </button>
                 <button type="button" class="nav-tab-btn" id="tabBtnMaster" onclick="switchPage('master')">
                     <i data-lucide="users" style="width: 16px; height: 16px;"></i>
@@ -1960,6 +2091,13 @@
 
                 <button class="theme-toggle-btn" id="themeToggle" title="Ganti Mode Gelap/Terang">
                     <i data-lucide="moon" id="themeIcon" style="width: 18px; height: 18px;"></i>
+                </button>
+
+                <!-- Unauthenticated Nav Action Button (Top Right) -->
+                <button type="button" class="btn btn-primary btn-sm" id="btnNavAuth" onclick="openAuthModal('login')"
+                    style="padding: 7px 16px; font-size: 0.82rem; font-weight: 700; border-radius: var(--radius-full); box-shadow: 0 4px 14px var(--primary-glow); display: none; align-items: center; gap: 8px;">
+                    <i data-lucide="log-in" style="width: 15px; height: 15px;"></i>
+                    <span>Masuk / Daftar</span>
                 </button>
 
                 <!-- User Profile Pill & Dropdown -->
@@ -2009,12 +2147,12 @@
                             <span>Kelola Pengguna Sistem</span>
                         </button>
 
-                        <button type="button" class="dropdown-item" onclick="openAuthModal('login')">
+                        <button type="button" class="dropdown-item" onclick="closeUserDropdown(); openAuthModal('login');">
                             <i data-lucide="key-round" style="width: 15px; height: 15px;"></i>
                             <span>Ganti / Masuk Akun Lain</span>
                         </button>
 
-                        <button type="button" class="dropdown-item" onclick="openAuthModal('register')">
+                        <button type="button" class="dropdown-item" onclick="closeUserDropdown(); openAuthModal('register');">
                             <i data-lucide="user-plus" style="width: 15px; height: 15px;"></i>
                             <span>Daftar Akun Baru</span>
                         </button>
@@ -2037,6 +2175,11 @@
 
         <!-- PAGE 1: DASHBOARD & INSPEKSI APD -->
         <div class="page-view active" id="pageInspeksi">
+
+            <!-- Dynamic Automated Schedule Compliance & Overdue Alert Banner -->
+            <div id="scheduleAlertBanner" style="display: none; margin-bottom: 20px;">
+                <!-- Dynamically rendered by updateScheduleAlertBanner() -->
+            </div>
 
             <!-- Dynamic Role Status & Privilege Banner -->
             <div id="roleBannerContainer">
@@ -2119,6 +2262,26 @@
                     </div>
                     <div class="stat-icon icon-rate">
                         <i data-lucide="activity"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card" id="cardStatOverdue" style="border-left: 3px solid var(--danger); cursor: pointer;" onclick="switchPage('jadwal'); setScheduleStatusFilter('OVERDUE');" title="Klik untuk lihat APD Terlambat">
+                    <div class="stat-info">
+                        <span style="color: var(--danger);">Overdue (Target: 0)</span>
+                        <h3 id="statOverdue" style="color: var(--danger);">0</h3>
+                    </div>
+                    <div class="stat-icon icon-overdue">
+                        <i data-lucide="alert-octagon"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card" style="cursor: pointer;" onclick="switchPage('jadwal'); setScheduleStatusFilter('UPCOMING');" title="Klik untuk lihat jadwal 7 hari ke depan">
+                    <div class="stat-info">
+                        <span>Jadwal Segera (7 Hari)</span>
+                        <h3 id="statUpcoming">0</h3>
+                    </div>
+                    <div class="stat-icon icon-schedule">
+                        <i data-lucide="calendar-days"></i>
                     </div>
                 </div>
             </section>
@@ -2988,6 +3151,174 @@
 
         </div>
 
+        <!-- ========================================================================= -->
+        <!-- PAGE 3: SISTEM PENJADWALAN INSPEKSI APD OTOMATIS & OVERDUE CONTROL -->
+        <!-- ========================================================================= -->
+        <div class="page-view" id="pageJadwal">
+
+            <!-- Schedule Header Card -->
+            <div class="card" style="background: linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%); border-left: 4px solid var(--primary);">
+                <div class="card-header" style="padding: 18px 24px; border-bottom: 1px solid var(--border);">
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                        <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, var(--primary) 0%, #3730a3 100%); color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px var(--primary-glow);">
+                            <i data-lucide="calendar-clock" style="width: 24px; height: 24px;"></i>
+                        </div>
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                <h3 style="margin: 0; font-size: 1.22rem; font-weight: 700; color: var(--text-main);">Penjadwalan Inspeksi APD Otomatis & Overdue Control</h3>
+                                <span class="badge badge-good" style="font-size: 0.72rem; padding: 3px 10px; display: inline-flex; align-items: center; gap: 5px;">
+                                    <span class="pulse-dot" style="width: 6px; height: 6px; background: #10b981;"></span>
+                                    Sistem Kontrol Siklus Aktif
+                                </span>
+                            </div>
+                            <p style="font-size: 0.82rem; color: var(--text-muted); margin: 4px 0 0 0;">
+                                Sistem otomatis menghitung siklus berkala inspeksi APD, memantau masa jatuh tempo, dan mendeteksi keterlambatan (overdue) guna menjamin kepatuhan 100% dan kesiapan audit SMK3.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-primary btn-sm" onclick="syncAutoSchedules(true)" title="Hitung dan sinkronkan ulang siklus jadwal APD">
+                            <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i>
+                            <span>Sinkronkan Siklus Otomatis</span>
+                        </button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="openModalAddSchedule()" title="Tambah penugasan jadwal inspeksi kustom">
+                            <i data-lucide="calendar-plus" style="width: 14px; height: 14px;"></i>
+                            <span>Tambah Jadwal Kustom</span>
+                        </button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="blastScheduleReminders()" title="Kirim email pengingat massal untuk semua jadwal jatuh tempo">
+                            <i data-lucide="send" style="width: 14px; height: 14px; color: var(--primary);"></i>
+                            <span>Blast Email Pengingat</span>
+                        </button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="exportSchedulesExcel()" title="Unduh jadwal inspeksi format Excel">
+                            <i data-lucide="file-spreadsheet" style="width: 14px; height: 14px; color: #10b981;"></i>
+                            <span>Ekspor Excel</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule Stats Summary Grid -->
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span>Total APD Terjadwal</span>
+                        <h3 id="statSchTotal">0</h3>
+                    </div>
+                    <div class="stat-icon icon-total">
+                        <i data-lucide="layers"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span style="color: var(--success);">Tepat Waktu (On-Track)</span>
+                        <h3 id="statSchOnTrack" style="color: var(--success);">0</h3>
+                    </div>
+                    <div class="stat-icon icon-done">
+                        <i data-lucide="shield-check"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span style="color: var(--warning);">Jatuh Tempo Segera (&le; 7 Hari)</span>
+                        <h3 id="statSchUpcoming" style="color: var(--warning);">0</h3>
+                    </div>
+                    <div class="stat-icon icon-pending">
+                        <i data-lucide="clock-4"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card" style="border-left: 3px solid var(--danger);">
+                    <div class="stat-info">
+                        <span style="color: var(--danger);">Overdue (Target: 0)</span>
+                        <h3 id="statSchOverdue" style="color: var(--danger);">0</h3>
+                    </div>
+                    <div class="stat-icon icon-overdue">
+                        <i data-lucide="alert-octagon"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span>Siklus Rata-rata</span>
+                        <h3 id="statSchAvgCycle">30 Hari</h3>
+                    </div>
+                    <div class="stat-icon icon-schedule">
+                        <i data-lucide="repeat"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span>Kepatuhan Jadwal</span>
+                        <h3 id="statSchCompliance">100%</h3>
+                    </div>
+                    <div class="stat-icon icon-rate">
+                        <i data-lucide="activity"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Schedule Table Card -->
+            <div class="card">
+                <!-- Toolbar: Search, Status Filter Pills, Dept Filter -->
+                <div class="master-table-toolbar" style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; gap: 10px; align-items: center; flex: 1; min-width: 280px; max-width: 520px;">
+                        <div class="master-table-search" style="flex: 1; max-width: 100%;">
+                            <span class="input-icon"><i data-lucide="search" style="width: 16px; height: 16px;"></i></span>
+                            <input type="text" id="searchScheduleInput" placeholder="Cari nama APD, nomor seri, pemilik, divisi..." oninput="handleScheduleFilter()">
+                        </div>
+                        <select id="filterScheduleDept" onchange="handleScheduleFilter()" style="padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-input); font-size: 0.8rem; color: var(--text-main); min-width: 160px;">
+                            <option value="all">Semua Departemen</option>
+                        </select>
+                    </div>
+
+                    <!-- Quick Filter Status Pills -->
+                    <div class="schedule-status-pills" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                        <button type="button" class="quick-filter-pill active" id="pillSchAll" onclick="setScheduleStatusFilter('all')">
+                            Semua (<span id="countPillAll">0</span>)
+                        </button>
+                        <button type="button" class="quick-filter-pill pill-danger" id="pillSchOverdue" onclick="setScheduleStatusFilter('OVERDUE')">
+                            🔴 Overdue (<span id="countPillOverdue">0</span>)
+                        </button>
+                        <button type="button" class="quick-filter-pill pill-warning" id="pillSchUpcoming" onclick="setScheduleStatusFilter('UPCOMING')">
+                            🟡 Jatuh Tempo &le;7 Hr (<span id="countPillUpcoming">0</span>)
+                        </button>
+                        <button type="button" class="quick-filter-pill pill-success" id="pillSchOnTrack" onclick="setScheduleStatusFilter('ON_SCHEDULE')">
+                            🟢 Terkontrol (<span id="countPillOnTrack">0</span>)
+                        </button>
+                        <button type="button" class="quick-filter-pill pill-neutral" id="pillSchUninspected" onclick="setScheduleStatusFilter('UNINSPECTED')">
+                            ⚪ Belum Diinspeksi (<span id="countPillUninspected">0</span>)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Schedule Table -->
+                <div class="table-full-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 4%;">No</th>
+                                <th style="width: 21%;">Alat Pelindung Diri (APD)</th>
+                                <th style="width: 18%;">Karyawan / Pemilik</th>
+                                <th style="width: 12%;">Siklus Frekuensi</th>
+                                <th style="width: 13%;">Inspeksi Terakhir</th>
+                                <th style="width: 14%;">Jadwal Jatuh Tempo</th>
+                                <th style="width: 11%;">Status Kontrol</th>
+                                <th style="width: 7%; text-align: right;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableScheduleBody">
+                            <!-- Populated dynamically by renderScheduleTable() -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
     </main>
 
     <!-- Photo Lightbox Modal -->
@@ -3298,6 +3629,17 @@
 
             <div class="modal-body" style="text-align: left; padding: 22px; max-height: 80vh; overflow-y: auto;">
                 
+                <!-- Gate Notice (Shown when entering before login) -->
+                <div id="authGateNotice" style="background: var(--primary-soft); border: 1px solid var(--border-focus); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 8px var(--primary-glow);">
+                        <i data-lucide="shield-alert" style="width: 20px; height: 20px;"></i>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">Akses Dashboard Terproteksi</div>
+                        <div style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.35;">Silakan masukkan email &amp; password Anda untuk membuka dashboard sesuai seksi atau daftarkan akun baru.</div>
+                    </div>
+                </div>
+
                 <!-- Auth Tabs Toggle -->
                 <div class="auth-tabs-nav">
                     <button type="button" class="auth-tab-btn active" id="tabAuthLogin" onclick="switchAuthTab('login')">
@@ -3311,77 +3653,38 @@
                 <!-- TAB 1: LOGIN -->
                 <div id="authViewLogin">
                     
-                    <div style="margin-bottom: 10px;">
-                        <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px;">⚡ Login Cepat 1-Klik (Mode Demo):</div>
-                        <div style="font-size: 0.74rem; color: var(--text-muted);">Klik salah satu peran di bawah untuk langsung mencoba sistem sesuai hak akses:</div>
-                    </div>
-
-                    <!-- 4 Quick Role Cards -->
-                    <div class="quick-roles-grid">
-                        <div class="quick-role-card" onclick="quickLogin('admin')" style="border-left: 3px solid #6366f1;">
-                            <div class="quick-role-card-header">
-                                <span class="quick-role-card-title">👑 Admin K3</span>
-                                <span class="badge-role badge-role-admin" style="font-size: 0.65rem;">Full</span>
-                            </div>
-                            <div class="quick-role-card-desc">Akses penuh input, approval, master data, dan kelola user.</div>
-                        </div>
-
-                        <div class="quick-role-card" onclick="quickLogin('leader')" style="border-left: 3px solid #f59e0b;">
-                            <div class="quick-role-card-header">
-                                <span class="quick-role-card-title">⭐ Leader / SPV</span>
-                                <span class="badge-role badge-role-leader" style="font-size: 0.65rem;">Approval</span>
-                            </div>
-                            <div class="quick-role-card-desc">Review & persetujuan laporan inspeksi serta export data.</div>
-                        </div>
-
-                        <div class="quick-role-card" onclick="quickLogin('pengawas')" style="border-left: 3px solid #06b6d4;">
-                            <div class="quick-role-card-header">
-                                <span class="quick-role-card-title">🔍 Pengawas / PIC</span>
-                                <span class="badge-role badge-role-pengawas" style="font-size: 0.65rem;">Inspeksi</span>
-                            </div>
-                            <div class="quick-role-card-desc">Pemeriksaan fisik APD lapangan, foto bukti, & input form.</div>
-                        </div>
-
-                        <div class="quick-role-card" onclick="quickLogin('karyawan')" style="border-left: 3px solid #10b981;">
-                            <div class="quick-role-card-header">
-                                <span class="quick-role-card-title">👷 Karyawan</span>
-                                <span class="badge-role badge-role-karyawan" style="font-size: 0.65rem;">Pribadi</span>
-                            </div>
-                            <div class="quick-role-card-desc">Monitoring kepatuhan APD milik sendiri & lapor kerusakan.</div>
-                        </div>
-                    </div>
-
-                    <div class="auth-divider">
-                        <span>atau masuk dengan email & password</span>
-                    </div>
-
                     <!-- Standard Login Form -->
                     <form id="formLogin" onsubmit="handleLoginSubmit(event)">
-                        <div class="form-group" style="margin-bottom: 12px;">
-                            <label for="loginEmail" style="font-size: 0.8rem;">Alamat Email</label>
+                        <div class="form-group" style="margin-bottom: 14px;">
+                            <label for="loginEmail" style="font-size: 0.82rem; font-weight: 600;">Alamat Email</label>
                             <div class="input-wrapper">
                                 <span class="input-icon"><i data-lucide="mail" style="width: 16px; height: 16px;"></i></span>
-                                <input type="email" id="loginEmail" placeholder="Misal: admin@k3.com" required>
+                                <input type="email" id="loginEmail" placeholder="Masukkan email akun Anda (misal: budi@k3.com)" required autocomplete="username">
                             </div>
                         </div>
 
-                        <div class="form-group" style="margin-bottom: 16px;">
+                        <div class="form-group" style="margin-bottom: 18px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                                <label for="loginPassword" style="font-size: 0.8rem; margin: 0;">Password</label>
+                                <label for="loginPassword" style="font-size: 0.82rem; font-weight: 600; margin: 0;">Password</label>
                             </div>
                             <div class="input-wrapper">
                                 <span class="input-icon"><i data-lucide="lock" style="width: 16px; height: 16px;"></i></span>
-                                <input type="password" id="loginPassword" placeholder="Masukkan password Anda" required>
+                                <input type="password" id="loginPassword" placeholder="Masukkan password Anda" required autocomplete="current-password">
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary btn-block" style="height: 42px; font-weight: 700; font-size: 0.9rem;">
+                        <button type="submit" class="btn btn-primary btn-block" style="height: 44px; font-weight: 700; font-size: 0.92rem;">
                             <i data-lucide="log-in" style="width: 18px; height: 18px;"></i>
-                            Masuk ke Sistem
+                            Masuk ke Dashboard
                         </button>
                     </form>
 
-                    <div style="margin-top: 16px; text-align: center; font-size: 0.8rem; color: var(--text-muted);">
+                    <div style="margin-top: 14px; padding: 10px 14px; background: var(--bg-input); border-radius: var(--radius-md); border: 1px dashed var(--border); font-size: 0.72rem; color: var(--text-muted); line-height: 1.45;">
+                        <i data-lucide="info" style="width: 14px; height: 14px; color: var(--primary); vertical-align: middle; margin-right: 4px;"></i>
+                        <strong>Petunjuk:</strong> Dashboard akan terbuka otomatis sesuai hak akses seksi akun Anda (Karyawan, Pengawas, Leader, Admin).
+                    </div>
+
+                    <div style="margin-top: 16px; text-align: center; font-size: 0.82rem; color: var(--text-muted);">
                         Belum memiliki akun? <a href="javascript:void(0)" onclick="switchAuthTab('register')" style="color: var(--primary); font-weight: 700; text-decoration: none;">Daftar Akun Baru</a>
                     </div>
                 </div>
@@ -3767,10 +4070,9 @@
         }
 
         // Active authenticated user
-        let currentUser = JSON.parse(localStorage.getItem('k3_auth_user')) || usersList[0];
-        if (!localStorage.getItem('k3_auth_user')) {
-            localStorage.setItem('k3_auth_user', JSON.stringify(currentUser));
-        }
+        // Session only: on fresh entrance or when web is left, currentUser is null so login form is shown first
+        const isSessionActive = sessionStorage.getItem('k3_auth_session') === 'true';
+        let currentUser = isSessionActive ? JSON.parse(sessionStorage.getItem('k3_auth_user')) : null;
 
         let selectedRegRole = 'karyawan';
         let currentFilter = { query: '', kuartal: 'all', status: 'all' };
@@ -3786,7 +4088,7 @@
             localStorage.setItem('k3_users', JSON.stringify(list));
         }
 
-        // Quick 1-Click Demo Login
+        // Quick role switch (used inside user dropdown for testing roles)
         function quickLogin(role) {
             const list = getRegisteredUsers();
             let targetUser = list.find(u => u.role === role);
@@ -3797,14 +4099,16 @@
             }
 
             currentUser = targetUser;
-            localStorage.setItem('k3_auth_user', JSON.stringify(currentUser));
-            closeAuthModalDirect();
+            sessionStorage.setItem('k3_auth_user', JSON.stringify(currentUser));
+            sessionStorage.setItem('k3_auth_session', 'true');
+            localStorage.removeItem('k3_auth_user');
+            closeAuthModalDirect(true);
             closeUserDropdown();
             applyRolePermissions();
-            showToast(`🎉 Berhasil masuk sebagai ${targetUser.nama} (${role.toUpperCase()})!`, 'success');
+            showToast(`🎉 Beralih ke peran ${getRoleBadgeText(role)} (${targetUser.nama})`, 'success');
         }
 
-        // Handle Standard Login Submit
+        // Handle Standard Login Submit (Validates credentials and routes to matching section dashboard)
         function handleLoginSubmit(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
@@ -3815,13 +4119,29 @@
 
             if (matchedUser) {
                 currentUser = matchedUser;
-                localStorage.setItem('k3_auth_user', JSON.stringify(currentUser));
-                closeAuthModalDirect();
+                // Store in session only (so leaving/closing web automatically logs out)
+                sessionStorage.setItem('k3_auth_user', JSON.stringify(currentUser));
+                sessionStorage.setItem('k3_auth_session', 'true');
+                localStorage.removeItem('k3_auth_user');
+
+                closeAuthModalDirect(true);
                 applyRolePermissions();
-                showToast(`🎉 Selamat datang kembali, ${matchedUser.nama}!`, 'success');
+                switchPage('inspeksi');
+
+                if (matchedUser.role === 'karyawan') {
+                    showToast(`👷 Selamat datang, ${matchedUser.nama}! Anda diarahkan ke Dashboard APD Karyawan.`, 'success');
+                } else if (matchedUser.role === 'admin') {
+                    showToast(`👑 Selamat datang, ${matchedUser.nama}! Akses Administrator K3 aktif.`, 'success');
+                } else if (matchedUser.role === 'leader') {
+                    showToast(`⭐ Selamat datang, ${matchedUser.nama}! Dashboard Supervisor / Approval aktif.`, 'success');
+                } else if (matchedUser.role === 'pengawas') {
+                    showToast(`🔍 Selamat datang, ${matchedUser.nama}! Dashboard Pengawas Lapangan aktif.`, 'success');
+                } else {
+                    showToast(`🎉 Selamat datang kembali, ${matchedUser.nama}!`, 'success');
+                }
                 document.getElementById('formLogin').reset();
             } else {
-                showToast('Email atau password salah! Silakan coba lagi.', 'danger');
+                showToast('Email atau password salah! Pastikan data akun Anda sudah sesuai.', 'danger');
             }
         }
 
@@ -3883,10 +4203,18 @@
             updateDatalists();
 
             currentUser = newUser;
-            localStorage.setItem('k3_auth_user', JSON.stringify(currentUser));
-            closeAuthModalDirect();
+            sessionStorage.setItem('k3_auth_user', JSON.stringify(currentUser));
+            sessionStorage.setItem('k3_auth_session', 'true');
+            localStorage.removeItem('k3_auth_user');
+            closeAuthModalDirect(true);
             applyRolePermissions();
-            showToast(`🎉 Akun baru (${selectedRegRole.toUpperCase()}) berhasil dibuat! Selamat datang, ${nama}.`, 'success');
+            switchPage('inspeksi');
+            
+            if (newUser.role === 'karyawan') {
+                showToast(`🎉 Akun Karyawan berhasil dibuat! Selamat datang di dashboard Anda, ${nama}.`, 'success');
+            } else {
+                showToast(`🎉 Akun baru (${getRoleBadgeText(selectedRegRole)}) berhasil dibuat! Selamat datang, ${nama}.`, 'success');
+            }
             document.getElementById('formRegister').reset();
         }
 
@@ -3894,9 +4222,11 @@
         function logoutUser() {
             if (confirm('Apakah Anda yakin ingin keluar (logout) dari sistem?')) {
                 currentUser = null;
+                sessionStorage.clear();
                 localStorage.removeItem('k3_auth_user');
+                localStorage.removeItem('k3_auth_session');
                 closeUserDropdown();
-                openAuthModal('login');
+                applyRolePermissions();
                 showToast('Anda telah keluar dari akun.', 'info');
             }
         }
@@ -3920,6 +4250,14 @@
             const modal = document.getElementById('authModal');
             if (modal) {
                 switchAuthTab(tab);
+                const closeBtn = document.getElementById('authModalCloseBtn');
+                if (closeBtn) {
+                    closeBtn.style.display = currentUser ? 'flex' : 'none';
+                }
+                const gateNotice = document.getElementById('authGateNotice');
+                if (gateNotice) {
+                    gateNotice.style.display = currentUser ? 'none' : 'flex';
+                }
                 modal.classList.add('active');
                 lucide.createIcons();
             }
@@ -3931,9 +4269,9 @@
             }
         }
 
-        function closeAuthModalDirect() {
-            if (!currentUser) {
-                showToast('Silakan login terlebih dahulu untuk mengakses sistem!', 'warning');
+        function closeAuthModalDirect(force = false) {
+            if (!currentUser && !force) {
+                showToast('Silakan login atau daftar terlebih dahulu untuk mengakses dashboard!', 'warning');
                 return;
             }
             const modal = document.getElementById('authModal');
@@ -4110,10 +4448,36 @@
         // 3. ROLE-BASED ACCESS CONTROL (RBAC) UI ENGINE
         // =========================================================================
         function applyRolePermissions() {
+            const mainContainer = document.querySelector('.main-container');
+            const navTabs = document.querySelector('.nav-tabs-wrapper');
+            const userProfileWrapper = document.getElementById('userProfileWrapper');
+            const btnNavAuth = document.getElementById('btnNavAuth');
+            const authCloseBtn = document.getElementById('authModalCloseBtn');
+            const authGateNotice = document.getElementById('authGateNotice');
+
             if (!currentUser) {
+                // Lock down workspace / hide full dashboard before authentication
+                if (mainContainer) mainContainer.style.display = 'none';
+                if (navTabs) navTabs.style.display = 'none';
+                if (userProfileWrapper) userProfileWrapper.style.display = 'none';
+                if (btnNavAuth) btnNavAuth.style.display = 'inline-flex';
+                if (authCloseBtn) authCloseBtn.style.display = 'none';
+                if (authGateNotice) authGateNotice.style.display = 'flex';
+
                 openAuthModal('login');
                 return;
             }
+
+            // Authenticated: unlock and show full dashboard
+            if (mainContainer) {
+                mainContainer.style.display = 'block';
+                mainContainer.classList.add('fade-in');
+            }
+            if (navTabs) navTabs.style.display = 'flex';
+            if (userProfileWrapper) userProfileWrapper.style.display = 'block';
+            if (btnNavAuth) btnNavAuth.style.display = 'none';
+            if (authCloseBtn) authCloseBtn.style.display = 'flex';
+            if (authGateNotice) authGateNotice.style.display = 'none';
 
             const role = currentUser.role;
             const initials = currentUser.nama.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
@@ -4383,29 +4747,46 @@
             }
         }
 
-        // Navigation Page Switcher (With RBAC Guards)
+        // Navigation Page Switcher (With RBAC Guards & Automated Schedule View)
         function switchPage(pageName) {
+            if (!currentUser) {
+                openAuthModal('login');
+                return;
+            }
+
             if (pageName === 'master' && currentUser && currentUser.role === 'karyawan') {
                 showToast('Halaman Data Master hanya dapat diakses oleh Administrator, Leader, dan Pengawas.', 'warning');
                 return;
             }
 
             const pageInspeksi = document.getElementById('pageInspeksi');
+            const pageJadwal = document.getElementById('pageJadwal');
             const pageMaster = document.getElementById('pageMaster');
             const tabBtnInspeksi = document.getElementById('tabBtnInspeksi');
+            const tabBtnJadwal = document.getElementById('tabBtnJadwal');
             const tabBtnMaster = document.getElementById('tabBtnMaster');
 
+            // Deactivate all first
+            if (pageInspeksi) pageInspeksi.classList.remove('active');
+            if (pageJadwal) pageJadwal.classList.remove('active');
+            if (pageMaster) pageMaster.classList.remove('active');
+
+            if (tabBtnInspeksi) tabBtnInspeksi.classList.remove('active');
+            if (tabBtnJadwal) tabBtnJadwal.classList.remove('active');
+            if (tabBtnMaster) tabBtnMaster.classList.remove('active');
+
             if (pageName === 'inspeksi') {
-                pageInspeksi.classList.add('active');
-                pageMaster.classList.remove('active');
-                tabBtnInspeksi.classList.add('active');
-                tabBtnMaster.classList.remove('active');
+                if (pageInspeksi) pageInspeksi.classList.add('active');
+                if (tabBtnInspeksi) tabBtnInspeksi.classList.add('active');
                 renderTable();
+                updateScheduleAlertBanner();
+            } else if (pageName === 'jadwal') {
+                if (pageJadwal) pageJadwal.classList.add('active');
+                if (tabBtnJadwal) tabBtnJadwal.classList.add('active');
+                renderScheduleTable();
             } else {
-                pageInspeksi.classList.remove('active');
-                pageMaster.classList.add('active');
-                tabBtnInspeksi.classList.remove('active');
-                tabBtnMaster.classList.add('active');
+                if (pageMaster) pageMaster.classList.add('active');
+                if (tabBtnMaster) tabBtnMaster.classList.add('active');
                 renderMasterLists();
             }
             lucide.createIcons();
@@ -5172,7 +5553,7 @@
             uploadPlaceholder.style.display = 'flex';
         }
 
-        // Update Summary Dashboard Statistics
+        // Update Summary Dashboard Statistics & Overdue Compliance Control
         function updateStats() {
             let list = dataInspeksi;
             if (currentUser && currentUser.role === 'karyawan') {
@@ -5184,10 +5565,35 @@
             const done = list.filter(x => x.status === 'Done').length;
             const rate = total > 0 ? Math.round((done / total) * 100) : 0;
 
-            document.getElementById('statTotal').innerText = total;
-            document.getElementById('statPending').innerText = pending;
-            document.getElementById('statDone').innerText = done;
-            document.getElementById('statRate').innerText = `${rate}%`;
+            const elTotal = document.getElementById('statTotal');
+            if (elTotal) elTotal.innerText = total;
+            const elPending = document.getElementById('statPending');
+            if (elPending) elPending.innerText = pending;
+            const elDone = document.getElementById('statDone');
+            if (elDone) elDone.innerText = done;
+            const elRate = document.getElementById('statRate');
+            if (elRate) elRate.innerText = `${rate}%`;
+
+            // Overdue & Upcoming schedule metrics
+            let schList = schedulesList || [];
+            if (currentUser && currentUser.role === 'karyawan') {
+                schList = schList.filter(s => s.pemilik_nama && s.pemilik_nama.toLowerCase() === currentUser.nama.toLowerCase());
+            }
+            const overdueCount = schList.filter(s => s.status === 'OVERDUE').length;
+            const upcomingCount = schList.filter(s => s.status === 'UPCOMING' || s.status === 'DUE_TODAY').length;
+
+            const elOverdue = document.getElementById('statOverdue');
+            if (elOverdue) elOverdue.innerText = overdueCount;
+            const elUpcoming = document.getElementById('statUpcoming');
+            if (elUpcoming) elUpcoming.innerText = upcomingCount;
+
+            const badgeOverdue = document.getElementById('badgeOverdueCount');
+            if (badgeOverdue) {
+                badgeOverdue.innerText = overdueCount;
+                badgeOverdue.style.display = overdueCount > 0 ? 'inline-block' : 'none';
+            }
+
+            updateScheduleAlertBanner();
         }
 
         // Filter logic helper with Role filter
@@ -5441,6 +5847,11 @@
 
             dataInspeksi.unshift(newData);
             localStorage.setItem('k3_data', JSON.stringify(dataInspeksi));
+            
+            // Re-sync automated schedule for this PPE
+            if (typeof generateAutoSchedules === 'function') {
+                generateAutoSchedules(true);
+            }
 
             // Auto add to master if not yet existing
             const pemilikName = newData.pemilik;
@@ -5471,6 +5882,9 @@
                 dataInspeksi[itemIndex].status = 'Done';
                 dataInspeksi[itemIndex].approvedAt = new Date().toISOString();
                 localStorage.setItem('k3_data', JSON.stringify(dataInspeksi));
+                if (typeof generateAutoSchedules === 'function') {
+                    generateAutoSchedules(true);
+                }
                 renderTable();
                 showToast(`Laporan ${dataInspeksi[itemIndex].nama_apd} disetujui!`, 'success');
             }
@@ -5481,6 +5895,9 @@
             if (confirm('Apakah Anda yakin ingin menghapus data laporan ini?')) {
                 dataInspeksi = dataInspeksi.filter(x => x.id !== id);
                 localStorage.setItem('k3_data', JSON.stringify(dataInspeksi));
+                if (typeof generateAutoSchedules === 'function') {
+                    generateAutoSchedules(true);
+                }
                 renderTable();
                 showToast('Laporan telah dihapus', 'info');
             }
@@ -5896,7 +6313,110 @@
                     .status-pending { background-color: #FFFBEB; color: #B45309; font-weight: bold; text-align: center; }
                     .text-center { text-align: center; }
                     .total-row { background-color: #F1F5F9; font-weight: bold; border-top: 1px solid #94A3B8; border-bottom: 3px double #1E293B; }
-                </style>
+            
+        /* Automated Schedule Engine Styling */
+        .badge-tab-count {
+            animation: pulseCount 2s infinite;
+        }
+
+        @keyframes pulseCount {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .icon-overdue {
+            background: var(--danger-soft);
+            color: var(--danger);
+        }
+
+        .icon-schedule {
+            background: rgba(99, 102, 241, 0.15);
+            color: #6366f1;
+        }
+
+        .quick-filter-pill {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: var(--radius-full);
+            padding: 6px 13px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .quick-filter-pill:hover {
+            border-color: var(--border-hover);
+            color: var(--text-main);
+        }
+
+        .quick-filter-pill.active {
+            background: var(--primary-soft);
+            border-color: var(--primary);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .quick-filter-pill.pill-danger.active {
+            background: var(--danger-soft);
+            border-color: var(--danger);
+            color: var(--danger-text);
+        }
+
+        .quick-filter-pill.pill-warning.active {
+            background: var(--warning-soft);
+            border-color: var(--warning);
+            color: var(--warning-text);
+        }
+
+        .quick-filter-pill.pill-success.active {
+            background: var(--success-soft);
+            border-color: var(--success);
+            color: var(--success-text);
+        }
+
+        .quick-filter-pill.pill-neutral.active {
+            background: var(--bg-input);
+            border-color: var(--border-hover);
+            color: var(--text-main);
+        }
+
+        .pulse-highlight {
+            animation: pulseHighlight 1.8s ease-in-out;
+        }
+
+        @keyframes pulseHighlight {
+            0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.7); border-color: var(--primary); }
+            50% { box-shadow: 0 0 0 14px rgba(79, 70, 229, 0); border-color: var(--primary-light); }
+            100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+        }
+
+        .badge-overdue-anim {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--danger-soft);
+            color: var(--danger-text);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: var(--radius-full);
+            padding: 4px 10px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            animation: pulseDangerBadge 2s infinite;
+        }
+
+        @keyframes pulseDangerBadge {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+    </style>
             </head>
             <body>
                 <table border="1">
@@ -5988,7 +6508,150 @@
                         </td>
                     </tr>
                 </table>
-            </body>
+            
+    <!-- ========================================================================= -->
+    <!-- MODAL TAMBAH JADWAL INSPEKSI KUSTOM -->
+    <!-- ========================================================================= -->
+    <div class="modal" id="modalAddSchedule" onclick="closeModalAddSchedule(event)">
+        <div class="modal-content" style="max-width: 540px;" onclick="event.stopPropagation()">
+            <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, var(--primary) 0%, #3730a3 100%); color: white; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="calendar-plus" style="width: 20px; height: 20px;"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0; font-size: 1.05rem; font-weight: 700; color: var(--text-main);">Tambah Penjadwalan Inspeksi APD</h4>
+                        <p style="font-size: 0.76rem; color: var(--text-muted); margin: 0;">Atur jadwal berkala dan penugasan inspeksi khusus</p>
+                    </div>
+                </div>
+                <button class="modal-close-btn" onclick="closeModalAddScheduleDirect()">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <form id="formAddSchedule" onsubmit="saveCustomSchedule(event)">
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 14px;">
+                        <div class="form-group">
+                            <label for="sch_apd">Jenis Alat Pelindung Diri (APD) <span style="color: var(--danger);">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i data-lucide="shield" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="sch_apd" list="datalistApd" placeholder="Pilih atau ketik jenis APD..." required onchange="autoFillApdInterval(this.value)">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sch_pemilik">Karyawan / Pemilik APD <span style="color: var(--danger);">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i data-lucide="user" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="sch_pemilik" list="datalistPemilik" placeholder="Pilih karyawan pemilik APD..." required onchange="autoFillPemilikData(this.value)">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label for="sch_sn">Nomor Seri / SN APD</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon"><i data-lucide="hash" style="width: 16px; height: 16px;"></i></span>
+                                    <input type="text" id="sch_sn" placeholder="Contoh: SN-HLM-2024-001">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="sch_dept">Departemen / Divisi</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon"><i data-lucide="building-2" style="width: 16px; height: 16px;"></i></span>
+                                    <input type="text" id="sch_dept" placeholder="Contoh: Workshop">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label for="sch_interval">Siklus Inspeksi <span style="color: var(--danger);">*</span></label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon"><i data-lucide="repeat" style="width: 16px; height: 16px;"></i></span>
+                                    <select id="sch_interval" required onchange="recalcNextDueDate()">
+                                        <option value="14">Tiap 14 Hari (Dua Mingguan)</option>
+                                        <option value="30" selected>Tiap 30 Hari (Bulanan)</option>
+                                        <option value="60">Tiap 60 Hari (Dua Bulanan)</option>
+                                        <option value="90">Tiap 90 Hari (Kuartalan / Q)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="sch_target_date">Tanggal Target Jatuh Tempo <span style="color: var(--danger);">*</span></label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon"><i data-lucide="calendar" style="width: 16px; height: 16px;"></i></span>
+                                    <input type="date" id="sch_target_date" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sch_pic">PIC Pemeriksa (Inspector Yang Ditugaskan)</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i data-lucide="user-check" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="sch_pic" list="datalistPic" placeholder="Pilih petugas pemeriksa K3...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                        <button type="button" class="btn btn-outline" onclick="closeModalAddScheduleDirect()">Batal</button>
+                        <button type="submit" class="btn btn-primary" style="padding: 0 20px;">
+                            <i data-lucide="save" style="width: 16px; height: 16px;"></i> Simpan Penjadwalan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODAL UBAH SIKLUS INTERVAL APD -->
+    <!-- ========================================================================= -->
+    <div class="modal" id="modalEditInterval" onclick="closeModalEditInterval(event)">
+        <div class="modal-content" style="max-width: 440px;" onclick="event.stopPropagation()">
+            <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--primary-soft); color: var(--primary); display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="repeat" style="width: 18px; height: 18px;"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0; font-size: 1rem; font-weight: 700; color: var(--text-main);">Ubah Siklus Frekuensi APD</h4>
+                        <p style="font-size: 0.74rem; color: var(--text-muted); margin: 0;" id="editIntervalApdTitle">Atur interval inspeksi berkala</p>
+                    </div>
+                </div>
+                <button class="modal-close-btn" onclick="closeModalEditIntervalDirect()">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <form id="formEditInterval" onsubmit="saveIntervalChange(event)">
+                    <input type="hidden" id="editIntervalScheduleId">
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label for="selectNewInterval">Pilih Siklus Berkala Baru</label>
+                        <select id="selectNewInterval" style="width: 100%;" required>
+                            <option value="7">Tiap 7 Hari (Mingguan - Critical APD)</option>
+                            <option value="14">Tiap 14 Hari (Dua Mingguan - Respirator/Harness)</option>
+                            <option value="30">Tiap 30 Hari (Bulanan - Standar K3)</option>
+                            <option value="60">Tiap 60 Hari (Dua Bulanan)</option>
+                            <option value="90">Tiap 90 Hari (Kuartalan / Q)</option>
+                        </select>
+                    </div>
+                    <div style="background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; font-size: 0.74rem; color: var(--text-muted); margin-bottom: 16px;">
+                        <i data-lucide="info" style="width: 14px; height: 14px; color: var(--primary); vertical-align: middle; margin-right: 4px;"></i>
+                        Jadwal inspeksi berikutnya akan otomatis dihitung ulang sejak tanggal inspeksi terakhir ditambah interval yang dipilih.
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                        <button type="button" class="btn btn-outline" onclick="closeModalEditIntervalDirect()">Batal</button>
+                        <button type="submit" class="btn btn-primary">Perbarui Siklus</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
             </html>`;
 
             const blob = new Blob(['\uFEFF' + html], { type: 'application/vnd.ms-excel;charset=utf-8' });
@@ -7135,12 +7798,1132 @@
             localStorage.setItem('k3_data', JSON.stringify(dataInspeksi));
         }
 
+        // Auto-logout when user leaves the website (tab/window closed, navigated away)
+        window.addEventListener('beforeunload', function () {
+            sessionStorage.clear();
+            localStorage.removeItem('k3_auth_user');
+            localStorage.removeItem('k3_auth_session');
+        });
+
+        window.addEventListener('pagehide', function () {
+            sessionStorage.clear();
+            localStorage.removeItem('k3_auth_user');
+            localStorage.removeItem('k3_auth_session');
+        });
+
+
+        // =========================================================================
+        // AUTOMATED INSPECTION SCHEDULING & OVERDUE CONTROL ENGINE
+        // =========================================================================
+        const DEFAULT_INSPECTION_INTERVALS = {
+            'Pelindung Kepala': 30,       // Helm Safety (30 hari)
+            'Pelindung Kaki': 30,         // Safety Shoes (30 hari)
+            'Pelindung Mata': 30,         // Safety Glasses / Goggles (30 hari)
+            'Pelindung Pendengaran': 30,  // Earplug / Earmuff (30 hari)
+            'Pelindung Tangan': 30,       // Safety Gloves (30 hari)
+            'Pelindung Pernapasan': 14,   // Respirator / Masker Filter (14 hari - critical)
+            'Pelindung Mata & Wajah': 30, // Face Shield (30 hari)
+            'Pelindung Tubuh': 14,        // Body Harness / Lanyard (14 hari - height safety)
+            'default': 30
+        };
+
+        let schedulesList = JSON.parse(localStorage.getItem('k3_schedules')) || [];
+        let currentScheduleFilter = {
+            query: '',
+            status: 'all',
+            dept: 'all'
+        };
+
+        // Helper date calculation
+        function addDays(dateStr, days) {
+            const d = new Date(dateStr);
+            d.setDate(d.getDate() + parseInt(days, 10));
+            return d.toISOString().slice(0, 10);
+        }
+
+        function getDaysDiff(targetDateStr) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const target = new Date(targetDateStr);
+            target.setHours(0, 0, 0, 0);
+            const diffTime = target - today;
+            return Math.round(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        // Generate and synchronize automated schedules for all registered PPE & workers
+        function generateAutoSchedules(forceRefresh = false) {
+            const pemilikList = masterData.pemilik || [];
+            const apdMaster = masterData.apd || [];
+            const savedSchedules = JSON.parse(localStorage.getItem('k3_schedules')) || [];
+
+            // Build map of custom intervals or custom created schedules
+            const customMap = new Map();
+            savedSchedules.forEach(s => {
+                const key = `${(s.pemilik_nama || '').toLowerCase()}|${(s.apd_nama || '').toLowerCase()}`;
+                customMap.set(key, s);
+            });
+
+            const newSchedules = [];
+
+            // 1. Gather all historical PPE from actual inspection records
+            const historyMap = new Map();
+            dataInspeksi.forEach(ins => {
+                const key = `${(ins.pemilik || '').toLowerCase()}|${(ins.nama_apd || '').toLowerCase()}`;
+                if (!historyMap.has(key)) {
+                    historyMap.set(key, []);
+                }
+                historyMap.get(key).push(ins);
+            });
+
+            // 2. Generate schedule for every worker in master data
+            pemilikList.forEach(p => {
+                // Determine which APDs are assigned to this worker
+                // A worker gets standard APDs (Helm, Sepatu, Kacamata) plus any previously inspected APDs
+                const assignedApds = new Set(['Helm Safety', 'Safety Shoes', 'Safety Glasses']);
+
+                // Add any APDs previously recorded in inspections
+                dataInspeksi.forEach(ins => {
+                    if (ins.pemilik && ins.pemilik.toLowerCase() === p.nama.toLowerCase() && ins.nama_apd) {
+                        assignedApds.add(ins.nama_apd);
+                    }
+                });
+
+                assignedApds.forEach(namaApd => {
+                    const key = `${p.nama.toLowerCase()}|${namaApd.toLowerCase()}`;
+                    const customObj = customMap.get(key);
+
+                    // Find matching APD in master for category info
+                    const apdInfo = apdMaster.find(a =>
+                        a.nama.toLowerCase() === namaApd.toLowerCase() ||
+                        namaApd.toLowerCase().includes(a.nama.toLowerCase()) ||
+                        a.nama.toLowerCase().includes(namaApd.toLowerCase())
+                    );
+                    const kategori = apdInfo ? apdInfo.kategori : 'Pelindung Diri';
+                    const standar = apdInfo ? apdInfo.standar : 'SNI / Standard K3';
+
+                    // Default interval based on category or custom setting
+                    let intervalDays = DEFAULT_INSPECTION_INTERVALS[kategori] || DEFAULT_INSPECTION_INTERVALS['default'];
+                    if (customObj && customObj.interval_hari) {
+                        intervalDays = customObj.interval_hari;
+                    }
+
+                    // Find latest inspection for this worker + APD
+                    const insHistory = historyMap.get(key) || [];
+                    insHistory.sort((a, b) => new Date(b.tgl_inspeksi) - new Date(a.tgl_inspeksi));
+                    const latestIns = insHistory[0] || null;
+
+                    let tglTerakhir = latestIns ? latestIns.tgl_inspeksi : null;
+                    let kondisiTerakhir = latestIns ? latestIns.kondisi : 'Belum Ada';
+                    let tglNext = '';
+
+                    if (tglTerakhir) {
+                        tglNext = addDays(tglTerakhir, intervalDays);
+                    } else {
+                        // For demo & initial test, assign realistic dates
+                        if (namaApd.includes('Helm')) {
+                            tglNext = new Date().toISOString().slice(0, 10); // due today
+                        } else if (namaApd.includes('Harness') || namaApd.includes('Body')) {
+                            const d = new Date();
+                            d.setDate(d.getDate() - 3); // overdue by 3 days for alert demonstration
+                            tglNext = d.toISOString().slice(0, 10);
+                        } else {
+                            const d = new Date();
+                            d.setDate(d.getDate() + 5); // upcoming
+                            tglNext = d.toISOString().slice(0, 10);
+                        }
+                    }
+
+                    // If custom schedule has overridden target date
+                    if (customObj && customObj.manual_date && !forceRefresh) {
+                        tglNext = customObj.tgl_jadwal_berikutnya;
+                    }
+
+                    const diffDays = getDaysDiff(tglNext);
+                    let status = 'ON_SCHEDULE';
+                    if (diffDays < 0) {
+                        status = 'OVERDUE';
+                    } else if (diffDays === 0) {
+                        status = 'DUE_TODAY';
+                    } else if (diffDays > 0 && diffDays <= 7) {
+                        status = 'UPCOMING';
+                    } else {
+                        status = 'ON_SCHEDULE';
+                    }
+
+                    if (!tglTerakhir && diffDays <= 0) {
+                        status = 'OVERDUE';
+                    }
+
+                    // Assigned PIC
+                    const defaultPic = (masterData.pic && masterData.pic[0]) ? masterData.pic[0].nama : 'Petugas K3';
+                    const picTugas = (customObj && customObj.pic_tugas) ? customObj.pic_tugas : defaultPic;
+
+                    newSchedules.push({
+                        id: customObj ? customObj.id : `SCH-${Date.now()}-${Math.floor(Math.random()*1000)}`,
+                        apd_nama: namaApd,
+                        apd_kategori: kategori,
+                        apd_standar: standar,
+                        pemilik_nama: p.nama,
+                        pemilik_dept: p.dept || 'Operasional',
+                        pemilik_email: p.email || `${p.nama.toLowerCase().replace(/[^a-z0-9]/g, '.')}@perusahaan.com`,
+                        sn: p.sn || (latestIns ? latestIns.sn : `SN-APD-${p.id}`),
+                        interval_hari: intervalDays,
+                        tgl_terakhir_inspeksi: tglTerakhir,
+                        kondisi_terakhir: kondisiTerakhir,
+                        tgl_jadwal_berikutnya: tglNext,
+                        sisa_hari: diffDays,
+                        status: status,
+                        pic_tugas: picTugas,
+                        spv_approver: (masterData.spv && masterData.spv[0]) ? masterData.spv[0].nama : 'Supervisor K3'
+                    });
+                });
+            });
+
+            schedulesList = newSchedules;
+            localStorage.setItem('k3_schedules', JSON.stringify(schedulesList));
+
+            populateScheduleDeptFilter();
+            updateScheduleAlertBanner();
+        }
+
+        // Manual trigger to re-sync all schedules
+        function syncAutoSchedules(userInitiated = false) {
+            generateAutoSchedules(true);
+            renderScheduleTable();
+            updateStats();
+            if (userInitiated) {
+                showToast('Siklus seluruh jadwal APD berhasil dihitung ulang & disinkronkan secara otomatis!', 'success');
+            }
+        }
+
+        // Populate Dept dropdown in Schedule View
+        function populateScheduleDeptFilter() {
+            const select = document.getElementById('filterScheduleDept');
+            if (!select) return;
+            const currentVal = select.value;
+            select.innerHTML = '<option value="all">Semua Departemen</option>';
+
+            const depts = new Set();
+            (schedulesList || []).forEach(s => {
+                if (s.pemilik_dept) depts.add(s.pemilik_dept);
+            });
+
+            depts.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d;
+                opt.textContent = d;
+                select.appendChild(opt);
+            });
+
+            if (currentVal && Array.from(select.options).some(o => o.value === currentVal)) {
+                select.value = currentVal;
+            }
+        }
+
+        // Update Dynamic Schedule Alert Banner on Dashboard
+        function updateScheduleAlertBanner() {
+            const banner = document.getElementById('scheduleAlertBanner');
+            if (!banner) return;
+
+            let list = schedulesList || [];
+            if (currentUser && currentUser.role === 'karyawan') {
+                list = list.filter(s => s.pemilik_nama && s.pemilik_nama.toLowerCase() === currentUser.nama.toLowerCase());
+            }
+
+            const overdueList = list.filter(s => s.status === 'OVERDUE');
+            const todayList = list.filter(s => s.status === 'DUE_TODAY');
+            const upcomingList = list.filter(s => s.status === 'UPCOMING');
+
+            if (overdueList.length > 0) {
+                banner.style.display = 'block';
+                banner.innerHTML = `
+                    <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(220, 38, 38, 0.05) 100%); border: 1px solid rgba(239, 68, 68, 0.3); border-left: 5px solid var(--danger); border-radius: var(--radius-md); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 40px; height: 40px; border-radius: 10px; background: var(--danger); color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.35);">
+                                <i data-lucide="alert-octagon" style="width: 22px; height: 22px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.94rem; color: var(--danger-text);">
+                                    🚨 KONTROL KEPATUHAN: Terdapat ${overdueList.length} APD dengan Jadwal Terlambat (OVERDUE)!
+                                </div>
+                                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">
+                                    Target SHE KPI: <strong>Overdue = 0</strong>. Segera lakukan inspeksi fisik atau kirim pengingat agar siap diaudit.
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="switchPage('jadwal'); setScheduleStatusFilter('OVERDUE');" style="font-weight: 700;">
+                                <i data-lucide="calendar-alert" style="width: 14px; height: 14px;"></i> Lihat ${overdueList.length} APD Overdue
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else if (todayList.length > 0) {
+                banner.style.display = 'block';
+                banner.innerHTML = `
+                    <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(217, 119, 6, 0.05) 100%); border: 1px solid rgba(245, 158, 11, 0.3); border-left: 5px solid var(--warning); border-radius: var(--radius-md); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 40px; height: 40px; border-radius: 10px; background: var(--warning); color: white; display: flex; align-items: center; justify-content: center;">
+                                <i data-lucide="clock" style="width: 22px; height: 22px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.94rem; color: var(--warning-text);">
+                                    ⏱️ JADWAL HARI INI: Terdapat ${todayList.length} APD jatuh tempo inspeksi hari ini.
+                                </div>
+                                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">
+                                    Pastikan seluruh APD selesai diperiksa dan diunggah fotonya sebelum shift berakhir.
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-warning btn-sm" onclick="switchPage('jadwal'); setScheduleStatusFilter('all');">
+                            <i data-lucide="calendar-check" style="width: 14px; height: 14px;"></i> Buka Matriks Jadwal
+                        </button>
+                    </div>
+                `;
+            } else {
+                banner.style.display = 'block';
+                banner.innerHTML = `
+                    <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(5, 150, 105, 0.03) 100%); border: 1px solid rgba(16, 185, 129, 0.25); border-left: 5px solid var(--success); border-radius: var(--radius-md); padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i data-lucide="shield-check" style="width: 20px; height: 20px; color: var(--success);"></i>
+                            <div style="font-size: 0.84rem; color: var(--success-text); font-weight: 600;">
+                                Seluruh Siklus Inspeksi APD Terkendali (Zero Overdue). Kesiapan Audit Kepatuhan SHE 100%.
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="switchPage('jadwal');" style="border-color: var(--success); color: var(--success-text);">
+                            <i data-lucide="calendar" style="width: 14px; height: 14px;"></i> Buka Jadwal APD
+                        </button>
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        // Filter and Search Handler for Schedules
+        function handleScheduleFilter() {
+            const searchInput = document.getElementById('searchScheduleInput');
+            const deptSelect = document.getElementById('filterScheduleDept');
+
+            if (searchInput) currentScheduleFilter.query = searchInput.value.trim().toLowerCase();
+            if (deptSelect) currentScheduleFilter.dept = deptSelect.value;
+
+            renderScheduleTable();
+        }
+
+        function setScheduleStatusFilter(status) {
+            currentScheduleFilter.status = status;
+
+            // Update active pill button
+            document.querySelectorAll('.schedule-status-pills .quick-filter-pill').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            if (status === 'all') {
+                const el = document.getElementById('pillSchAll');
+                if (el) el.classList.add('active');
+            } else if (status === 'OVERDUE') {
+                const el = document.getElementById('pillSchOverdue');
+                if (el) el.classList.add('active');
+            } else if (status === 'UPCOMING') {
+                const el = document.getElementById('pillSchUpcoming');
+                if (el) el.classList.add('active');
+            } else if (status === 'ON_SCHEDULE') {
+                const el = document.getElementById('pillSchOnTrack');
+                if (el) el.classList.add('active');
+            } else if (status === 'UNINSPECTED') {
+                const el = document.getElementById('pillSchUninspected');
+                if (el) el.classList.add('active');
+            }
+
+            renderScheduleTable();
+        }
+
+        // Render Automated Schedule Table
+        function renderScheduleTable() {
+            const tbody = document.getElementById('tableScheduleBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            let list = schedulesList || [];
+            if (currentUser && currentUser.role === 'karyawan') {
+                list = list.filter(s => s.pemilik_nama && s.pemilik_nama.toLowerCase() === currentUser.nama.toLowerCase());
+            }
+
+            // Update Counts for Pills
+            const countAll = list.length;
+            const countOverdue = list.filter(s => s.status === 'OVERDUE').length;
+            const countUpcoming = list.filter(s => s.status === 'UPCOMING' || s.status === 'DUE_TODAY').length;
+            const countOnTrack = list.filter(s => s.status === 'ON_SCHEDULE').length;
+            const countUninspected = list.filter(s => s.status === 'UNINSPECTED' || !s.tgl_terakhir_inspeksi).length;
+
+            const elPillAll = document.getElementById('countPillAll');
+            if (elPillAll) elPillAll.innerText = countAll;
+            const elPillOverdue = document.getElementById('countPillOverdue');
+            if (elPillOverdue) elPillOverdue.innerText = countOverdue;
+            const elPillUpcoming = document.getElementById('countPillUpcoming');
+            if (elPillUpcoming) elPillUpcoming.innerText = countUpcoming;
+            const elPillOnTrack = document.getElementById('countPillOnTrack');
+            if (elPillOnTrack) elPillOnTrack.innerText = countOnTrack;
+            const elPillUninspected = document.getElementById('countPillUninspected');
+            if (elPillUninspected) elPillUninspected.innerText = countUninspected;
+
+            // Update Summary Stats on Schedule Page
+            const elSchTotal = document.getElementById('statSchTotal');
+            if (elSchTotal) elSchTotal.innerText = countAll;
+            const elSchOnTrack = document.getElementById('statSchOnTrack');
+            if (elSchOnTrack) elSchOnTrack.innerText = countOnTrack;
+            const elSchUpcoming = document.getElementById('statSchUpcoming');
+            if (elSchUpcoming) elSchUpcoming.innerText = countUpcoming;
+            const elSchOverdue = document.getElementById('statSchOverdue');
+            if (elSchOverdue) elSchOverdue.innerText = countOverdue;
+
+            const avgCycle = countAll > 0 ? Math.round(list.reduce((acc, c) => acc + (c.interval_hari || 30), 0) / countAll) : 30;
+            const elAvgCycle = document.getElementById('statSchAvgCycle');
+            if (elAvgCycle) elAvgCycle.innerText = `${avgCycle} Hari`;
+
+            const complianceRate = countAll > 0 ? Math.round(((countAll - countOverdue) / countAll) * 100) : 100;
+            const elSchCompliance = document.getElementById('statSchCompliance');
+            if (elSchCompliance) elSchCompliance.innerText = `${complianceRate}%`;
+
+            // Filter data
+            const q = currentScheduleFilter.query;
+            const filtered = list.filter(s => {
+                const matchQuery = !q ||
+                    (s.apd_nama && s.apd_nama.toLowerCase().includes(q)) ||
+                    (s.sn && s.sn.toLowerCase().includes(q)) ||
+                    (s.pemilik_nama && s.pemilik_nama.toLowerCase().includes(q)) ||
+                    (s.pemilik_dept && s.pemilik_dept.toLowerCase().includes(q)) ||
+                    (s.pic_tugas && s.pic_tugas.toLowerCase().includes(q));
+
+                const matchDept = currentScheduleFilter.dept === 'all' || (s.pemilik_dept === currentScheduleFilter.dept);
+
+                let matchStatus = true;
+                if (currentScheduleFilter.status === 'OVERDUE') {
+                    matchStatus = s.status === 'OVERDUE';
+                } else if (currentScheduleFilter.status === 'UPCOMING') {
+                    matchStatus = s.status === 'UPCOMING' || s.status === 'DUE_TODAY';
+                } else if (currentScheduleFilter.status === 'ON_SCHEDULE') {
+                    matchStatus = s.status === 'ON_SCHEDULE';
+                } else if (currentScheduleFilter.status === 'UNINSPECTED') {
+                    matchStatus = s.status === 'UNINSPECTED' || !s.tgl_terakhir_inspeksi;
+                }
+
+                return matchQuery && matchDept && matchStatus;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i data-lucide="calendar-x" style="width: 32px; height: 32px;"></i>
+                                </div>
+                                <h4>Tidak ada jadwal inspeksi yang cocok</h4>
+                                <p style="font-size: 0.8rem;">Sesuaikan filter atau klik tombol "Sinkronkan Siklus Otomatis" di atas.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            // Sort: OVERDUE first, then DUE_TODAY, then UPCOMING, then newest
+            filtered.sort((a, b) => {
+                const order = { 'OVERDUE': 1, 'DUE_TODAY': 2, 'UPCOMING': 3, 'UNINSPECTED': 4, 'ON_SCHEDULE': 5 };
+                if (order[a.status] !== order[b.status]) {
+                    return order[a.status] - order[b.status];
+                }
+                return a.sisa_hari - b.sisa_hari;
+            });
+
+            filtered.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                const initial = item.pemilik_nama ? item.pemilik_nama.charAt(0).toUpperCase() : 'U';
+
+                // Format Status Badge
+                let statusBadge = '';
+                if (item.status === 'OVERDUE') {
+                    statusBadge = `<span class="badge-overdue-anim"><i data-lucide="alert-octagon" style="width: 12px; height: 12px;"></i> Terlambat ${Math.abs(item.sisa_hari)} Hari</span>`;
+                } else if (item.status === 'DUE_TODAY') {
+                    statusBadge = `<span class="badge badge-warning" style="font-weight: 700; border-color: var(--warning);"><i data-lucide="clock" style="width: 12px; height: 12px;"></i> Hari Ini</span>`;
+                } else if (item.status === 'UPCOMING') {
+                    statusBadge = `<span class="badge badge-warning"><i data-lucide="bell" style="width: 12px; height: 12px;"></i> Sisa ${item.sisa_hari} Hari</span>`;
+                } else if (item.status === 'UNINSPECTED') {
+                    statusBadge = `<span class="badge badge-pending">⚪ Belum Diinspeksi</span>`;
+                } else {
+                    statusBadge = `<span class="badge badge-good"><i data-lucide="check" style="width: 12px; height: 12px;"></i> Terkontrol (${item.sisa_hari} Hr)</span>`;
+                }
+
+                // Format Last Inspection
+                let lastInsHtml = '';
+                if (item.tgl_terakhir_inspeksi) {
+                    const condClass = item.kondisi_terakhir === 'Layak Pakai' ? 'badge-good' : (item.kondisi_terakhir === 'Perlu Perbaikan' ? 'badge-warning' : 'badge-danger');
+                    lastInsHtml = `
+                        <div style="font-weight: 600; font-size: 0.82rem; color: var(--text-main);">${escapeHtml(item.tgl_terakhir_inspeksi)}</div>
+                        <span class="badge ${condClass}" style="font-size: 0.68rem; padding: 1px 6px; margin-top: 2px;">${escapeHtml(item.kondisi_terakhir)}</span>
+                    `;
+                } else {
+                    lastInsHtml = `<span style="font-size: 0.76rem; color: var(--text-subtle); font-style: italic;">Belum Ada Riwayat</span>`;
+                }
+
+                // Highlight Row if Overdue
+                if (item.status === 'OVERDUE') {
+                    tr.style.backgroundColor = 'rgba(239, 68, 68, 0.04)';
+                }
+
+                tr.innerHTML = `
+                    <td style="text-align: center; font-size: 0.8rem; color: var(--text-subtle);">${index + 1}</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 34px; height: 34px; border-radius: 8px; background: var(--primary-soft); color: var(--primary); display: flex; align-items: center; justify-content: center;">
+                                <i data-lucide="shield" style="width: 17px; height: 17px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.86rem; color: var(--text-main);">${escapeHtml(item.apd_nama)}</div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted);">
+                                    SN: <strong>${escapeHtml(item.sn || '-')}</strong> • <span style="color: var(--primary);">${escapeHtml(item.apd_kategori || 'Standard APD')}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div class="user-avatar" style="width: 30px; height: 30px; font-size: 0.75rem;">${initial}</div>
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.84rem; color: var(--text-main);">${escapeHtml(item.pemilik_nama)}</div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted);">${escapeHtml(item.pemilik_dept || 'Operasional')}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span style="font-size: 0.82rem; font-weight: 600; color: var(--text-main);">Tiap ${item.interval_hari} Hari</span>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="openModalEditInterval('${item.id}')" title="Ubah interval frekuensi" style="padding: 2px 6px; border-radius: var(--radius-sm); border: none; background: var(--bg-input);">
+                                <i data-lucide="edit-3" style="width: 12px; height: 12px; color: var(--text-muted);"></i>
+                            </button>
+                        </div>
+                    </td>
+                    <td>${lastInsHtml}</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--primary);"></i>
+                            <span style="font-weight: 700; font-size: 0.84rem; color: var(--text-main);">${escapeHtml(item.tgl_jadwal_berikutnya)}</span>
+                        </div>
+                    </td>
+                    <td>${statusBadge}</td>
+                    <td style="text-align: right;">
+                        <div style="display: flex; gap: 6px; justify-content: flex-end;">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="inspeksiDariJadwal('${item.id}')" title="Langsung Buka Form Inspeksi APD ini" style="padding: 5px 10px; font-size: 0.76rem; font-weight: 700;">
+                                <i data-lucide="clipboard-check" style="width: 13px; height: 13px;"></i> Inspeksi
+                            </button>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="sendScheduleReminderEmail('${item.id}')" title="Kirim Notifikasi Email Reminder" style="padding: 5px 8px;">
+                                <i data-lucide="mail" style="width: 13px; height: 13px; color: var(--primary);"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Direct Action: Start Inspection from Schedule Row
+        function inspeksiDariJadwal(schId) {
+            const item = (schedulesList || []).find(s => s.id === schId);
+            if (!item) return;
+
+            // 1. Switch to Inspeksi page
+            switchPage('inspeksi');
+
+            // 2. Populate inspection form fields
+            const elNama = document.getElementById('nama_apd');
+            const elPemilik = document.getElementById('pemilik');
+            const elSn = document.getElementById('sn');
+            const elTgl = document.getElementById('tgl_inspeksi');
+            const elKuartal = document.getElementById('kuartal');
+            const elPic = document.getElementById('pic');
+            const elSpv = document.getElementById('spv');
+
+            if (elNama) elNama.value = item.apd_nama || '';
+            if (elPemilik) elPemilik.value = item.pemilik_nama || '';
+            if (elSn) elSn.value = item.sn || '';
+            if (elTgl) elTgl.valueAsDate = new Date();
+            if (elKuartal) elKuartal.value = getCurrentKuartalLabel();
+            if (elPic) elPic.value = item.pic_tugas || (masterData.pic[0] ? masterData.pic[0].nama : '');
+            if (elSpv) elSpv.value = item.spv_approver || (masterData.spv[0] ? masterData.spv[0].nama : '');
+
+            // 3. Scroll to form card with visual pulse highlight
+            const formCard = document.getElementById('formCard');
+            if (formCard) {
+                formCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                formCard.classList.add('pulse-highlight');
+                setTimeout(() => formCard.classList.remove('pulse-highlight'), 2000);
+            }
+
+            showToast(`Form inspeksi terisi otomatis dari jadwal APD "${item.apd_nama}" (${item.pemilik_nama}). Silakan lengkapi kondisi dan foto fisik!`, 'success');
+        }
+
+        // Send Scheduled Reminder Email for Specific PPE
+        async function sendScheduleReminderEmail(schId) {
+            const item = (schedulesList || []).find(s => s.id === schId);
+            if (!item) return;
+
+            const email = item.pemilik_email;
+            const config = JSON.parse(localStorage.getItem('k3_emailjs_config')) || null;
+
+            const isOverdue = item.status === 'OVERDUE';
+            const subject = isOverdue
+                ? `🚨 [URGENT OVERDUE] Peringatan Keterlambatan Inspeksi APD: ${item.apd_nama} - ${item.pemilik_nama}`
+                : `📅 [PPE Compliance] Pemberitahuan Jadwal Inspeksi APD: ${item.apd_nama} - ${item.pemilik_nama}`;
+
+            const message = `Halo ${item.pemilik_nama},
+
+` +
+                `Pemberitahuan resmi dari PPE Compliance Control System:
+` +
+                `• Jenis APD: ${item.apd_nama} (Serial Number: ${item.sn || '-'})
+` +
+                `• Departemen: ${item.pemilik_dept}
+` +
+                `• Siklus Frekuensi: Setiap ${item.interval_hari} Hari
+` +
+                `• Tanggal Jatuh Tempo: ${item.tgl_jadwal_berikutnya}
+` +
+                `• Status Kontrol: ${isOverdue ? 'TERLAMBAT (Overdue ' + Math.abs(item.sisa_hari) + ' hari)' : (item.sisa_hari === 0 ? 'JATUH TEMPO HARI INI' : 'Sisa ' + item.sisa_hari + ' hari')}
+` +
+                `• Petugas PIC Pemeriksa: ${item.pic_tugas || 'Petugas K3 Lapangan'}
+
+` +
+                `Mohon pastikan APD Anda siap diperiksa fisik demi menjamin kepatuhan standar keselamatan kerja (K3) dan kesiapan audit.
+
+` +
+                `Salam Keselamatan Kerja,
+Tim K3 & Safety Governance`;
+
+            if (config && config.serviceId && config.templateId && config.publicKey && email) {
+                try {
+                    showToast(`Mengirim email reminder jadwal ke ${email}...`, 'info');
+                    const templateParams = {
+                        to_email: email,
+                        to_name: item.pemilik_nama,
+                        subject: subject,
+                        message: message,
+                        nama_apd: item.apd_nama,
+                        pemilik: item.pemilik_nama,
+                        sn: item.sn,
+                        kondisi: item.status,
+                        tgl_inspeksi: item.tgl_jadwal_berikutnya,
+                        pic: item.pic_tugas || 'Petugas K3',
+                        spv: item.spv_approver || 'Supervisor K3'
+                    };
+                    await emailjs.send(config.serviceId, config.templateId, templateParams, config.publicKey);
+                    showToast(`Email pengingat jadwal berhasil dikirim ke ${email}!`, 'success');
+                } catch (err) {
+                    console.error('[PPE Compliance Schedule Email Error]:', err);
+                    showToast(`Gagal kirim via EmailJS (${err.text || err.message}). Membuka email client...`, 'warning');
+                    window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`);
+                }
+            } else {
+                window.open(`mailto:${email || ''}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`);
+                showToast(`Membuka email client default untuk mengirimkan pengingat jadwal ke ${item.pemilik_nama}.`, 'info');
+            }
+        }
+
+        // Blast Reminders to all Overdue & Upcoming PPE
+        async function blastScheduleReminders() {
+            const urgentList = (schedulesList || []).filter(s => s.status === 'OVERDUE' || s.status === 'DUE_TODAY' || s.status === 'UPCOMING');
+
+            if (urgentList.length === 0) {
+                showToast('Tidak ada jadwal APD yang Overdue atau mendekati jatuh tempo saat ini!', 'info');
+                return;
+            }
+
+            if (!confirm(`Kirimkan email pengingat massal ke ${urgentList.length} personel dengan jadwal inspeksi jatuh tempo/terlambat?`)) {
+                return;
+            }
+
+            const config = JSON.parse(localStorage.getItem('k3_emailjs_config')) || null;
+            if (!config || !config.serviceId || !config.templateId || !config.publicKey) {
+                showToast('Konfigurasi EmailJS belum lengkap. Silakan buka menu "Email Notif" di pojok kanan atas.', 'warning');
+                return;
+            }
+
+            let sentCount = 0;
+            showToast(`Memproses pengiriman broadcast reminder ke ${urgentList.length} personel...`, 'info');
+
+            for (const item of urgentList) {
+                if (item.pemilik_email) {
+                    try {
+                        const isOverdue = item.status === 'OVERDUE';
+                        const subject = isOverdue
+                            ? `🚨 [URGENT OVERDUE] Peringatan Keterlambatan Inspeksi APD: ${item.apd_nama} - ${item.pemilik_nama}`
+                            : `📅 [PPE Compliance] Jadwal Inspeksi APD: ${item.apd_nama} - ${item.pemilik_nama}`;
+
+                        const message = `Halo ${item.pemilik_nama},
+
+Jadwal pemeriksaan rutin APD Anda (${item.apd_nama}, SN: ${item.sn}) jatuh tempo pada ${item.tgl_jadwal_berikutnya} (${item.status}). Mohon segera dilakukan inspeksi bersama petugas PIC K3 (${item.pic_tugas}).`;
+
+                        await emailjs.send(config.serviceId, config.templateId, {
+                            to_email: item.pemilik_email,
+                            to_name: item.pemilik_nama,
+                            subject: subject,
+                            message: message,
+                            nama_apd: item.apd_nama,
+                            pemilik: item.pemilik_nama,
+                            sn: item.sn,
+                            kondisi: item.status,
+                            tgl_inspeksi: item.tgl_jadwal_berikutnya,
+                            pic: item.pic_tugas || 'Petugas K3',
+                            spv: item.spv_approver || 'Supervisor K3'
+                        }, config.publicKey);
+
+                        sentCount++;
+                    } catch (e) {
+                        console.error('Broadcast failed for:', item.pemilik_email, e);
+                    }
+                }
+            }
+
+            showToast(`Broadcast selesai! ${sentCount} email pengingat berhasil terkirim.`, 'success');
+        }
+
+        // Export Schedules to Excel via ExcelJS
+        async function exportSchedulesExcel() {
+            if (typeof ExcelJS === 'undefined') {
+                showToast('Library ExcelJS belum siap. Silakan muat ulang halaman.', 'danger');
+                return;
+            }
+
+            try {
+                showToast('Menyiapkan berkas Excel Jadwal Inspeksi...', 'info');
+                const workbook = new ExcelJS.Workbook();
+                workbook.creator = 'PPE Compliance Control System';
+                workbook.lastModifiedBy = 'PPE Compliance Control System';
+                workbook.created = new Date();
+
+                const worksheet = workbook.addWorksheet('Jadwal Kontrol APD');
+
+                // Header Banner
+                worksheet.mergeCells('A1:H1');
+                const titleCell = worksheet.getCell('A1');
+                titleCell.value = 'PPE COMPLIANCE CONTROL SYSTEM - MATRIKS JADWAL & KONTROL INSPEKSI APD';
+                titleCell.font = { name: 'Calibri', size: 14, bold: true, color: { argb: 'FFFFFFFF' } };
+                titleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4F46E5' } };
+                titleCell.alignment = { vertical: 'middle', horizontal: 'center' };
+                worksheet.getRow(1).height = 36;
+
+                // Subtitle Info
+                worksheet.mergeCells('A2:H2');
+                const subCell = worksheet.getCell('A2');
+                subCell.value = `Tanggal Ekspor: ${new Date().toLocaleDateString('id-ID')} | Total Terjadwal: ${schedulesList.length} APD | Overdue: ${schedulesList.filter(s=>s.status==='OVERDUE').length} APD`;
+                subCell.font = { name: 'Calibri', size: 10, italic: true, color: { argb: 'FF94A3B8' } };
+                subCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E293B' } };
+                subCell.alignment = { vertical: 'middle', horizontal: 'center' };
+                worksheet.getRow(2).height = 24;
+
+                worksheet.addRow([]); // Blank Row 3
+
+                // Column Headers
+                const headers = ['No', 'Jenis APD', 'Nomor Seri (SN)', 'Karyawan / Pemilik', 'Departemen', 'Siklus Inspeksi', 'Inspeksi Terakhir', 'Jadwal Jatuh Tempo', 'Status Kontrol', 'PIC Ditugaskan'];
+                worksheet.getRow(4).values = headers;
+                worksheet.getRow(4).height = 28;
+
+                worksheet.getRow(4).eachCell((cell) => {
+                    cell.font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
+                    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF3730A3' } };
+                    cell.alignment = { vertical: 'middle', horizontal: 'center' };
+                    cell.border = {
+                        top: { style: 'thin', color: { argb: 'FF6366F1' } },
+                        left: { style: 'thin', color: { argb: 'FF6366F1' } },
+                        bottom: { style: 'medium', color: { argb: 'FFFFFFFF' } },
+                        right: { style: 'thin', color: { argb: 'FF6366F1' } }
+                    };
+                });
+
+                // Populate Rows
+                schedulesList.forEach((item, index) => {
+                    const rowNumber = index + 5;
+                    const rowValues = [
+                        index + 1,
+                        item.apd_nama,
+                        item.sn || '-',
+                        item.pemilik_nama,
+                        item.pemilik_dept,
+                        `Tiap ${item.interval_hari} Hari`,
+                        item.tgl_terakhir_inspeksi || 'Belum Ada',
+                        item.tgl_jadwal_berikutnya,
+                        item.status === 'OVERDUE' ? `TERLAMBAT (${Math.abs(item.sisa_hari)} Hari)` : (item.status === 'DUE_TODAY' ? 'HARI INI' : `Sisa ${item.sisa_hari} Hari`),
+                        item.pic_tugas || '-'
+                    ];
+
+                    const row = worksheet.addRow(rowValues);
+                    row.height = 22;
+
+                    row.eachCell((cell, colNumber) => {
+                        cell.font = { name: 'Calibri', size: 10 };
+                        cell.border = {
+                            top: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+                            left: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+                            bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+                            right: { style: 'thin', color: { argb: 'FFE2E8F0' } }
+                        };
+                        cell.alignment = { vertical: 'middle', horizontal: colNumber === 1 || colNumber === 6 || colNumber === 7 || colNumber === 8 ? 'center' : 'left' };
+
+                        // Highlight status column
+                        if (colNumber === 9) {
+                            if (item.status === 'OVERDUE') {
+                                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEE2E2' } };
+                                cell.font = { name: 'Calibri', size: 10, bold: true, color: { argb: 'FFB91C1C' } };
+                            } else if (item.status === 'DUE_TODAY' || item.status === 'UPCOMING') {
+                                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEF3C7' } };
+                                cell.font = { name: 'Calibri', size: 10, bold: true, color: { argb: 'FFB45309' } };
+                            } else {
+                                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFECFDF5' } };
+                                cell.font = { name: 'Calibri', size: 10, bold: true, color: { argb: 'FF047857' } };
+                            }
+                        }
+                    });
+                });
+
+                // Auto Column Widths
+                worksheet.columns = [
+                    { width: 6 },
+                    { width: 28 },
+                    { width: 18 },
+                    { width: 22 },
+                    { width: 20 },
+                    { width: 16 },
+                    { width: 16 },
+                    { width: 16 },
+                    { width: 20 },
+                    { width: 20 }
+                ];
+
+                const buffer = await workbook.xlsx.writeBuffer();
+                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Jadwal_Inspeksi_APD_Compliance_Control_${new Date().toISOString().slice(0, 10)}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                showToast('Berkas Excel Jadwal Inspeksi berhasil diunduh!', 'success');
+            } catch (err) {
+                console.error('[Excel Export Error]:', err);
+                showToast(`Gagal mengekspor Excel: ${err.message}`, 'danger');
+            }
+        }
+
+        // Modal Handlers: Add Custom Schedule
+        function openModalAddSchedule() {
+            const modal = document.getElementById('modalAddSchedule');
+            if (modal) {
+                modal.classList.add('active');
+                document.getElementById('sch_target_date').valueAsDate = new Date();
+                lucide.createIcons();
+            }
+        }
+
+        function closeModalAddScheduleDirect() {
+            const modal = document.getElementById('modalAddSchedule');
+            if (modal) modal.classList.remove('active');
+        }
+
+        function closeModalAddSchedule(e) {
+            if (e.target.id === 'modalAddSchedule') {
+                closeModalAddScheduleDirect();
+            }
+        }
+
+        function autoFillApdInterval(apdName) {
+            const apdMaster = masterData.apd || [];
+            const found = apdMaster.find(a => a.nama.toLowerCase() === (apdName || '').toLowerCase());
+            if (found && found.kategori) {
+                const def = DEFAULT_INSPECTION_INTERVALS[found.kategori] || 30;
+                const select = document.getElementById('sch_interval');
+                if (select) select.value = def.toString();
+                recalcNextDueDate();
+            }
+        }
+
+        function autoFillPemilikData(pemilikName) {
+            const pemilikList = masterData.pemilik || [];
+            const found = pemilikList.find(p => p.nama.toLowerCase() === (pemilikName || '').toLowerCase());
+            if (found) {
+                const elSn = document.getElementById('sch_sn');
+                const elDept = document.getElementById('sch_dept');
+                if (elSn && found.sn) elSn.value = found.sn;
+                if (elDept && found.dept) elDept.value = found.dept;
+            }
+        }
+
+        function recalcNextDueDate() {
+            const interval = parseInt(document.getElementById('sch_interval').value || '30', 10);
+            const d = new Date();
+            d.setDate(d.getDate() + interval);
+            document.getElementById('sch_target_date').value = d.toISOString().slice(0, 10);
+        }
+
+        function saveCustomSchedule(e) {
+            e.preventDefault();
+
+            const apdNama = document.getElementById('sch_apd').value.trim();
+            const pemilikNama = document.getElementById('sch_pemilik').value.trim();
+            const sn = document.getElementById('sch_sn').value.trim();
+            const dept = document.getElementById('sch_dept').value.trim();
+            const interval = parseInt(document.getElementById('sch_interval').value, 10);
+            const targetDate = document.getElementById('sch_target_date').value;
+            const pic = document.getElementById('sch_pic').value.trim() || (masterData.pic[0] ? masterData.pic[0].nama : 'Petugas K3');
+
+            const diffDays = getDaysDiff(targetDate);
+            let status = 'ON_SCHEDULE';
+            if (diffDays < 0) status = 'OVERDUE';
+            else if (diffDays === 0) status = 'DUE_TODAY';
+            else if (diffDays <= 7) status = 'UPCOMING';
+
+            const newSch = {
+                id: `SCH-${Date.now()}-${Math.floor(Math.random()*1000)}`,
+                apd_nama: apdNama,
+                apd_kategori: 'Custom APD',
+                apd_standar: 'SNI / Standard K3',
+                pemilik_nama: pemilikNama,
+                pemilik_dept: dept || 'Operasional',
+                pemilik_email: `${pemilikNama.toLowerCase().replace(/[^a-z0-9]/g, '.')}@perusahaan.com`,
+                sn: sn || `SN-APD-${Date.now().toString().slice(-4)}`,
+                interval_hari: interval,
+                tgl_terakhir_inspeksi: null,
+                kondisi_terakhir: 'Belum Ada',
+                tgl_jadwal_berikutnya: targetDate,
+                sisa_hari: diffDays,
+                status: status,
+                pic_tugas: pic,
+                spv_approver: (masterData.spv && masterData.spv[0]) ? masterData.spv[0].nama : 'Supervisor K3',
+                manual_date: true
+            };
+
+            schedulesList.unshift(newSch);
+            localStorage.setItem('k3_schedules', JSON.stringify(schedulesList));
+
+            closeModalAddScheduleDirect();
+            document.getElementById('formAddSchedule').reset();
+            renderScheduleTable();
+            updateStats();
+            showToast(`Jadwal inspeksi kustom untuk ${apdNama} (${pemilikNama}) berhasil disimpan!`, 'success');
+        }
+
+        // Modal Handlers: Edit Interval
+        function openModalEditInterval(schId) {
+            const item = (schedulesList || []).find(s => s.id === schId);
+            if (!item) return;
+
+            document.getElementById('editIntervalScheduleId').value = schId;
+            document.getElementById('editIntervalApdTitle').innerText = `${item.apd_nama} - ${item.pemilik_nama}`;
+            document.getElementById('selectNewInterval').value = (item.interval_hari || 30).toString();
+
+            const modal = document.getElementById('modalEditInterval');
+            if (modal) {
+                modal.classList.add('active');
+                lucide.createIcons();
+            }
+        }
+
+        function closeModalEditIntervalDirect() {
+            const modal = document.getElementById('modalEditInterval');
+            if (modal) modal.classList.remove('active');
+        }
+
+        function closeModalEditInterval(e) {
+            if (e.target.id === 'modalEditInterval') {
+                closeModalEditIntervalDirect();
+            }
+        }
+
+        function saveIntervalChange(e) {
+            e.preventDefault();
+            const schId = document.getElementById('editIntervalScheduleId').value;
+            const newInterval = parseInt(document.getElementById('selectNewInterval').value, 10);
+
+            const index = (schedulesList || []).findIndex(s => s.id === schId);
+            if (index > -1) {
+                schedulesList[index].interval_hari = newInterval;
+
+                // Recalculate next due date
+                const baseDate = schedulesList[index].tgl_terakhir_inspeksi || new Date().toISOString().slice(0, 10);
+                schedulesList[index].tgl_jadwal_berikutnya = addDays(baseDate, newInterval);
+                const diffDays = getDaysDiff(schedulesList[index].tgl_jadwal_berikutnya);
+                schedulesList[index].sisa_hari = diffDays;
+
+                if (diffDays < 0) schedulesList[index].status = 'OVERDUE';
+                else if (diffDays === 0) schedulesList[index].status = 'DUE_TODAY';
+                else if (diffDays <= 7) schedulesList[index].status = 'UPCOMING';
+                else schedulesList[index].status = 'ON_SCHEDULE';
+
+                localStorage.setItem('k3_schedules', JSON.stringify(schedulesList));
+                closeModalEditIntervalDirect();
+                renderScheduleTable();
+                updateStats();
+                showToast(`Siklus inspeksi diperbarui menjadi tiap ${newInterval} hari!`, 'success');
+            }
+        }
+
+        // Initialize Auto Schedules
+        generateAutoSchedules();
+
         // Initial setup
         updateDatalists();
         applyRolePermissions();
         updateEmailStatusUI();
         lucide.createIcons();
     </script>
+
+    <!-- ========================================================================= -->
+    <!-- MODAL TAMBAH JADWAL INSPEKSI KUSTOM -->
+    <!-- ========================================================================= -->
+    <div class="modal" id="modalAddSchedule" onclick="closeModalAddSchedule(event)">
+        <div class="modal-content" style="max-width: 540px;" onclick="event.stopPropagation()">
+            <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, var(--primary) 0%, #3730a3 100%); color: white; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="calendar-plus" style="width: 20px; height: 20px;"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0; font-size: 1.05rem; font-weight: 700; color: var(--text-main);">Tambah Penjadwalan Inspeksi APD</h4>
+                        <p style="font-size: 0.76rem; color: var(--text-muted); margin: 0;">Atur jadwal berkala dan penugasan inspeksi khusus</p>
+                    </div>
+                </div>
+                <button class="modal-close-btn" onclick="closeModalAddScheduleDirect()">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <form id="formAddSchedule" onsubmit="saveCustomSchedule(event)">
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 14px;">
+                        <div class="form-group">
+                            <label for="sch_apd">Jenis Alat Pelindung Diri (APD) <span style="color: var(--danger);">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i data-lucide="shield" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="sch_apd" list="datalistApd" placeholder="Pilih atau ketik jenis APD..." required onchange="autoFillApdInterval(this.value)">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sch_pemilik">Karyawan / Pemilik APD <span style="color: var(--danger);">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i data-lucide="user" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="sch_pemilik" list="datalistPemilik" placeholder="Pilih karyawan pemilik APD..." required onchange="autoFillPemilikData(this.value)">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label for="sch_sn">Nomor Seri / SN APD</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon"><i data-lucide="hash" style="width: 16px; height: 16px;"></i></span>
+                                    <input type="text" id="sch_sn" placeholder="Contoh: SN-HLM-2024-001">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="sch_dept">Departemen / Divisi</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon"><i data-lucide="building-2" style="width: 16px; height: 16px;"></i></span>
+                                    <input type="text" id="sch_dept" placeholder="Contoh: Workshop">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label for="sch_interval">Siklus Inspeksi <span style="color: var(--danger);">*</span></label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon"><i data-lucide="repeat" style="width: 16px; height: 16px;"></i></span>
+                                    <select id="sch_interval" required onchange="recalcNextDueDate()">
+                                        <option value="14">Tiap 14 Hari (Dua Mingguan)</option>
+                                        <option value="30" selected>Tiap 30 Hari (Bulanan)</option>
+                                        <option value="60">Tiap 60 Hari (Dua Bulanan)</option>
+                                        <option value="90">Tiap 90 Hari (Kuartalan / Q)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="sch_target_date">Tanggal Target Jatuh Tempo <span style="color: var(--danger);">*</span></label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon"><i data-lucide="calendar" style="width: 16px; height: 16px;"></i></span>
+                                    <input type="date" id="sch_target_date" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sch_pic">PIC Pemeriksa (Inspector Yang Ditugaskan)</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i data-lucide="user-check" style="width: 16px; height: 16px;"></i></span>
+                                <input type="text" id="sch_pic" list="datalistPic" placeholder="Pilih petugas pemeriksa K3...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                        <button type="button" class="btn btn-outline" onclick="closeModalAddScheduleDirect()">Batal</button>
+                        <button type="submit" class="btn btn-primary" style="padding: 0 20px;">
+                            <i data-lucide="save" style="width: 16px; height: 16px;"></i> Simpan Penjadwalan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODAL UBAH SIKLUS INTERVAL APD -->
+    <!-- ========================================================================= -->
+    <div class="modal" id="modalEditInterval" onclick="closeModalEditInterval(event)">
+        <div class="modal-content" style="max-width: 440px;" onclick="event.stopPropagation()">
+            <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--primary-soft); color: var(--primary); display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="repeat" style="width: 18px; height: 18px;"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0; font-size: 1rem; font-weight: 700; color: var(--text-main);">Ubah Siklus Frekuensi APD</h4>
+                        <p style="font-size: 0.74rem; color: var(--text-muted); margin: 0;" id="editIntervalApdTitle">Atur interval inspeksi berkala</p>
+                    </div>
+                </div>
+                <button class="modal-close-btn" onclick="closeModalEditIntervalDirect()">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <form id="formEditInterval" onsubmit="saveIntervalChange(event)">
+                    <input type="hidden" id="editIntervalScheduleId">
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label for="selectNewInterval">Pilih Siklus Berkala Baru</label>
+                        <select id="selectNewInterval" style="width: 100%;" required>
+                            <option value="7">Tiap 7 Hari (Mingguan - Critical APD)</option>
+                            <option value="14">Tiap 14 Hari (Dua Mingguan - Respirator/Harness)</option>
+                            <option value="30">Tiap 30 Hari (Bulanan - Standar K3)</option>
+                            <option value="60">Tiap 60 Hari (Dua Bulanan)</option>
+                            <option value="90">Tiap 90 Hari (Kuartalan / Q)</option>
+                        </select>
+                    </div>
+                    <div style="background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; font-size: 0.74rem; color: var(--text-muted); margin-bottom: 16px;">
+                        <i data-lucide="info" style="width: 14px; height: 14px; color: var(--primary); vertical-align: middle; margin-right: 4px;"></i>
+                        Jadwal inspeksi berikutnya akan otomatis dihitung ulang sejak tanggal inspeksi terakhir ditambah interval yang dipilih.
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                        <button type="button" class="btn btn-outline" onclick="closeModalEditIntervalDirect()">Batal</button>
+                        <button type="submit" class="btn btn-primary">Perbarui Siklus</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html> 
