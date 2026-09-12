@@ -2423,10 +2423,11 @@
 
             <div class="nav-actions">
                 <button type="button" class="btn btn-outline btn-sm" id="btnNavEmail" onclick="openEmailConfigModal()"
-                    title="Pengaturan Email Notifikasi (EmailJS & Gmail)"
-                    style="padding: 7px 14px; font-size: 0.8rem; border-radius: var(--radius-full);">
+                    title="Pengaturan Email Notifikasi & Kuota Kredit (Web3Forms API)"
+                    style="padding: 6px 14px; font-size: 0.8rem; border-radius: var(--radius-full); display: flex; align-items: center; gap: 6px;">
                     <i data-lucide="mail" style="width: 15px; height: 15px; color: var(--primary);"></i>
-                    <span id="emailStatusText">Email Notif</span>
+                    <span id="emailStatusText">Web3Forms</span>
+                    <span id="emailNavQuotaBadge" style="font-size: 0.72rem; padding: 2px 7px; border-radius: 12px; background: rgba(16, 185, 129, 0.15); color: #059669; font-weight: 700; border: 1px solid rgba(16, 185, 129, 0.3);">250/250</span>
                 </button>
 
                 <div class="badge-live">
@@ -3804,22 +3805,29 @@
         </div>
     </div>
 
-    <!-- EmailJS & Custom Template & Multi-Recipient Selector Modal -->
+    <!-- Web3Forms API & Custom Template & Multi-Recipient Selector Modal with Credit Quota Limits -->
     <div class="modal" id="emailModal" onclick="closeEmailModal(event)">
-        <div class="modal-content" style="max-width: 760px; max-height: 90vh; display: flex; flex-direction: column;" onclick="event.stopPropagation()">
+        <div class="modal-content" style="max-width: 780px; max-height: 92vh; display: flex; flex-direction: column;" onclick="event.stopPropagation()">
             <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border);">
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #ea4335 0%, #4285f4 100%); color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(66, 133, 244, 0.3);">
-                        <i data-lucide="mail" style="width: 22px; height: 22px;"></i>
+                    <div style="width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #059669 0%, #0284c7 100%); color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3);">
+                        <i data-lucide="send" style="width: 22px; height: 22px;"></i>
                     </div>
                     <div>
                         <h4 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--text-main);">Pusat Notifikasi & Broadcast Email K3</h4>
-                        <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Pilih penerima, kustomisasi template HTML, dan kirim pesan serentak</p>
+                        <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Integrasi Web3Forms API, Template HTML interaktif, dan Kontrol Batas Kuota Kredit</p>
                     </div>
                 </div>
-                <button class="modal-close-btn" onclick="closeEmailModalDirect()">
-                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
-                </button>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <!-- Live Quota Header Pill -->
+                    <div id="modalQuotaHeaderCard" style="display: flex; align-items: center; gap: 6px; background: var(--bg-surface-2); border: 1px solid var(--border); border-radius: var(--radius-full); padding: 5px 12px; font-size: 0.78rem;" title="Sisa kuota kredit pengiriman email bulan ini">
+                        <i data-lucide="credit-card" style="width: 14px; height: 14px; color: var(--primary);"></i>
+                        <span>Sisa Kuota: <strong id="modalHeaderQuotaRemaining" style="color: var(--primary);">250</strong> / <span id="modalHeaderQuotaTotal">250</span> Kredit</span>
+                    </div>
+                    <button class="modal-close-btn" onclick="closeEmailModalDirect()">
+                        <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Modal Nav Tabs -->
@@ -3831,7 +3839,7 @@
                     <i data-lucide="code" style="width: 15px; height: 15px;"></i> 2. Template Email HTML
                 </button>
                 <button type="button" class="btn btn-sm email-modal-tab" id="tabBtnConfig" onclick="switchEmailTab('config')" style="border-radius: var(--radius-sm) var(--radius-sm) 0 0; padding: 8px 14px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
-                    <i data-lucide="settings" style="width: 15px; height: 15px;"></i> 3. Pengaturan EmailJS
+                    <i data-lucide="settings" style="width: 15px; height: 15px;"></i> 3. Pengaturan Web3Forms & Kuota
                 </button>
             </div>
 
@@ -3871,13 +3879,12 @@
                         <input type="text" id="searchRecipientInput" onkeyup="filterRecipientList()" placeholder="Cari nama atau email penerima..." style="font-size: 0.82rem; padding: 7px 10px 7px 32px;">
                     </div>
 
-                    <!-- Recipient Limit Warning Banner (> 5 Recipients) -->
-                    <div id="recipientLimitWarningBanner" style="display: none; background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 12px; font-size: 0.78rem; color: #92400e;">
-                        <div style="display: flex; align-items: flex-start; gap: 8px;">
-                            <i data-lucide="alert-triangle" style="width: 16px; height: 16px; color: #d97706; flex-shrink: 0; margin-top: 2px;"></i>
-                            <div>
-                                <strong style="color: #b45309;">⚠️ Peringatan Kuota Email (> 5 Penerima):</strong><br>
-                                Anda memilih <span id="warnSelectedCount" style="font-weight: 700; color: #b45309;">0</span> penerima. Disarankan centang pihak penting saja (seperti <strong>SPV</strong> atau <strong>PIC</strong>) agar kuota gratis EmailJS tidak cepat habis.
+                    <!-- Recipient Limit Warning Banner (Dynamic Credit Awareness) -->
+                    <div id="recipientLimitWarningBanner" style="display: none; border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 12px; font-size: 0.78rem;">
+                        <div style="display: flex; align-items: flex-start; gap: 10px;">
+                            <i id="warnBannerIcon" data-lucide="alert-triangle" style="width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px;"></i>
+                            <div id="warnBannerText">
+                                <!-- Populated dynamically by updateSelectedRecipientCount() -->
                             </div>
                         </div>
                     </div>
@@ -3892,12 +3899,16 @@
                         <div>
                             <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">
                                 Terpilih: <span id="selectedRecipientCount" style="color: var(--primary); font-size: 0.95rem;">0</span> dari <span id="totalRecipientCount">0</span> email
+                                <span style="margin: 0 6px; color: var(--border);">|</span>
+                                <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">
+                                    Sisa Kuota: <strong id="quotaRemainingTab1" style="color: #10b981;">250</strong> Kredit
+                                </span>
                             </div>
                             <div style="font-size: 0.74rem; color: var(--text-muted);" id="currentSubjectPreview">
                                 Subject: <em>Pemberitahuan Pemeriksaan APD</em>
                             </div>
                         </div>
-                        <div style="display: flex; gap: 8px;">
+                        <div style="display: flex; gap: 8px; align-items: center;">
                             <button type="button" class="btn btn-outline btn-sm" onclick="switchEmailTab('template')">
                                 <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> Edit Template
                             </button>
@@ -4013,53 +4024,86 @@
                     </div>
                 </div>
 
-                <!-- TAB 3: PENGATURAN EMAILJS -->
+                <!-- TAB 3: PENGATURAN WEB3FORMS & KUOTA KREDIT -->
                 <div id="emailTabConfigContent" style="display: none;">
+                    <!-- Credit Quota Card Visual -->
+                    <div style="background: linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(6, 182, 212, 0.08) 100%); border: 1px solid rgba(79, 70, 229, 0.25); border-radius: var(--radius-md); padding: 16px; margin-bottom: 18px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                            <div>
+                                <div style="font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; color: var(--primary);">STATUS BATAS KUOTA KREDIT</div>
+                                <div style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                                    <span id="statRemainingCredits" style="color: #10b981;">250</span>
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">/ <span id="statTotalQuota">250</span> Kredit Tersedia</span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-outline btn-xs" onclick="resetEmailQuota()" style="border-radius: var(--radius-full); font-weight: 600;">
+                                <i data-lucide="refresh-cw" style="width: 12px; height: 12px;"></i> Reset Kuota Bulanan
+                            </button>
+                        </div>
+                        
+                        <!-- Progress bar -->
+                        <div style="width: 100%; height: 8px; background: rgba(0,0,0,0.08); border-radius: 99px; overflow: hidden; margin-bottom: 8px;">
+                            <div id="quotaProgressBar" style="width: 100%; height: 100%; background: linear-gradient(90deg, #10b981, #06b6d4); border-radius: 99px; transition: width 0.3s ease;"></div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted);">
+                            <span>Terpakai: <strong id="statUsedCredits" style="color: var(--text-main);">0</strong> email</span>
+                            <span id="quotaPercentText">Tersisa 100%</span>
+                        </div>
+                    </div>
+
                     <form id="formEmailConfig" onsubmit="saveEmailConfig(event)">
-                        <div class="form-group" style="margin-bottom: 12px;">
-                            <label for="emailServiceId">Service ID (Gmail) <span style="color: var(--danger);">*</span></label>
-                            <div class="input-wrapper">
-                                <span class="input-icon"><i data-lucide="server" style="width: 16px; height: 16px;"></i></span>
-                                <input type="text" id="emailServiceId" placeholder="service_q5t1439" value="service_q5t1439" required style="font-family: monospace; font-size: 0.85rem;">
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="margin-bottom: 12px;">
-                            <label for="emailTemplateId">Template ID <span style="color: var(--danger);">*</span></label>
-                            <div class="input-wrapper">
-                                <span class="input-icon"><i data-lucide="file-text" style="width: 16px; height: 16px;"></i></span>
-                                <input type="text" id="emailTemplateId" placeholder="template_0bzqbkm" value="template_0bzqbkm" required style="font-family: monospace; font-size: 0.85rem;">
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="margin-bottom: 16px;">
-                            <label for="emailPublicKey">Public Key (User ID) <span style="color: var(--danger);">*</span></label>
+                        <div class="form-group" style="margin-bottom: 14px;">
+                            <label for="web3AccessKey" style="font-size: 0.82rem; font-weight: 600;">Form Access Key Web3Forms <span style="color: var(--danger);">*</span></label>
                             <div class="input-wrapper">
                                 <span class="input-icon"><i data-lucide="key" style="width: 16px; height: 16px;"></i></span>
-                                <input type="text" id="emailPublicKey" placeholder="EX2aChiMhL1QozTTc" value="EX2aChiMhL1QozTTc" required style="font-family: monospace; font-size: 0.85rem;">
+                                <input type="text" id="web3AccessKey" placeholder="f0026945-5742-4e04-a7d8-eac32a92a524" value="f0026945-5742-4e04-a7d8-eac32a92a524" required style="font-family: monospace; font-size: 0.85rem;">
+                            </div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Kunci akses publik resmi dari Web3Forms untuk pengiriman formulir &amp; notifikasi email.</div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+                            <div class="form-group" style="margin: 0;">
+                                <label for="web3QuotaLimit" style="font-size: 0.82rem; font-weight: 600;">Batas Maksimal Kuota (Credit) <span style="color: var(--danger);">*</span></label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon"><i data-lucide="credit-card" style="width: 16px; height: 16px;"></i></span>
+                                    <input type="number" id="web3QuotaLimit" min="1" max="100000" placeholder="250" value="250" required style="font-size: 0.85rem; font-weight: 700;">
+                                </div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Batas limit kuota credit akun (Default: 250 kredit).</div>
+                            </div>
+
+                            <div class="form-group" style="margin: 0;">
+                                <label for="web3TestEmail" style="font-size: 0.82rem; font-weight: 600;">Email Tujuan Uji Coba (Test) <span style="color: var(--danger);">*</span></label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon"><i data-lucide="mail" style="width: 16px; height: 16px;"></i></span>
+                                    <input type="email" id="web3TestEmail" placeholder="arifanalfahri1@gmail.com" value="arifanalfahri1@gmail.com" required style="font-size: 0.85rem;">
+                                </div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Alamat email penerima saat klik tombol "Test 1 Email".</div>
                             </div>
                         </div>
 
                         <!-- Guidance Banner -->
-                        <div style="background: var(--primary-soft); border: 1px solid rgba(79, 70, 229, 0.3); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px; font-size: 0.78rem;">
-                            <div style="display: flex; align-items: flex-start; gap: 8px;">
-                                <i data-lucide="info" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0; margin-top: 2px;"></i>
-                                <div>
-                                    <strong style="color: var(--primary);">Panduan Template di Dashboard EmailJS:</strong><br>
-                                    1. Di EmailJS &gt; <strong>Email Templates</strong> &gt; Pilih Template &gt; Tab <strong>Settings</strong>:<br>
-                                    • Kolom <strong>To Email</strong>: <code>{{to_email}}</code><br>
-                                    • Kolom <strong>Subject</strong>: <code>{{subject}}</code><br>
-                                    2. Di Tab <strong>Content</strong>, isi pesan dengan: <code>{{{message}}}</code> atau <code>{{{html_content}}}</code> (gunakan kurung kurawal 3 rangkap agar format HTML tampil sempurna).
+                        <div style="background: var(--bg-surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px; font-size: 0.78rem;">
+                            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                                <div style="width: 28px; height: 28px; border-radius: 6px; background: rgba(16, 185, 129, 0.15); color: #10b981; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>
+                                </div>
+                                <div style="line-height: 1.45;">
+                                    <strong style="color: var(--text-main);">Integrasi Web3Forms Aktif &amp; Siap Pakai:</strong><br>
+                                    • Endpoint API: <code>https://api.web3forms.com/submit</code> (Metode POST Langsung)<br>
+                                    • Tidak memerlukan Service ID atau Template ID rumit EmailJS yang rawan error.<br>
+                                    • Template HTML &amp; QR Code scan HP tetap bekerja 100% dengan semua tag variabel.<br>
+                                    • Setiap email terkirim memotong 1 kredit kuota secara otomatis.
                                 </div>
                             </div>
                         </div>
 
                         <div style="display: flex; gap: 8px; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 14px; flex-wrap: wrap;">
-                            <button type="button" class="btn btn-outline btn-sm" onclick="testEmailJS()" id="btnTestEmail" title="Kirim test ke email admin">
-                                <i data-lucide="send" style="width: 14px; height: 14px;"></i> Test 1 Email (Admin)
+                            <button type="button" class="btn btn-outline btn-sm" onclick="testWeb3Forms()" id="btnTestEmail" title="Kirim test ke email admin">
+                                <i data-lucide="send" style="width: 14px; height: 14px;"></i> Test 1 Email (Web3Forms)
                             </button>
                             <button type="submit" class="btn btn-primary btn-sm">
-                                <i data-lucide="check" style="width: 14px; height: 14px;"></i> Simpan Kredensial API
+                                <i data-lucide="save" style="width: 14px; height: 14px;"></i> Simpan Pengaturan Web3Forms
                             </button>
                         </div>
                     </form>
@@ -6353,7 +6397,7 @@
             renderTable();
             showToast('Laporan inspeksi berhasil disimpan!', 'success');
 
-            // Trigger Email Notification to Leader/SPV via EmailJS
+            // Trigger Email Notification to Leader/SPV via Web3Forms API
             sendEmailNotification(newData);
         });
 
@@ -7216,12 +7260,186 @@
             document.getElementById('photoModal').classList.remove('active');
         }
 
-        // EmailJS Settings & Configuration Defaults
-        const DEFAULT_EMAILJS = {
-            serviceId: 'service_q5t1439',
-            publicKey: 'EX2aChiMhL1QozTTc',
-            templateId: 'template_0bzqbkm'
+        // Web3Forms Settings & Credit Quota System
+        const DEFAULT_WEB3FORMS = {
+            accessKey: 'f0026945-5742-4e04-a7d8-eac32a92a524',
+            endpoint: 'https://api.web3forms.com/submit',
+            fromName: 'Sistem PPE Compliance K3',
+            testEmail: 'arifanalfahri1@gmail.com',
+            quotaLimit: 250 // Batas kuota kredit default (misal 250 pengiriman per bulan)
         };
+
+        // Backward-compatible alias
+        const DEFAULT_EMAILJS = {
+            serviceId: 'web3forms_api',
+            publicKey: DEFAULT_WEB3FORMS.accessKey,
+            templateId: 'web3forms_direct'
+        };
+
+        // Quota Credit Manager
+        function getEmailQuota() {
+            const config = JSON.parse(localStorage.getItem('k3_web3forms_config')) || DEFAULT_WEB3FORMS;
+            const limit = parseInt(config.quotaLimit, 10) || 250;
+            let quota = JSON.parse(localStorage.getItem('k3_email_quota'));
+            const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+
+            if (!quota) {
+                quota = {
+                    limit: limit,
+                    used: 0,
+                    lastReset: currentMonth
+                };
+                localStorage.setItem('k3_email_quota', JSON.stringify(quota));
+            } else {
+                // Auto reset if new calendar month
+                if (quota.lastReset !== currentMonth) {
+                    quota.used = 0;
+                    quota.lastReset = currentMonth;
+                }
+                quota.limit = limit;
+                localStorage.setItem('k3_email_quota', JSON.stringify(quota));
+            }
+
+            quota.remaining = Math.max(0, quota.limit - quota.used);
+            return quota;
+        }
+
+        function consumeEmailQuota(amount = 1) {
+            const quota = getEmailQuota();
+            quota.used += amount;
+            quota.remaining = Math.max(0, quota.limit - quota.used);
+            localStorage.setItem('k3_email_quota', JSON.stringify(quota));
+            updateQuotaUI();
+            return quota;
+        }
+
+        function resetEmailQuota() {
+            const config = JSON.parse(localStorage.getItem('k3_web3forms_config')) || DEFAULT_WEB3FORMS;
+            const limit = parseInt(config.quotaLimit, 10) || 250;
+            const quota = {
+                limit: limit,
+                used: 0,
+                lastReset: new Date().toISOString().slice(0, 7)
+            };
+            localStorage.setItem('k3_email_quota', JSON.stringify(quota));
+            updateQuotaUI();
+            showToast(`✅ Kuota kredit email berhasil direset ke ${limit} kredit!`, 'success');
+        }
+
+        function updateQuotaUI() {
+            const quota = getEmailQuota();
+            const rem = quota.remaining;
+            const total = quota.limit;
+            const used = quota.used;
+            const percent = total > 0 ? Math.round((rem / total) * 100) : 0;
+
+            // Modal Header Pill
+            const headerRem = document.getElementById('modalHeaderQuotaRemaining');
+            const headerTot = document.getElementById('modalHeaderQuotaTotal');
+            if (headerRem) headerRem.innerText = rem;
+            if (headerTot) headerTot.innerText = total;
+
+            // Tab 3 Stat Card
+            const statRem = document.getElementById('statRemainingCredits');
+            const statTot = document.getElementById('statTotalQuota');
+            const statUsed = document.getElementById('statUsedCredits');
+            const pBar = document.getElementById('quotaProgressBar');
+            const pText = document.getElementById('quotaPercentText');
+
+            if (statRem) {
+                statRem.innerText = rem;
+                statRem.style.color = rem <= 10 ? 'var(--danger)' : (rem <= 50 ? '#d97706' : '#10b981');
+            }
+            if (statTot) statTot.innerText = total;
+            if (statUsed) statUsed.innerText = used;
+            if (pBar) {
+                pBar.style.width = `${Math.min(100, Math.max(0, percent))}%`;
+                pBar.style.background = rem <= 10 ? 'var(--danger)' : (rem <= 50 ? '#d97706' : 'linear-gradient(90deg, #10b981, #06b6d4)');
+            }
+            if (pText) pText.innerText = `Tersisa ${percent}%`;
+
+            // Tab 1 Remaining Pill
+            const tab1Rem = document.getElementById('quotaRemainingTab1');
+            if (tab1Rem) {
+                tab1Rem.innerText = rem;
+                tab1Rem.style.color = rem <= 10 ? 'var(--danger)' : (rem <= 50 ? '#d97706' : '#10b981');
+            }
+
+            // Navbar Button Badge
+            const navBadge = document.getElementById('emailNavQuotaBadge');
+            if (navBadge) {
+                navBadge.innerText = `${rem}/${total}`;
+                if (rem <= 10) {
+                    navBadge.style.background = 'rgba(239, 68, 68, 0.15)';
+                    navBadge.style.color = 'var(--danger)';
+                    navBadge.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+                } else if (rem <= 50) {
+                    navBadge.style.background = 'rgba(245, 158, 11, 0.15)';
+                    navBadge.style.color = '#d97706';
+                    navBadge.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+                } else {
+                    navBadge.style.background = 'rgba(16, 185, 129, 0.15)';
+                    navBadge.style.color = '#059669';
+                    navBadge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                }
+            }
+        }
+
+        // Web3Forms Direct API Submitter Helper
+        async function sendViaWeb3Forms(payload) {
+            const config = JSON.parse(localStorage.getItem('k3_web3forms_config')) || DEFAULT_WEB3FORMS;
+            const accessKey = (config.accessKey || DEFAULT_WEB3FORMS.accessKey).trim();
+
+            const quota = getEmailQuota();
+            if (quota.remaining <= 0) {
+                throw new Error('Batas limit kuota kredit telah habis (0 kredit). Harap tambah batas kuota atau reset kuota bulanan di tab Pengaturan.');
+            }
+
+            const bodyData = {
+                access_key: accessKey,
+                from_name: config.fromName || DEFAULT_WEB3FORMS.fromName,
+                subject: payload.subject || 'Notifikasi Sistem K3',
+                name: payload.name || payload.to_name || 'Rekan K3',
+                email: payload.email || payload.to_email || config.testEmail || 'admin@k3.com',
+                to_recipient: payload.to_email || payload.email,
+                recipient_role: payload.role || '-',
+                message: payload.message || 'Pemberitahuan Sistem PPE Compliance K3',
+                html_message: payload.html_content || payload.html_message || '',
+                approval_link: payload.approval_link || window.location.href.split('#')[0] || 'http://localhost/sistempencatatan/',
+                botcheck: ''
+            };
+
+            if (payload.nama_apd) bodyData.nama_apd = payload.nama_apd;
+            if (payload.tgl_inspeksi) bodyData.tgl_inspeksi = payload.tgl_inspeksi;
+            if (payload.kondisi) bodyData.kondisi = payload.kondisi;
+            if (payload.pemilik) bodyData.pemilik = payload.pemilik;
+            if (payload.pic) bodyData.pic = payload.pic;
+            if (payload.spv) bodyData.spv = payload.spv;
+
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(bodyData)
+            });
+
+            let result;
+            try {
+                result = await response.json();
+            } catch (e) {
+                result = { success: response.ok, message: response.statusText };
+            }
+
+            if (response.ok && (result.success !== false)) {
+                consumeEmailQuota(1);
+                return { success: true, result };
+            } else {
+                const errMsg = result.message || response.statusText || 'Gagal terkirim ke Web3Forms API';
+                throw new Error(errMsg);
+            }
+        }
 
         // Helper to generate reliable QR Code URL from any link
         function getQrCodeUrl(link, size = '150x150') {
@@ -7352,16 +7570,26 @@
 
         // Initialize localStorage configurations
         (function initEmailConfig() {
+            let web3Config = JSON.parse(localStorage.getItem('k3_web3forms_config'));
+            if (!web3Config) {
+                web3Config = { ...DEFAULT_WEB3FORMS };
+                localStorage.setItem('k3_web3forms_config', JSON.stringify(web3Config));
+            } else {
+                if (!web3Config.accessKey) web3Config.accessKey = DEFAULT_WEB3FORMS.accessKey;
+                if (!web3Config.quotaLimit) web3Config.quotaLimit = DEFAULT_WEB3FORMS.quotaLimit;
+                if (!web3Config.testEmail) web3Config.testEmail = DEFAULT_WEB3FORMS.testEmail;
+                localStorage.setItem('k3_web3forms_config', JSON.stringify(web3Config));
+            }
+
+            // Sync emailjs config for backwards compatibility
             let config = JSON.parse(localStorage.getItem('k3_emailjs_config'));
             if (!config) {
-                config = { ...DEFAULT_EMAILJS };
-                localStorage.setItem('k3_emailjs_config', JSON.stringify(config));
-            } else {
-                if (!config.serviceId) config.serviceId = DEFAULT_EMAILJS.serviceId;
-                if (!config.publicKey) config.publicKey = DEFAULT_EMAILJS.publicKey;
-                if (!config.templateId) config.templateId = DEFAULT_EMAILJS.templateId;
+                config = { ...DEFAULT_EMAILJS, publicKey: web3Config.accessKey };
                 localStorage.setItem('k3_emailjs_config', JSON.stringify(config));
             }
+
+            // Init quota
+            getEmailQuota();
 
             let tpl = JSON.parse(localStorage.getItem('k3_email_template'));
             if (!tpl || !tpl.htmlContent || !tpl.htmlContent.includes('PPE Compliance')) {
@@ -7679,38 +7907,92 @@
         }
 
         // Update selected recipient counter & button text with limit warning (> 5)
+        // Update selected recipient counter & button text with dynamic credit quota limit warning
         let hasShownRecipientLimitToast = false;
         function updateSelectedRecipientCount(triggerWarning = true) {
             const checked = document.querySelectorAll('.recipient-checkbox:checked');
             const countEl = document.getElementById('selectedRecipientCount');
             const btnSend = document.getElementById('btnSendSelectedEmails');
             const warnBanner = document.getElementById('recipientLimitWarningBanner');
-            const warnCountEl = document.getElementById('warnSelectedCount');
+            const warnBannerText = document.getElementById('warnBannerText');
+            const warnBannerIcon = document.getElementById('warnBannerIcon');
+            const quotaRemainingEl = document.getElementById('quotaRemainingTab1');
 
             const total = checked.length;
             if (countEl) countEl.innerText = total;
 
-            if (total > 5) {
-                if (warnBanner) warnBanner.style.display = 'block';
-                if (warnCountEl) warnCountEl.innerText = total;
+            const quota = getEmailQuota();
+            if (quotaRemainingEl) {
+                quotaRemainingEl.innerText = quota.remaining;
+                quotaRemainingEl.style.color = quota.remaining <= 10 ? 'var(--danger)' : (quota.remaining <= 50 ? '#d97706' : '#10b981');
+            }
+
+            if (total > quota.remaining) {
+                // Out of quota limit
+                if (warnBanner) {
+                    warnBanner.style.display = 'block';
+                    warnBanner.style.background = '#fef2f2';
+                    warnBanner.style.border = '1px solid #fecaca';
+                    warnBanner.style.color = '#991b1b';
+                }
+                if (warnBannerIcon) {
+                    warnBannerIcon.setAttribute('data-lucide', 'alert-octagon');
+                    warnBannerIcon.style.color = '#dc2626';
+                }
+                if (warnBannerText) {
+                    warnBannerText.innerHTML = `
+                        <strong style="color: #b91c1c;">⛔ Peringatan Batas Limit Kuota Kredit:</strong><br>
+                        Anda memilih <strong>${total} penerima</strong>, namun sisa kuota kredit Anda saat ini hanya <strong>${quota.remaining} kredit</strong>.<br>
+                        Silakan kurangi tanda centang atau tambahkan batas kuota kredit pada Tab <strong>3. Pengaturan Web3Forms &amp; Kuota</strong>.
+                    `;
+                }
                 if (triggerWarning && !hasShownRecipientLimitToast) {
-                    showToast(`⚠️ Peringatan Kuota Limit: Anda memilih ${total} orang! Disarankan hanya kirim ke pihak penting (SPV/PIC) agar kuota EmailJS tidak cepat habis.`, 'warning');
+                    showToast(`⛔ Kuota kredit tidak cukup! Anda memilih ${total} penerima, sisa kuota: ${quota.remaining} kredit.`, 'danger');
                     hasShownRecipientLimitToast = true;
+                }
+                if (btnSend) {
+                    btnSend.disabled = true;
+                    btnSend.innerHTML = `<i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i> Kuota Tidak Cukup (${total}/${quota.remaining})`;
+                }
+            } else if (total > 5) {
+                // High volume advisory
+                if (warnBanner) {
+                    warnBanner.style.display = 'block';
+                    warnBanner.style.background = '#fffbeb';
+                    warnBanner.style.border = '1px solid #fde68a';
+                    warnBanner.style.color = '#92400e';
+                }
+                if (warnBannerIcon) {
+                    warnBannerIcon.setAttribute('data-lucide', 'alert-triangle');
+                    warnBannerIcon.style.color = '#d97706';
+                }
+                if (warnBannerText) {
+                    warnBannerText.innerHTML = `
+                        <strong style="color: #b45309;">⚠️ Peringatan Penggunaan Kuota Kredit (> 5 Penerima):</strong><br>
+                        Anda memilih <strong>${total} penerima</strong> (akan memotong <strong>${total} kredit</strong> dari sisa <strong>${quota.remaining} kredit</strong>). Disarankan mencentang pihak penting saja (seperti <strong>SPV</strong> atau <strong>PIC</strong>) agar kuota credit tetap hemat.
+                    `;
+                }
+                if (triggerWarning && !hasShownRecipientLimitToast) {
+                    showToast(`⚠️ Memilih ${total} orang akan memotong ${total} kuota kredit Web3Forms.`, 'warning');
+                    hasShownRecipientLimitToast = true;
+                }
+                if (btnSend) {
+                    btnSend.disabled = (total === 0);
+                    btnSend.innerHTML = `<i data-lucide="send" style="width: 14px; height: 14px;"></i> Kirim ke (${total}) Email ⚠️`;
                 }
             } else {
                 if (warnBanner) warnBanner.style.display = 'none';
                 hasShownRecipientLimitToast = false;
-            }
-
-            if (btnSend) {
-                if (total > 5) {
-                    btnSend.innerHTML = `<i data-lucide="send" style="width: 14px; height: 14px;"></i> Kirim ke (${total}) Email ⚠️`;
-                } else {
-                    btnSend.innerHTML = `<i data-lucide="send" style="width: 14px; height: 14px;"></i> Kirim ke (${total}) Email Terpilih`;
+                if (btnSend) {
+                    btnSend.disabled = (total === 0 || quota.remaining <= 0);
+                    if (quota.remaining <= 0) {
+                        btnSend.innerHTML = `<i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i> Kuota Kredit Habis (0)`;
+                    } else {
+                        btnSend.innerHTML = `<i data-lucide="send" style="width: 14px; height: 14px;"></i> Kirim ke (${total}) Email Terpilih`;
+                    }
                 }
-                btnSend.disabled = (total === 0);
-                lucide.createIcons();
             }
+            lucide.createIcons();
         }
 
         // Non-blocking recursive sequential dispatcher (bypasses Live Preview / Sandbox loop watchdogs)
@@ -7753,11 +8035,12 @@
             });
         }
 
-        // Send email broadcast to specifically SELECTED recipients
+        // Send email broadcast to specifically SELECTED recipients via Web3Forms API
         async function sendSelectedRecipients() {
-            const config = JSON.parse(localStorage.getItem('k3_emailjs_config')) || DEFAULT_EMAILJS;
-            if (!config || !config.serviceId || !config.templateId || !config.publicKey) {
-                showToast('Harap lengkapi Service ID, Template ID, dan Public Key terlebih dahulu di tab Pengaturan EmailJS!', 'warning');
+            const config = JSON.parse(localStorage.getItem('k3_web3forms_config')) || DEFAULT_WEB3FORMS;
+            const accessKey = (config.accessKey || DEFAULT_WEB3FORMS.accessKey).trim();
+            if (!accessKey) {
+                showToast('Harap isi Form Access Key Web3Forms di tab Pengaturan!', 'warning');
                 switchEmailTab('config');
                 return;
             }
@@ -7768,13 +8051,19 @@
                 return;
             }
 
+            const quota = getEmailQuota();
+            if (checkedBoxes.length > quota.remaining) {
+                showToast(`⛔ Kuota kredit tidak mencukupi! Anda memilih ${checkedBoxes.length} penerima, namun sisa kuota Anda hanya ${quota.remaining} kredit. Silakan tambah batas kuota atau reset kuota di Tab Pengaturan.`, 'danger');
+                return;
+            }
+
             // Limit warning confirmation pop-up if user selects more than 5 recipients
             if (checkedBoxes.length > 5) {
                 const confirmSend = confirm(
-                    `⚠️ PERINGATAN LIMIT KUOTA EMAILJS\n\n` +
-                    `Anda memilih ${checkedBoxes.length} penerima (lebih dari 5 orang).\n\n` +
-                    `Akun gratis EmailJS dibatasi 200 email per bulan. Disarankan mengirim email hanya ke beberapa pengguna penting saja (seperti SPV atau PIC terkait) agar kuota tidak cepat habis.\n\n` +
-                    `Apakah Anda yakin ingin tetap melanjutkan pengiriman ke ${checkedBoxes.length} orang ini?`
+                    `⚠️ KONFIRMASI PENGGUNAAN KUOTA KREDIT WEB3FORMS\n\n` +
+                    `Anda memilih ${checkedBoxes.length} penerima (akan memotong ${checkedBoxes.length} kredit).\n` +
+                    `Sisa kuota kredit saat ini: ${quota.remaining} dari ${quota.limit} kredit.\n\n` +
+                    `Apakah Anda yakin ingin tetap melanjutkan pengiriman ke ${checkedBoxes.length} penerima terpilih?`
                 );
                 if (!confirmSend) return;
             }
@@ -7816,76 +8105,62 @@
 
                 const renderedSubject = renderEmailTemplate(templateConfig.subject, variables);
                 const renderedHtml = renderEmailTemplate(templateConfig.htmlContent, variables);
+                const plainContent = renderedHtml.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
 
                 try {
-                    const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            service_id: config.serviceId,
-                            template_id: config.templateId,
-                            user_id: config.publicKey,
-                            template_params: {
-                                to_email: r.email,
-                                email: r.email,
-                                user_email: r.email,
-                                recipient_email: r.email,
-                                to: r.email,
-                                reply_to: r.email,
-                                to_name: r.name,
-                                name: r.name,
-                                recipient_name: r.name,
-                                namaPenerima: r.name,
-                                role: r.role,
-                                subject: renderedSubject,
-                                title: renderedSubject,
-                                approval_link: templateConfig.approvalLink,
-                                link: templateConfig.approvalLink,
-                                html_content: renderedHtml,
-                                htmlContent: renderedHtml,
-                                html: renderedHtml,
-                                message: renderedHtml,
-                                pesan: renderedHtml,
-                                content: renderedHtml
-                            }
-                        })
+                    await sendViaWeb3Forms({
+                        subject: renderedSubject,
+                        name: r.name,
+                        email: r.email,
+                        to_email: r.email,
+                        role: r.role,
+                        message: `Pemberitahuan Sistem PPE Compliance K3:\nPenerima: ${r.name} (${r.role})\nEmail: ${r.email}\nSubjek: ${renderedSubject}\n\nIsi Pesan:\n${plainContent}\n\nTautan Approval: ${templateConfig.approvalLink}`,
+                        html_content: renderedHtml,
+                        approval_link: templateConfig.approvalLink,
+                        nama_apd: variables.nama_apd,
+                        kondisi: variables.kondisi,
+                        tgl_inspeksi: variables.tgl_inspeksi,
+                        pemilik: variables.pemilik,
+                        pic: variables.pic,
+                        spv: variables.spv
                     });
 
-                    if (response.ok) {
-                        successCount++;
-                        console.log(`[Broadcast Terpilih] Berhasil ke ${r.email}`);
-                    } else {
-                        const err = await response.text();
-                        console.error(`[Broadcast Terpilih] Gagal ke ${r.email}:`, err);
-                        failedList.push(`${r.email} (${err || 'Gagal'})`);
-                    }
+                    successCount++;
+                    console.log(`[Web3Forms Broadcast] Berhasil ke ${r.email}`);
                 } catch (e) {
-                    console.error(`[Broadcast Terpilih] Network error ke ${r.email}:`, e);
-                    failedList.push(`${r.email} (Koneksi error)`);
+                    console.error(`[Web3Forms Broadcast] Gagal ke ${r.email}:`, e);
+                    failedList.push(`${r.email} (${e.message || 'Gagal'})`);
                 }
             }, 600);
 
             btn.disabled = false;
             btn.innerHTML = origHtml;
             lucide.createIcons();
+            updateQuotaUI();
 
+            const curQuota = getEmailQuota();
             if (successCount === recipients.length) {
-                showToast(`🎉 Sukses! Pesan email berhasil dikirim ke seluruh (${successCount}) penerima terpilih!`, 'success');
+                showToast(`🎉 Sukses! Pesan email berhasil dikirim ke seluruh (${successCount}) penerima terpilih! (Sisa kuota: ${curQuota.remaining} kredit)`, 'success');
             } else if (successCount > 0) {
-                showToast(`Terkirim ke ${successCount} dari ${recipients.length} email terpilih. (${failedList.length} gagal)`, 'warning');
+                showToast(`Terkirim ke ${successCount} dari ${recipients.length} email terpilih. (${failedList.length} gagal). Sisa kuota: ${curQuota.remaining} kredit.`, 'warning');
             } else {
-                showToast(`Pengiriman gagal. Periksa kuota / Template ID EmailJS Anda.`, 'danger');
+                showToast(`Pengiriman gagal. Periksa Form Access Key Web3Forms atau koneksi internet Anda.`, 'danger');
             }
         }
 
         function openEmailConfigModal() {
             const modal = document.getElementById('emailModal');
-            const config = JSON.parse(localStorage.getItem('k3_emailjs_config')) || DEFAULT_EMAILJS;
+            const config = JSON.parse(localStorage.getItem('k3_web3forms_config')) || DEFAULT_WEB3FORMS;
 
-            document.getElementById('emailServiceId').value = config.serviceId || DEFAULT_EMAILJS.serviceId;
-            document.getElementById('emailTemplateId').value = config.templateId || '';
-            document.getElementById('emailPublicKey').value = config.publicKey || DEFAULT_EMAILJS.publicKey;
+            const accessKeyEl = document.getElementById('web3AccessKey');
+            const quotaLimitEl = document.getElementById('web3QuotaLimit');
+            const testEmailEl = document.getElementById('web3TestEmail');
 
+            if (accessKeyEl) accessKeyEl.value = config.accessKey || DEFAULT_WEB3FORMS.accessKey;
+            if (quotaLimitEl) quotaLimitEl.value = config.quotaLimit || DEFAULT_WEB3FORMS.quotaLimit;
+            if (testEmailEl) testEmailEl.value = config.testEmail || DEFAULT_WEB3FORMS.testEmail;
+
+            updateQuotaUI();
             renderRecipientCheckboxes();
             loadEmailTemplateIntoUI();
             switchEmailTab('recipients');
@@ -7904,43 +8179,64 @@
         }
 
         function updateEmailStatusUI() {
-            const config = JSON.parse(localStorage.getItem('k3_emailjs_config')) || DEFAULT_EMAILJS;
+            const config = JSON.parse(localStorage.getItem('k3_web3forms_config')) || DEFAULT_WEB3FORMS;
             const statusText = document.getElementById('emailStatusText');
             if (statusText) {
-                if (config.serviceId && config.templateId && config.publicKey) {
-                    statusText.innerHTML = `<span style="color: var(--success); font-weight: 700; margin-right: 2px;">●</span> Email Aktif`;
+                if (config.accessKey) {
+                    statusText.innerHTML = `<span style="color: var(--success); font-weight: 700; margin-right: 2px;">●</span> Web3Forms`;
                 } else {
-                    statusText.innerText = 'Email Notif';
+                    statusText.innerText = 'Web3Forms';
                 }
             }
+            updateQuotaUI();
         }
 
         function saveEmailConfig(e) {
             e.preventDefault();
-            const serviceId = document.getElementById('emailServiceId').value.trim() || DEFAULT_EMAILJS.serviceId;
-            const templateId = document.getElementById('emailTemplateId').value.trim();
-            const publicKey = document.getElementById('emailPublicKey').value.trim() || DEFAULT_EMAILJS.publicKey;
+            const accessKey = (document.getElementById('web3AccessKey')?.value || '').trim() || DEFAULT_WEB3FORMS.accessKey;
+            const quotaLimit = parseInt(document.getElementById('web3QuotaLimit')?.value || '250', 10) || 250;
+            const testEmail = (document.getElementById('web3TestEmail')?.value || '').trim() || DEFAULT_WEB3FORMS.testEmail;
 
-            if (!serviceId || !templateId || !publicKey) {
-                showToast('Harap masukkan Template ID dari menu Email Templates di EmailJS!', 'warning');
+            if (!accessKey) {
+                showToast('Harap masukkan Form Access Key Web3Forms!', 'warning');
                 return;
             }
 
-            const config = { serviceId, templateId, publicKey };
-            localStorage.setItem('k3_emailjs_config', JSON.stringify(config));
+            const config = {
+                accessKey,
+                endpoint: DEFAULT_WEB3FORMS.endpoint,
+                fromName: DEFAULT_WEB3FORMS.fromName,
+                testEmail,
+                quotaLimit
+            };
+
+            localStorage.setItem('k3_web3forms_config', JSON.stringify(config));
+
+            // Sync with quota
+            const quota = getEmailQuota();
+            quota.limit = quotaLimit;
+            quota.remaining = Math.max(0, quota.limit - quota.used);
+            localStorage.setItem('k3_email_quota', JSON.stringify(quota));
+
             updateEmailStatusUI();
             closeEmailModalDirect();
-            showToast('Konfigurasi EmailJS berhasil disimpan & aktif!', 'success');
+            showToast(`✅ Konfigurasi Web3Forms & Kuota (${quotaLimit} Kredit) berhasil disimpan & aktif!`, 'success');
         }
 
-        // Test Kirim 1 Email (Admin)
-        async function testEmailJS() {
-            const serviceId = document.getElementById('emailServiceId').value.trim();
-            const templateId = document.getElementById('emailTemplateId').value.trim();
-            const publicKey = document.getElementById('emailPublicKey').value.trim();
+        // Test Kirim 1 Email (Admin via Web3Forms API)
+        async function testWeb3Forms() {
+            const config = JSON.parse(localStorage.getItem('k3_web3forms_config')) || DEFAULT_WEB3FORMS;
+            const accessKey = (document.getElementById('web3AccessKey')?.value || config.accessKey || DEFAULT_WEB3FORMS.accessKey).trim();
+            const testEmail = (document.getElementById('web3TestEmail')?.value || config.testEmail || DEFAULT_WEB3FORMS.testEmail).trim();
 
-            if (!serviceId || !templateId || !publicKey) {
-                showToast('Harap lengkapi Service ID, Template ID, dan Public Key terlebih dahulu!', 'warning');
+            if (!accessKey) {
+                showToast('Harap lengkapi Form Access Key Web3Forms terlebih dahulu!', 'warning');
+                return;
+            }
+
+            const quota = getEmailQuota();
+            if (quota.remaining <= 0) {
+                showToast('Batas kuota kredit habis (0 kredit). Harap tambah atau reset kuota terlebih dahulu.', 'danger');
                 return;
             }
 
@@ -7953,7 +8249,7 @@
             const templateConfig = getEmailTemplateConfig();
             const sampleVariables = {
                 to_name: "Admin SafeGuard K3",
-                to_email: "arifanalfahri1@gmail.com",
+                to_email: testEmail,
                 role: "Administrator K3",
                 approval_link: templateConfig.approvalLink,
                 nama_apd: "Helm Safety Test",
@@ -7966,50 +8262,31 @@
 
             const renderedHtml = renderEmailTemplate(templateConfig.htmlContent, sampleVariables);
             const renderedSubject = renderEmailTemplate(templateConfig.subject, sampleVariables);
+            const plainMsg = renderedHtml.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
 
             try {
-                const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        service_id: serviceId,
-                        template_id: templateId,
-                        user_id: publicKey,
-                        template_params: {
-                            to_email: "arifanalfahri1@gmail.com",
-                            email: "arifanalfahri1@gmail.com",
-                            user_email: "arifanalfahri1@gmail.com",
-                            recipient_email: "arifanalfahri1@gmail.com",
-                            to: "arifanalfahri1@gmail.com",
-                            reply_to: "arifanalfahri1@gmail.com",
-                            to_name: "Admin SafeGuard K3",
-                            name: "Admin SafeGuard K3",
-                            recipient_name: "Admin SafeGuard K3",
-                            namaPenerima: "Admin SafeGuard K3",
-                            subject: renderedSubject,
-                            title: renderedSubject,
-                            approval_link: templateConfig.approvalLink,
-                            link: templateConfig.approvalLink,
-                            html_content: renderedHtml,
-                            htmlContent: renderedHtml,
-                            html: renderedHtml,
-                            message: renderedHtml,
-                            pesan: renderedHtml
-                        }
-                    })
+                await sendViaWeb3Forms({
+                    subject: renderedSubject + " [Uji Coba Web3Forms]",
+                    name: "Admin SafeGuard K3",
+                    email: testEmail,
+                    to_email: testEmail,
+                    role: "Administrator K3",
+                    message: `[TEST EMAIL WEB3FORMS]\nHalo Admin SafeGuard K3,\n\nIni adalah pesan uji coba integrasi Web3Forms API.\nStatus Pengiriman: Berhasil Aktif & Terhubung!\n\n${plainMsg}`,
+                    html_content: renderedHtml,
+                    approval_link: templateConfig.approvalLink,
+                    nama_apd: "Helm Safety Test",
+                    kondisi: "Layak Pakai",
+                    tgl_inspeksi: sampleVariables.tgl_inspeksi,
+                    pemilik: "Budi Santoso",
+                    pic: "Ahmad Fauzi (PIC)",
+                    spv: "Ir. Hendra Wijaya"
                 });
 
-                if (response.ok) {
-                    showToast(`Test email berhasil terkirim ke Gmail Anda! Silakan cek inbox/spam.`, 'success');
-                } else {
-                    const errText = await response.text();
-                    showToast(`Gagal kirim test email: ${errText || response.statusText}`, 'danger');
-                }
+                updateQuotaUI();
+                showToast(`🎉 Berhasil! Test email Web3Forms terkirim ke ${testEmail}! Sisa kuota: ${getEmailQuota().remaining} kredit.`, 'success');
             } catch (err) {
-                console.error('Test EmailJS Error:', err);
-                showToast('Gagal menghubungi API EmailJS. Periksa koneksi internet.', 'danger');
+                console.error('Test Web3Forms Error:', err);
+                showToast(`Gagal kirim test email Web3Forms: ${err.message}`, 'danger');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = origHtml;
@@ -8017,11 +8294,21 @@
             }
         }
 
-        // Send Email Notification to ALL registered people across the web (Pekerja, Leader, & PIC)
+        // Backward-compatible alias
+        const testEmailJS = testWeb3Forms;
+
+        // Send Email Notification to ALL registered people across the web (Pekerja, Leader, & PIC) via Web3Forms API
         async function sendEmailNotification(item) {
-            const config = JSON.parse(localStorage.getItem('k3_emailjs_config')) || null;
-            if (!config || !config.serviceId || !config.templateId || !config.publicKey) {
-                showToast('Laporan disimpan! (Atur Template ID EmailJS di tombol "Email Notif" di atas untuk mengirim email otomatis)', 'info');
+            const config = JSON.parse(localStorage.getItem('k3_web3forms_config')) || DEFAULT_WEB3FORMS;
+            const accessKey = (config.accessKey || DEFAULT_WEB3FORMS.accessKey).trim();
+            if (!accessKey) {
+                showToast('Laporan disimpan! (Form Access Key Web3Forms belum diatur di menu Notif Email)', 'info');
+                return;
+            }
+
+            const quota = getEmailQuota();
+            if (quota.remaining <= 0) {
+                showToast('Laporan tersimpan! (Namun email notifikasi tidak dikirim karena kuota kredit Web3Forms habis)', 'warning');
                 return;
             }
 
@@ -8126,75 +8413,52 @@
                 return;
             }
 
-            showToast(`Mengirim email notifikasi ke ${recipients.length} penerima terdaftar...`, 'info');
+            showToast(`Mengirim email notifikasi Web3Forms ke ${recipients.length} penerima terdaftar...`, 'info');
 
             let successCount = 0;
             const failedEmails = [];
 
             await dispatchSequence(recipients, async (r) => {
+                if (getEmailQuota().remaining <= 0) {
+                    failedEmails.push(`${r.email} (Kuota kredit habis)`);
+                    return;
+                }
                 try {
-                    const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            service_id: config.serviceId,
-                            template_id: config.templateId,
-                            user_id: config.publicKey,
-                            template_params: {
-                                to_email: r.email,
-                                email: r.email,
-                                user_email: r.email,
-                                recipient_email: r.email,
-                                to: r.email,
-                                reply_to: r.email,
-                                to_name: r.name,
-                                name: r.name,
-                                user_name: r.name,
-                                recipient_name: r.name,
-                                namaPenerima: r.name,
-                                role: r.role,
-                                subject: r.subject,
-                                title: r.subject,
-                                spv_name: item.spv,
-                                pemilik: item.pemilik,
-                                nama_apd: item.nama_apd,
-                                sn: item.sn,
-                                kondisi: item.kondisi,
-                                pic: item.pic,
-                                kuartal: item.kuartal,
-                                tgl_inspeksi: item.tgl_inspeksi,
-                                approval_link: window.location.href.split('#')[0] || "http://localhost/sistempencatatan/",
-                                link: window.location.href.split('#')[0] || "http://localhost/sistempencatatan/",
-                                message: r.message,
-                                pesan: r.message,
-                                html_content: r.message.replace(/\n/g, '<br>'),
-                                htmlContent: r.message.replace(/\n/g, '<br>')
-                            }
-                        })
+                    await sendViaWeb3Forms({
+                        subject: r.subject,
+                        name: r.name,
+                        email: r.email,
+                        to_email: r.email,
+                        role: r.role,
+                        message: r.message,
+                        html_content: r.message.replace(/\n/g, '<br>'),
+                        pemilik: item.pemilik,
+                        nama_apd: item.nama_apd,
+                        sn: item.sn,
+                        kondisi: item.kondisi,
+                        pic: item.pic,
+                        kuartal: item.kuartal,
+                        tgl_inspeksi: item.tgl_inspeksi,
+                        approval_link: window.location.href.split('#')[0] || "http://localhost/sistempencatatan/"
                     });
 
-                    if (response.ok) {
-                        successCount++;
-                        console.log(`[PPE Compliance] Email sukses dikirim ke: ${r.email} (${r.name})`);
-                    } else {
-                        const errText = await response.text();
-                        console.error(`[PPE Compliance] Gagal kirim ke ${r.email}:`, errText);
-                        failedEmails.push(r.email);
-                    }
+                    successCount++;
+                    console.log(`[Web3Forms Notif] Email sukses dikirim ke: ${r.email} (${r.name})`);
                 } catch (err) {
-                    console.error(`[PPE Compliance] Network error kirim ke ${r.email}:`, err);
+                    console.error(`[Web3Forms Notif] Error kirim ke ${r.email}:`, err);
                     failedEmails.push(r.email);
                 }
             }, 600);
 
+            updateQuotaUI();
+
+            const curQuota = getEmailQuota();
             if (successCount === recipients.length) {
-                showToast(`✅ Berhasil! Email terkirim ke SEMUA (${successCount}) orang terdaftar di web!`, 'success');
+                showToast(`✅ Berhasil! Email terkirim via Web3Forms ke SEMUA (${successCount}) orang! Sisa kuota: ${curQuota.remaining} kredit.`, 'success');
             } else if (successCount > 0) {
-                showToast(`Email terkirim ke ${successCount} dari ${recipients.length} orang. (${failedEmails.length} email gagal/tidak valid)`, 'warning');
+                showToast(`Email terkirim ke ${successCount} dari ${recipients.length} orang. (${failedEmails.length} gagal/habis kuota). Sisa: ${curQuota.remaining} kredit.`, 'warning');
             } else {
-                showToast('Laporan tersimpan, namun semua pengiriman email gagal. Periksa Template ID EmailJS Anda.', 'danger');
+                showToast('Laporan tersimpan, namun pengiriman email via Web3Forms gagal. Periksa Form Access Key Anda.', 'danger');
             }
         }
 
@@ -8851,13 +9115,15 @@
             showToast(`Form inspeksi terisi otomatis dari jadwal APD "${item.apd_nama}" (${item.pemilik_nama}). Silakan lengkapi kondisi dan foto fisik!`, 'success');
         }
 
-        // Send Scheduled Reminder Email for Specific PPE
+        // Send Scheduled Reminder Email for Specific PPE via Web3Forms API
         async function sendScheduleReminderEmail(schId) {
             const item = (schedulesList || []).find(s => s.id === schId);
             if (!item) return;
 
             const email = item.pemilik_email;
-            const config = JSON.parse(localStorage.getItem('k3_emailjs_config')) || null;
+            const config = JSON.parse(localStorage.getItem('k3_web3forms_config')) || DEFAULT_WEB3FORMS;
+            const accessKey = (config.accessKey || DEFAULT_WEB3FORMS.accessKey).trim();
+            const quota = getEmailQuota();
 
             const isOverdue = item.status === 'OVERDUE';
             const subject = isOverdue
@@ -8866,36 +9132,29 @@
 
             const message = `Halo ${item.pemilik_nama},
 
-` +
-                `Pemberitahuan resmi dari PPE Compliance Control System:
-` +
-                `• Jenis APD: ${item.apd_nama} (Serial Number: ${item.sn || '-'})
-` +
-                `• Departemen: ${item.pemilik_dept}
-` +
-                `• Siklus Frekuensi: Setiap ${item.interval_hari} Hari
-` +
-                `• Tanggal Jatuh Tempo: ${item.tgl_jadwal_berikutnya}
-` +
-                `• Status Kontrol: ${isOverdue ? 'TERLAMBAT (Overdue ' + Math.abs(item.sisa_hari) + ' hari)' : (item.sisa_hari === 0 ? 'JATUH TEMPO HARI INI' : 'Sisa ' + item.sisa_hari + ' hari')}
-` +
-                `• Petugas PIC Pemeriksa: ${item.pic_tugas || 'Petugas K3 Lapangan'}
+Pemberitahuan resmi dari PPE Compliance Control System:
+• Jenis APD: ${item.apd_nama} (Serial Number: ${item.sn || '-'})
+• Departemen: ${item.pemilik_dept}
+• Siklus Frekuensi: Setiap ${item.interval_hari} Hari
+• Tanggal Jatuh Tempo: ${item.tgl_jadwal_berikutnya}
+• Status Kontrol: ${isOverdue ? 'TERLAMBAT (Overdue ' + Math.abs(item.sisa_hari) + ' hari)' : (item.sisa_hari === 0 ? 'JATUH TEMPO HARI INI' : 'Sisa ' + item.sisa_hari + ' hari')}
+• Petugas PIC Pemeriksa: ${item.pic_tugas || 'Petugas K3 Lapangan'}
 
-` +
-                `Mohon pastikan APD Anda siap diperiksa fisik demi menjamin kepatuhan standar keselamatan kerja (K3) dan kesiapan audit.
+Mohon pastikan APD Anda siap diperiksa fisik demi menjamin kepatuhan standar keselamatan kerja (K3) dan kesiapan audit.
 
-` +
-                `Salam Keselamatan Kerja,
+Salam Keselamatan Kerja,
 Tim K3 & Safety Governance`;
 
-            if (config && config.serviceId && config.templateId && config.publicKey && email) {
+            if (accessKey && email && quota.remaining > 0) {
                 try {
-                    showToast(`Mengirim email reminder jadwal ke ${email}...`, 'info');
-                    const templateParams = {
-                        to_email: email,
-                        to_name: item.pemilik_nama,
+                    showToast(`Mengirim email reminder jadwal ke ${email} via Web3Forms...`, 'info');
+                    await sendViaWeb3Forms({
                         subject: subject,
+                        name: item.pemilik_nama,
+                        email: email,
+                        to_email: email,
                         message: message,
+                        html_content: message.replace(/\n/g, '<br>'),
                         nama_apd: item.apd_nama,
                         pemilik: item.pemilik_nama,
                         sn: item.sn,
@@ -8903,21 +9162,25 @@ Tim K3 & Safety Governance`;
                         tgl_inspeksi: item.tgl_jadwal_berikutnya,
                         pic: item.pic_tugas || 'Petugas K3',
                         spv: item.spv_approver || 'Supervisor K3'
-                    };
-                    await emailjs.send(config.serviceId, config.templateId, templateParams, config.publicKey);
-                    showToast(`Email pengingat jadwal berhasil dikirim ke ${email}!`, 'success');
+                    });
+
+                    updateQuotaUI();
+                    showToast(`✅ Email pengingat jadwal berhasil dikirim ke ${email}! (Sisa kuota: ${getEmailQuota().remaining} kredit)`, 'success');
                 } catch (err) {
                     console.error('[PPE Compliance Schedule Email Error]:', err);
-                    showToast(`Gagal kirim via EmailJS (${err.text || err.message}). Membuka email client...`, 'warning');
+                    showToast(`Gagal kirim via Web3Forms (${err.message}). Membuka email client...`, 'warning');
                     window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`);
                 }
+            } else if (quota.remaining <= 0) {
+                showToast(`Kuota kredit email telah habis (0 kredit). Membuka email client...`, 'warning');
+                window.open(`mailto:${email || ''}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`);
             } else {
                 window.open(`mailto:${email || ''}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`);
                 showToast(`Membuka email client default untuk mengirimkan pengingat jadwal ke ${item.pemilik_nama}.`, 'info');
             }
         }
 
-        // Blast Reminders to all Overdue & Upcoming PPE
+        // Blast Reminders to all Overdue & Upcoming PPE via Web3Forms
         async function blastScheduleReminders() {
             const urgentList = (schedulesList || []).filter(s => s.status === 'OVERDUE' || s.status === 'DUE_TODAY' || s.status === 'UPCOMING');
 
@@ -8926,36 +9189,54 @@ Tim K3 & Safety Governance`;
                 return;
             }
 
-            if (!confirm(`Kirimkan email pengingat massal ke ${urgentList.length} personel dengan jadwal inspeksi jatuh tempo/terlambat?`)) {
+            const config = JSON.parse(localStorage.getItem('k3_web3forms_config')) || DEFAULT_WEB3FORMS;
+            const accessKey = (config.accessKey || DEFAULT_WEB3FORMS.accessKey).trim();
+            const quota = getEmailQuota();
+
+            if (!accessKey) {
+                showToast('Konfigurasi Web3Forms belum lengkap. Silakan buka menu "Web3Forms" di atas.', 'warning');
                 return;
             }
 
-            const config = JSON.parse(localStorage.getItem('k3_emailjs_config')) || null;
-            if (!config || !config.serviceId || !config.templateId || !config.publicKey) {
-                showToast('Konfigurasi EmailJS belum lengkap. Silakan buka menu "Email Notif" di pojok kanan atas.', 'warning');
+            const withEmail = urgentList.filter(s => s.pemilik_email);
+            if (withEmail.length === 0) {
+                showToast('Tidak ada personel jadwal yang memiliki email terdaftar di Data Master!', 'warning');
+                return;
+            }
+
+            if (withEmail.length > quota.remaining) {
+                showToast(`⛔ Kuota kredit tidak mencukupi! Dibutuhkan ${withEmail.length} kredit, sedangkan sisa kuota hanya ${quota.remaining} kredit. Tambah batas kuota di Pengaturan.`, 'danger');
+                return;
+            }
+
+            if (!confirm(`Kirimkan email pengingat massal ke ${urgentList.length} personel (${withEmail.length} personel memiliki email, akan memotong ${withEmail.length} kuota kredit)?\nSisa kuota kredit saat ini: ${quota.remaining} kredit.`)) {
                 return;
             }
 
             let sentCount = 0;
-            showToast(`Memproses pengiriman broadcast reminder ke ${urgentList.length} personel...`, 'info');
+            showToast(`Memproses pengiriman broadcast reminder via Web3Forms ke ${withEmail.length} personel...`, 'info');
 
             for (const item of urgentList) {
                 if (item.pemilik_email) {
+                    if (getEmailQuota().remaining <= 0) {
+                        showToast('Pengiriman broadcast terhenti karena kuota kredit telah habis.', 'warning');
+                        break;
+                    }
                     try {
                         const isOverdue = item.status === 'OVERDUE';
                         const subject = isOverdue
                             ? `🚨 [URGENT OVERDUE] Peringatan Keterlambatan Inspeksi APD: ${item.apd_nama} - ${item.pemilik_nama}`
                             : `📅 [PPE Compliance] Jadwal Inspeksi APD: ${item.apd_nama} - ${item.pemilik_nama}`;
 
-                        const message = `Halo ${item.pemilik_nama},
+                        const message = `Halo ${item.pemilik_nama},\n\nJadwal pemeriksaan rutin APD Anda (${item.apd_nama}, SN: ${item.sn}) jatuh tempo pada ${item.tgl_jadwal_berikutnya} (${item.status}). Mohon segera dilakukan inspeksi bersama petugas PIC K3 (${item.pic_tugas}).`;
 
-Jadwal pemeriksaan rutin APD Anda (${item.apd_nama}, SN: ${item.sn}) jatuh tempo pada ${item.tgl_jadwal_berikutnya} (${item.status}). Mohon segera dilakukan inspeksi bersama petugas PIC K3 (${item.pic_tugas}).`;
-
-                        await emailjs.send(config.serviceId, config.templateId, {
-                            to_email: item.pemilik_email,
-                            to_name: item.pemilik_nama,
+                        await sendViaWeb3Forms({
                             subject: subject,
+                            name: item.pemilik_nama,
+                            email: item.pemilik_email,
+                            to_email: item.pemilik_email,
                             message: message,
+                            html_content: message.replace(/\n/g, '<br>'),
                             nama_apd: item.apd_nama,
                             pemilik: item.pemilik_nama,
                             sn: item.sn,
@@ -8963,7 +9244,7 @@ Jadwal pemeriksaan rutin APD Anda (${item.apd_nama}, SN: ${item.sn}) jatuh tempo
                             tgl_inspeksi: item.tgl_jadwal_berikutnya,
                             pic: item.pic_tugas || 'Petugas K3',
                             spv: item.spv_approver || 'Supervisor K3'
-                        }, config.publicKey);
+                        });
 
                         sentCount++;
                     } catch (e) {
@@ -8972,7 +9253,9 @@ Jadwal pemeriksaan rutin APD Anda (${item.apd_nama}, SN: ${item.sn}) jatuh tempo
                 }
             }
 
-            showToast(`Broadcast selesai! ${sentCount} email pengingat berhasil terkirim.`, 'success');
+            updateQuotaUI();
+            const curQuota = getEmailQuota();
+            showToast(`Broadcast selesai! ${sentCount} email pengingat berhasil dikirim. (Sisa kuota: ${curQuota.remaining} kredit)`, 'success');
         }
 
         // Export Schedules to Excel via ExcelJS
