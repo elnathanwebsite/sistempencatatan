@@ -3661,7 +3661,7 @@
                         </div>
 
                         <!-- Search & Table Header Toolbar -->
-                        <div class="master-table-toolbar">
+                        <div class="master-table-toolbar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                             <div class="master-table-search">
                                 <span class="input-icon"><i data-lucide="search"
                                         style="width: 16px; height: 16px;"></i></span>
@@ -3669,8 +3669,25 @@
                                     placeholder="Cari nama pengguna, email, role, atau divisi..."
                                     oninput="handleMasterSearch('users', this.value)">
                             </div>
-                            <div style="font-size: 0.8rem; color: var(--text-muted);">
-                                Admin dapat mengubah role, mereset password, atau menghapus akun terdaftar
+                            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                <span class="badge badge-quarter" id="badgeEmailRepCount" style="font-size: 0.78rem; padding: 5px 12px; display: inline-flex; align-items: center; gap: 6px;">
+                                    <i data-lucide="mail-check" style="width: 14px; height: 14px; color: var(--primary);"></i>
+                                    <span id="labelEmailRepCount">0 Perwakilan Ditandai</span>
+                                </span>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="saveAllUserEmailReps()" title="Simpan tanda perwakilan email ke penyimpanan" style="height: 34px; padding: 0 14px; display: inline-flex; align-items: center; gap: 6px;">
+                                    <i data-lucide="save" style="width: 14px; height: 14px;"></i>
+                                    <span>Simpan Pengaturan Email</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Keterangan Sistem Tandai Perwakilan Email -->
+                        <div style="background: rgba(79, 70, 229, 0.05); border: 1px solid rgba(79, 70, 229, 0.2); border-left: 4px solid var(--primary); border-radius: 8px; padding: 12px 16px; margin: 14px 0; font-size: 0.82rem; color: var(--text-main); display: flex; align-items: flex-start; gap: 12px;">
+                            <i data-lucide="shield-alert" style="width: 18px; height: 18px; color: var(--primary); flex-shrink: 0; margin-top: 2px;"></i>
+                            <div style="line-height: 1.5;">
+                                <div style="font-weight: 700; color: var(--primary); margin-bottom: 2px;">Sistem Perwakilan Penerima Email Otomatis</div>
+                                <div>Tandai pengguna yang ditunjuk sebagai <strong>perwakilan penerima email otomatis</strong> agar sistem tidak mengirim email ke semua orang (menghemat kuota email). 
+                                <strong>Hanya akun Pengawas dan Leader/SPV</strong> yang dapat ditandai menerima email otomatis. Akun Karyawan atau peran lain dikunci. Default awal seluruhnya dikosongkan terlebih dahulu; Admin yang mengatur pilihannya lalu klik Simpan.</div>
                             </div>
                         </div>
 
@@ -3680,11 +3697,12 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 5%;">No</th>
-                                        <th style="width: 22%;">Nama Pengguna</th>
-                                        <th style="width: 22%;">Email & NIK</th>
-                                        <th style="width: 16%;">Role / Peran</th>
-                                        <th style="width: 18%;">Departemen / Jabatan</th>
-                                        <th style="width: 17%; text-align: right;">Aksi</th>
+                                        <th style="width: 20%;">Nama Pengguna</th>
+                                        <th style="width: 20%;">Email & NIK</th>
+                                        <th style="width: 13%;">Role / Peran</th>
+                                        <th style="width: 15%;">Departemen</th>
+                                        <th style="width: 15%; text-align: center;">Tandai Email Otomatis</th>
+                                        <th style="width: 12%; text-align: right;">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableMasterUsers">
@@ -5008,6 +5026,7 @@
                 role: 'admin',
                 dept: 'HSE & Safety Management',
                 nik: 'ADM-001',
+                isEmailRep: false,
                 createdAt: '2024-01-01T08:00:00.000Z'
             },
             {
@@ -5018,6 +5037,7 @@
                 role: 'leader',
                 dept: 'Section Head Safety & K3',
                 nik: 'SPV-102',
+                isEmailRep: false,
                 createdAt: '2024-01-02T08:00:00.000Z'
             },
             {
@@ -5028,6 +5048,7 @@
                 role: 'pengawas',
                 dept: 'Field Safety Inspector',
                 nik: 'PIC-001',
+                isEmailRep: false,
                 createdAt: '2024-01-03T08:00:00.000Z'
             },
             {
@@ -5038,6 +5059,7 @@
                 role: 'karyawan',
                 dept: 'Workshop / Mesin',
                 nik: 'EMP-2024-089',
+                isEmailRep: false,
                 createdAt: '2024-01-04T08:00:00.000Z'
             }
         ];
@@ -5045,6 +5067,17 @@
         let usersList = JSON.parse(localStorage.getItem('k3_users')) || DEFAULT_USERS;
         if (!localStorage.getItem('k3_users')) {
             localStorage.setItem('k3_users', JSON.stringify(usersList));
+        }
+
+        // Inisialisasi default sistem tanda perwakilan email (Kosongkan semua tanda perwakilan awal, hanya admin yang mengatur)
+        if (!localStorage.getItem('k3_email_rep_initialized_v1')) {
+            const initUsers = JSON.parse(localStorage.getItem('k3_users')) || DEFAULT_USERS;
+            initUsers.forEach(u => {
+                u.isEmailRep = false;
+            });
+            localStorage.setItem('k3_users', JSON.stringify(initUsers));
+            usersList = initUsers;
+            localStorage.setItem('k3_email_rep_initialized_v1', 'true');
         }
 
         // Active authenticated user
@@ -5504,7 +5537,7 @@
             if (tabMasterUsers) tabMasterUsers.style.display = (role === 'admin') ? 'inline-flex' : 'none';
 
             const btnNavEmail = document.getElementById('btnNavEmail');
-            if (btnNavEmail) btnNavEmail.style.display = (role === 'karyawan') ? 'none' : 'inline-flex';
+            if (btnNavEmail) btnNavEmail.style.display = (role === 'admin') ? 'inline-flex' : 'none';
 
             const tabBtnMaster = document.getElementById('tabBtnMaster');
             if (tabBtnMaster) {
@@ -5862,6 +5895,7 @@
 
         // Render Master Data Lists on Page 2 (Full Card & Table)
         function renderMasterLists() {
+            const isAdmin = currentUser && currentUser.role === 'admin';
             const totalPemilik = (masterData.pemilik || []).length;
             const totalSpv = (masterData.spv || []).length;
             const totalPic = (masterData.pic || []).length;
@@ -5955,9 +5989,9 @@
                                 </code>
                             </td>
                             <td style="text-align: center;">
-                                <label style="display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; user-select: none;">
-                                    <input type="checkbox" ${isSend ? 'checked' : ''} onchange="toggleMasterEmailStatus('pemilik', ${item.id}, this.checked)" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary);">
-                                    <span class="badge ${isSend ? 'badge-layak' : 'badge-quarter'}" style="font-size: 0.72rem; padding: 2px 6px;">
+                                <label style="display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: ${isAdmin ? 'pointer' : 'not-allowed'}; user-select: none;" title="${!isAdmin ? 'Hanya Administrator yang berhak mengubah status kirim email' : (isSend ? 'Email aktif (masuk daftar kirim email)' : 'Email tidak aktif (dikecualikan dari kirim)')}">
+                                    <input type="checkbox" ${isSend ? 'checked' : ''} ${!isAdmin ? 'disabled' : ''} onchange="toggleMasterEmailStatus('pemilik', ${item.id}, this.checked)" style="width: 16px; height: 16px; cursor: ${isAdmin ? 'pointer' : 'not-allowed'}; accent-color: var(--primary);">
+                                    <span class="badge ${isSend ? 'badge-layak' : 'badge-quarter'}" style="font-size: 0.72rem; padding: 2px 6px; ${!isAdmin ? 'opacity: 0.7;' : ''}">
                                         ${isSend ? '✓ Kirim' : '✕ Tidak'}
                                     </span>
                                 </label>
@@ -6029,9 +6063,9 @@
                                 `}
                             </td>
                             <td style="text-align: center;">
-                                <label style="display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; user-select: none;" title="${isSend ? 'Email aktif (masuk daftar kirim email)' : 'Email tidak aktif (dikecualikan dari kirim)'}">
-                                    <input type="checkbox" ${isSend ? 'checked' : ''} onchange="toggleMasterEmailStatus('spv', ${item.id}, this.checked)" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary);">
-                                    <span class="badge ${isSend ? 'badge-layak' : 'badge-quarter'}" style="font-size: 0.72rem; padding: 2px 6px;">
+                                <label style="display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: ${isAdmin ? 'pointer' : 'not-allowed'}; user-select: none;" title="${!isAdmin ? 'Hanya Administrator yang berhak mengubah status kirim email' : (isSend ? 'Email aktif (masuk daftar kirim email)' : 'Email tidak aktif (dikecualikan dari kirim)')}">
+                                    <input type="checkbox" ${isSend ? 'checked' : ''} ${!isAdmin ? 'disabled' : ''} onchange="toggleMasterEmailStatus('spv', ${item.id}, this.checked)" style="width: 16px; height: 16px; cursor: ${isAdmin ? 'pointer' : 'not-allowed'}; accent-color: var(--primary);">
+                                    <span class="badge ${isSend ? 'badge-layak' : 'badge-quarter'}" style="font-size: 0.72rem; padding: 2px 6px; ${!isAdmin ? 'opacity: 0.7;' : ''}">
                                         ${isSend ? '✓ Kirim' : '✕ Tidak'}
                                     </span>
                                 </label>
@@ -6102,9 +6136,9 @@
                                 `}
                             </td>
                             <td style="text-align: center;">
-                                <label style="display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; user-select: none;" title="${isSend ? 'Email aktif (masuk daftar kirim email)' : 'Email tidak aktif (dikecualikan dari kirim)'}">
-                                    <input type="checkbox" ${isSend ? 'checked' : ''} onchange="toggleMasterEmailStatus('pic', ${item.id}, this.checked)" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary);">
-                                    <span class="badge ${isSend ? 'badge-layak' : 'badge-quarter'}" style="font-size: 0.72rem; padding: 2px 6px;">
+                                <label style="display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: ${isAdmin ? 'pointer' : 'not-allowed'}; user-select: none;" title="${!isAdmin ? 'Hanya Administrator yang berhak mengubah status kirim email' : (isSend ? 'Email aktif (masuk daftar kirim email)' : 'Email tidak aktif (dikecualikan dari kirim)')}">
+                                    <input type="checkbox" ${isSend ? 'checked' : ''} ${!isAdmin ? 'disabled' : ''} onchange="toggleMasterEmailStatus('pic', ${item.id}, this.checked)" style="width: 16px; height: 16px; cursor: ${isAdmin ? 'pointer' : 'not-allowed'}; accent-color: var(--primary);">
+                                    <span class="badge ${isSend ? 'badge-layak' : 'badge-quarter'}" style="font-size: 0.72rem; padding: 2px 6px; ${!isAdmin ? 'opacity: 0.7;' : ''}">
                                         ${isSend ? '✓ Kirim' : '✕ Tidak'}
                                     </span>
                                 </label>
@@ -6206,7 +6240,7 @@
             if (filtered.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="6">
+                        <td colspan="7">
                             <div class="empty-state" style="padding: 24px;">
                                 <div class="empty-icon"><i data-lucide="user-x"></i></div>
                                 <h4>Pengguna tidak ditemukan</h4>
@@ -6214,13 +6248,18 @@
                         </td>
                     </tr>
                 `;
+                updateEmailRepBadge();
                 return;
             }
+
+            const isAdmin = currentUser && currentUser.role === 'admin';
 
             filtered.forEach((u, idx) => {
                 const tr = document.createElement('tr');
                 const initials = u.nama ? u.nama.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() : 'U';
                 const isCurrent = currentUser && currentUser.id === u.id;
+                const isEligible = u.role === 'pengawas' || u.role === 'leader';
+                const isRep = isEligible && Boolean(u.isEmailRep);
 
                 tr.innerHTML = `
                     <td style="color: var(--text-muted); font-weight: 600;">${idx + 1}</td>
@@ -6243,6 +6282,21 @@
                     <td>
                         <div style="font-size: 0.82rem; color: var(--text-main);">${escapeHtml(u.dept || '-')}</div>
                     </td>
+                    <td style="text-align: center;">
+                        ${isEligible ? `
+                            <label style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: ${isAdmin ? 'pointer' : 'not-allowed'}; user-select: none;" title="${!isAdmin ? 'Hanya Administrator yang berhak menandai penerima email otomatis' : (isRep ? 'Perwakilan aktif: Menerima email otomatis' : 'Dikosongkan: Tidak menerima email otomatis')}">
+                                <input type="checkbox" ${isRep ? 'checked' : ''} ${!isAdmin ? 'disabled' : ''} onchange="toggleUserEmailRep(${u.id}, this.checked)" style="width: 16px; height: 16px; cursor: ${isAdmin ? 'pointer' : 'not-allowed'}; accent-color: var(--primary);">
+                                <span class="badge ${isRep ? 'badge-layak' : 'badge-quarter'}" style="font-size: 0.72rem; padding: 2px 7px; font-weight: 600; ${!isAdmin ? 'opacity: 0.7;' : ''}">
+                                    ${isRep ? '✓ Ditandai' : '✕ Tidak'}
+                                </span>
+                            </label>
+                        ` : `
+                            <span class="badge badge-quarter" style="font-size: 0.7rem; opacity: 0.65; display: inline-flex; align-items: center; gap: 4px;" title="Hanya role Pengawas dan SPV/Leader yang berhak ditandai menerima email otomatis">
+                                <i data-lucide="minus-circle" style="width: 11px; height: 11px;"></i>
+                                ${u.role === 'karyawan' ? 'Pekerja' : 'Bukan Pengawas/SPV'}
+                            </span>
+                        `}
+                    </td>
                     <td style="text-align: right;">
                         <div style="display: flex; gap: 4px; justify-content: flex-end; flex-wrap: wrap;">
                             <button class="btn btn-outline btn-xs" onclick="changeUserRole(${u.id})" title="Ubah Hak Akses / Role">
@@ -6261,7 +6315,86 @@
                 `;
                 tbody.appendChild(tr);
             });
+            updateEmailRepBadge();
             lucide.createIcons();
+        }
+
+        // Toggle User Email Representative (Perwakilan Penerima Email Otomatis)
+        function toggleUserEmailRep(userId, isChecked) {
+            if (!currentUser || currentUser.role !== 'admin') {
+                showToast('⛔ Akses Ditolak: Hanya Administrator yang berhak menandai penerima email otomatis!', 'danger');
+                renderMasterUsers(masterSearchQuery.users);
+                return;
+            }
+
+            const list = getRegisteredUsers();
+            const u = list.find(x => x.id === userId);
+            if (!u) return;
+
+            if (isChecked && u.role !== 'pengawas' && u.role !== 'leader') {
+                showToast('Hanya akun dengan peran Pengawas dan Leader/SPV yang dapat ditandai sebagai perwakilan email otomatis!', 'warning');
+                renderMasterUsers(masterSearchQuery.users);
+                return;
+            }
+
+            u.isEmailRep = Boolean(isChecked);
+            saveRegisteredUsers(list);
+
+            // Sync ke masterData SPV/PIC bila ada
+            if (window.masterData) {
+                if ((u.role === 'leader' || u.role === 'spv') && masterData.spv) {
+                    const spvItem = masterData.spv.find(s => (s.email && s.email.toLowerCase() === u.email.toLowerCase()) || (s.nama && s.nama.toLowerCase() === u.nama.toLowerCase()));
+                    if (spvItem) spvItem.sendEmail = u.isEmailRep;
+                } else if (u.role === 'pengawas' && masterData.pic) {
+                    const picItem = masterData.pic.find(p => (p.email && p.email.toLowerCase() === u.email.toLowerCase()) || (p.nama && p.nama.toLowerCase() === u.nama.toLowerCase()));
+                    if (picItem) picItem.sendEmail = u.isEmailRep;
+                }
+                localStorage.setItem('k3_master_data', JSON.stringify(masterData));
+            }
+
+            updateEmailRepBadge();
+            renderMasterUsers(masterSearchQuery.users);
+            showToast(`Status perwakilan email "${escapeHtml(u.nama)}" (${u.role.toUpperCase()}): ${u.isEmailRep ? '✓ Ditandai menerima email otomatis' : '✕ Tidak menerima email otomatis'}`, u.isEmailRep ? 'success' : 'info');
+        }
+
+        // Simpan Seluruh Status Perwakilan Email ke Penyimpanan (LocalStorage)
+        function saveAllUserEmailReps() {
+            if (!currentUser || currentUser.role !== 'admin') {
+                showToast('⛔ Akses Ditolak: Hanya Administrator yang berhak menyimpan pengaturan perwakilan email!', 'danger');
+                return;
+            }
+
+            const list = getRegisteredUsers();
+            saveRegisteredUsers(list);
+            if (window.masterData) {
+                localStorage.setItem('k3_master_data', JSON.stringify(masterData));
+            }
+            updateEmailRepBadge();
+            const markedCount = list.filter(u => (u.role === 'pengawas' || u.role === 'leader') && u.isEmailRep).length;
+            showToast(`✅ Pengaturan perwakilan email otomatis berhasil disimpan ke penyimpanan (${markedCount} perwakilan aktif).`, 'success');
+        }
+
+        // Update indikator jumlah perwakilan email yang ditandai
+        function updateEmailRepBadge() {
+            const labelEl = document.getElementById('labelEmailRepCount');
+            const badgeEl = document.getElementById('badgeEmailRepCount');
+            if (!labelEl) return;
+            const list = getRegisteredUsers();
+            const marked = list.filter(u => (u.role === 'pengawas' || u.role === 'leader') && u.isEmailRep);
+            labelEl.innerText = `${marked.length} Perwakilan Ditandai`;
+            if (badgeEl) {
+                if (marked.length > 0) {
+                    badgeEl.className = 'badge badge-good';
+                    badgeEl.style.background = 'rgba(16, 185, 129, 0.15)';
+                    badgeEl.style.color = '#059669';
+                    badgeEl.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                } else {
+                    badgeEl.className = 'badge badge-quarter';
+                    badgeEl.style.background = '';
+                    badgeEl.style.color = '';
+                    badgeEl.style.borderColor = '';
+                }
+            }
         }
 
         // Add Master User Handler
@@ -6283,6 +6416,7 @@
             const newUser = {
                 id: Date.now(),
                 nama, email, password: pass, role, dept, nik,
+                isEmailRep: false, // Default kosongkan semuanya dulu
                 createdAt: new Date().toISOString()
             };
 
@@ -6291,11 +6425,11 @@
 
             // Auto sync to master list
             if (role === 'karyawan') {
-                masterData.pemilik.push({ id: Date.now(), nama, dept, email, sn: `SN-${nama.substring(0, 3).toUpperCase()}-001`, sendEmail: true });
+                masterData.pemilik.push({ id: Date.now(), nama, dept, email, sn: `SN-${nama.substring(0, 3).toUpperCase()}-001`, sendEmail: false });
             } else if (role === 'leader') {
-                masterData.spv.push({ id: Date.now(), nama, jabatan: dept, email, sendEmail: true });
+                masterData.spv.push({ id: Date.now(), nama, jabatan: dept, email, sendEmail: false });
             } else if (role === 'pengawas') {
-                masterData.pic.push({ id: Date.now(), nama, idPic: nik, email, sendEmail: true });
+                masterData.pic.push({ id: Date.now(), nama, idPic: nik, email, sendEmail: false });
             }
             localStorage.setItem('k3_master_data', JSON.stringify(masterData));
             updateDatalists();
@@ -6342,6 +6476,10 @@
             const newRole = prompt(`Pilih Role baru untuk ${u.nama} (admin, leader, pengawas, karyawan):`, u.role);
             if (newRole && ['admin', 'leader', 'pengawas', 'karyawan'].includes(newRole.toLowerCase().trim())) {
                 u.role = newRole.toLowerCase().trim();
+                // Jika role bukan pengawas atau leader, batalkan tanda perwakilan email
+                if (u.role !== 'leader' && u.role !== 'pengawas') {
+                    u.isEmailRep = false;
+                }
                 saveRegisteredUsers(list);
                 if (currentUser && currentUser.id === id) {
                     currentUser.role = u.role;
@@ -6358,6 +6496,11 @@
 
         // Toggle Master Data Email Sending Status
         function toggleMasterEmailStatus(category, id, isChecked) {
+            if (!currentUser || currentUser.role !== 'admin') {
+                showToast('⛔ Akses Ditolak: Hanya Administrator yang berhak mengubah status kirim email!', 'danger');
+                renderMasterLists();
+                return;
+            }
             if (!masterData || !masterData[category]) return;
             const item = masterData[category].find(x => x.id === id);
             if (item) {
@@ -8678,6 +8821,10 @@ Tim K3 & HSE Safety Management System`;
         }
 
         function openEmailConfigModal() {
+            if (!currentUser || currentUser.role !== 'admin') {
+                showToast('⛔ Akses Ditolak: Hanya Administrator yang berhak mengakses pengaturan email!', 'danger');
+                return;
+            }
             const modal = document.getElementById('emailModal');
             const config = JSON.parse(localStorage.getItem('k3_web3forms_config')) || DEFAULT_WEB3FORMS;
 
@@ -8722,6 +8869,10 @@ Tim K3 & HSE Safety Management System`;
 
         function saveEmailConfig(e) {
             e.preventDefault();
+            if (!currentUser || currentUser.role !== 'admin') {
+                showToast('⛔ Akses Ditolak: Hanya Administrator yang berhak menyimpan pengaturan email!', 'danger');
+                return;
+            }
             const accessKey = (document.getElementById('web3AccessKey')?.value || '').trim() || DEFAULT_WEB3FORMS.accessKey;
             const quotaLimit = parseInt(document.getElementById('web3QuotaLimit')?.value || '250', 10) || 250;
             const testEmail = (document.getElementById('web3TestEmail')?.value || '').trim() || DEFAULT_WEB3FORMS.testEmail;
@@ -8896,43 +9047,16 @@ Tim K3 & HSE Safety Management System`;
                 );
             }
 
-            // 4. All Other Registered SPVs (with sendEmail !== false)
-            (masterData.spv || []).forEach(s => {
-                if (s.email && s.sendEmail !== false) {
-                    addRecipient(
-                        s.email,
-                        s.nama,
-                        'SPV / Management',
-                        `📢 [PPE Compliance] Update Inspeksi APD: ${item.nama_apd} - ${item.pemilik}`,
-                        `Halo ${s.nama},\n\nPemberitahuan inspeksi berkala APD baru di sistem PPE Compliance Monitoring System:\n• Tanggal: ${item.tgl_inspeksi} (${item.kuartal})\n• Pekerja: ${item.pemilik} (SN: ${item.sn})\n• Jenis APD: ${item.nama_apd}\n• Kondisi: ${item.kondisi}\n• PIC Pemeriksa: ${item.pic}\n• Approver: ${item.spv}`
-                    );
-                }
-            });
-
-            // 5. All Other Registered Karyawan / Pemilik (with sendEmail !== false)
-            (masterData.pemilik || []).forEach(p => {
-                if (p.email && p.sendEmail !== false) {
-                    addRecipient(
-                        p.email,
-                        p.nama,
-                        'Karyawan',
-                        `📢 [PPE Compliance] Informasi Jadwal & Hasil Inspeksi APD`,
-                        `Halo ${p.nama},\n\nTelah dilaksanakan kegiatan inspeksi APD keselamatan kerja pada ${item.tgl_inspeksi} (${item.kuartal}) untuk unit ${item.nama_apd}.\nPastikan seluruh APD yang Anda gunakan dalam kondisi layak pakai demi keselamatan bersama.`
-                    );
-                }
-            });
-
-            // 6. All Other Registered PICs (with sendEmail !== false)
-            (masterData.pic || []).forEach(pi => {
-                if (pi.email && pi.sendEmail !== false) {
-                    addRecipient(
-                        pi.email,
-                        pi.nama,
-                        'Tim PIC K3',
-                        `📢 [PPE Compliance] Log Pemeriksaan APD Baru (${item.nama_apd})`,
-                        `Halo ${pi.nama},\n\nLog pemeriksaan APD baru telah dicatat oleh ${item.pic} untuk ${item.pemilik} (${item.nama_apd} - ${item.kondisi}) pada ${item.tgl_inspeksi}.`
-                    );
-                }
+            // 4. Perwakilan Pengawas dan Leader/SPV yang ditandai di Master Pengguna & Role
+            const markedReps = getCheckedMasterEmailRecipients();
+            markedReps.forEach(r => {
+                addRecipient(
+                    r.email,
+                    r.name,
+                    r.role,
+                    `📢 [PPE Compliance] Laporan Inspeksi APD: ${item.nama_apd} - ${item.pemilik}`,
+                    `Halo ${r.name} (${r.role}),\n\nPemberitahuan inspeksi berkala APD di sistem PPE Compliance Monitoring System:\n• Tanggal: ${item.tgl_inspeksi} (${item.kuartal})\n• Pekerja: ${item.pemilik} (SN: ${item.sn})\n• Jenis APD: ${item.nama_apd}\n• Kondisi Fisik: ${item.kondisi}\n• PIC Pemeriksa: ${item.pic}\n• Approver: ${item.spv}\n\nEmail ini dikirimkan khusus kepada Anda selaku perwakilan yang ditandai di Master Pengguna & Role.`
+                );
             });
 
             const recipients = Array.from(emailMap.values());
@@ -10548,36 +10672,43 @@ Tim K3 & Safety Governance`;
         // AUTOMATIC EMAIL & FINAL APPROVALS FOR 90-DAY PERIODSQ
         // =========================================================================
 
-        // Helper: Ambil seluruh penerima dari Data Master yang dicentang (sendEmail !== false)
+        // Helper: Ambil seluruh perwakilan penerima email otomatis dari Master Pengguna & Role
+        // Aturan: Hanya akun Pengawas dan Leader/SPV yang ditandai yang menerima email otomatis
         function getCheckedMasterEmailRecipients(filterRole = null) {
             const list = [];
             const seen = new Set();
+            const users = getRegisteredUsers();
 
-            const add = (item, defaultRoleName, roleCategory) => {
-                if (!item || !item.email || !isValidEmail(item.email) || item.sendEmail === false) return;
-                const key = item.email.trim().toLowerCase();
+            users.forEach(u => {
+                // Hanya akun yang ditandai oleh Admin
+                if (!u.isEmailRep) return;
+                if (!u.email || !isValidEmail(u.email)) return;
+
+                const role = (u.role || '').toLowerCase();
+                // Batasan mutlak: Hanya akun Pengawas dan Leader/SPV yang berhak menerima email otomatis
+                if (role !== 'pengawas' && role !== 'leader' && role !== 'spv') return;
+
+                if (filterRole) {
+                    const fRole = filterRole.toLowerCase();
+                    if ((fRole === 'spv' || fRole === 'leader') && role !== 'leader' && role !== 'spv') return;
+                    if ((fRole === 'pic' || fRole === 'pengawas') && role !== 'pengawas') return;
+                }
+
+                const key = u.email.trim().toLowerCase();
                 if (seen.has(key)) return;
                 seen.add(key);
-                list.push({
-                    email: item.email.trim(),
-                    name: item.nama || 'Rekan K3',
-                    role: defaultRoleName,
-                    roleCategory: roleCategory
-                });
-            };
 
-            // 1. SPV / Leader
-            if (!filterRole || filterRole === 'spv' || filterRole === 'leader') {
-                (masterData.spv || []).forEach(s => add(s, `Supervisor / Leader (${s.jabatan || 'K3'})`, 'spv'));
-            }
-            // 2. Karyawan / Pemilik
-            if (!filterRole || filterRole === 'karyawan' || filterRole === 'pemilik') {
-                (masterData.pemilik || []).forEach(p => add(p, `Karyawan / Pemilik APD (${p.dept || 'Umum'})`, 'karyawan'));
-            }
-            // 3. PIC / Pengawas
-            if (!filterRole || filterRole === 'pic' || filterRole === 'pengawas') {
-                (masterData.pic || []).forEach(pi => add(pi, `Inspector / Pengawas K3 (${pi.idPic || 'Safety'})`, 'pic'));
-            }
+                const roleTitle = (role === 'leader' || role === 'spv')
+                    ? `Supervisor / Leader (${u.dept || 'K3'})`
+                    : `Pengawas / Inspector K3 (${u.dept || u.nik || 'Safety'})`;
+
+                list.push({
+                    email: u.email.trim(),
+                    name: u.nama || 'Perwakilan K3',
+                    role: roleTitle,
+                    roleCategory: role
+                });
+            });
 
             return list;
         }
@@ -10585,7 +10716,10 @@ Tim K3 & Safety Governance`;
         // Email Otomatis 1: Terkirim ketika Penjadwalan Periode Otomatis / Manual dibuat
         async function sendAutoEmailPeriodCreated(period) {
             const recipients = getCheckedMasterEmailRecipients();
-            if (recipients.length === 0) return;
+            if (recipients.length === 0) {
+                showToast('Jadwal baru dibuat! (Belum ada perwakilan Pengawas/Leader yang ditandai menerima email otomatis di Master Pengguna & Role)', 'info');
+                return;
+            }
 
             const config = JSON.parse(localStorage.getItem('k3_web3forms_config')) || DEFAULT_WEB3FORMS;
             if (!config.accessKey || getEmailQuota().remaining <= 0) return;
@@ -10594,7 +10728,7 @@ Tim K3 & Safety Governance`;
             const qrUrl = getQrCodeUrl(defaultLink, '250x250');
             const barcodeUrl = getBarcodeUrl('K3-SCH-' + Date.now().toString().slice(-4));
 
-            showToast(`📨 Mengirim notifikasi jadwal baru otomatis ke ${recipients.length} penerima terdaftar...`, 'info');
+            showToast(`📨 Mengirim notifikasi jadwal baru otomatis ke ${recipients.length} perwakilan terdaftar...`, 'info');
 
             await dispatchSequence(recipients, async (r) => {
                 if (getEmailQuota().remaining <= 0) return;
@@ -10658,7 +10792,7 @@ Tim K3 & HSE Safety Governance`;
         async function sendAutoEmailPengawasApproved(period, pengawasName) {
             const recipients = getCheckedMasterEmailRecipients('spv');
             if (recipients.length === 0) {
-                showToast('Pemeriksaan disetujui Pengawas! (Tidak ada email Leader/SPV aktif yang dicentang di Data Master)', 'info');
+                showToast('Pemeriksaan disetujui Pengawas! (Belum ada Leader/SPV yang ditandai menerima email otomatis di Master Pengguna & Role)', 'info');
                 return;
             }
 
@@ -11124,17 +11258,14 @@ Tim Pengawas K3 & Field Inspector Safety`;
 
                         <!-- APD List for this employee -->
                         <div style="margin-bottom: 12px; background: var(--bg-input); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 0.74rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                            <span style="font-weight: 700; color: var(--text-muted);"><i data-lucide="shield" style="width: 13px; height: 13px; vertical-align: middle;"></i> APD Yang Diperiksa:</span>
+                            <span style="font-weight: 700; color: var(--text-muted);"><i data-lucide="shield" style="width: 13px; height: 13px; vertical-align: middle;"></i> Jenis APD Yang Diperiksa:</span>
                             ${k.apdDiperiksa ? `
-                                <span style="background: rgba(16, 185, 129, 0.16); border: 1px solid rgba(16, 185, 129, 0.45); padding: 2px 9px; border-radius: 4px; font-weight: 700; color: #065f46; display: inline-flex; align-items: center; gap: 4px;">
-                                    <i data-lucide="check-circle-2" style="width: 13px; height: 13px; color: #10b981;"></i> Diperiksa: ${k.apdDiperiksa}
+                                <span style="background: rgba(16, 185, 129, 0.16); border: 1px solid rgba(16, 185, 129, 0.45); padding: 3px 10px; border-radius: 6px; font-weight: 700; color: #065f46; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i data-lucide="check-circle-2" style="width: 13px; height: 13px; color: #10b981;"></i> ${escapeHtml(k.apdDiperiksa)}
                                 </span>
-                            ` : ''}
-                            ${(k.apdList || []).map(a => `
-                                <span style="background: var(--bg-card); border: 1px solid var(--border); padding: 2px 8px; border-radius: 4px; font-weight: 600; color: var(--text-main);">
-                                    ${a.nama} <span style="color: var(--primary); font-size: 0.7rem;">(${a.sn})</span>
-                                </span>
-                            `).join('')}
+                            ` : `
+                                <span style="color: var(--text-muted); font-style: italic;">(Belum dipilih / diisi karyawan)</span>
+                            `}
                         </div>
 
                         <!-- 2 Photo Upload Columns: Karyawan & Pengawas -->
@@ -11249,78 +11380,86 @@ Tim Pengawas K3 & Field Inspector Safety`;
         // MULTI-PHOTO UPLOAD MODAL LOGIC WITH APD TYPE SELECTOR & RBAC
         // =========================================================================
         function populateMultiUploadApdOptions(karyawan) {
-            const select = document.getElementById('multiUploadApdType');
+            const container = document.getElementById('multiUploadApdContainer');
             const customInput = document.getElementById('multiUploadApdCustom');
-            if (!select) return;
-            if (customInput) {
-                customInput.style.display = 'none';
-                customInput.value = '';
-            }
+            if (!container) return;
 
-            let html = `<option value="">-- Pilih Jenis APD Yang Diperiksa (Wajib Diisi) --</option>`;
+            // Parse previous choices (comma-separated or single)
+            const chosenList = (karyawan.apdDiperiksa || '')
+                .split(',')
+                .map(s => s.trim())
+                .filter(Boolean);
+
+            const allApds = [];
+            const seen = new Set();
 
             // 1. APD assigned to this employee
-            const empApds = karyawan.apdList || [];
-            if (empApds.length > 0) {
-                html += `<optgroup label="📋 APD Terdaftar Karyawan (${karyawan.nama})">`;
-                empApds.forEach(a => {
-                    const label = `${a.nama} (${a.sn || '-'})`;
-                    html += `<option value="${a.nama}">${label} &bull; [${a.standar || 'Standar K3'}]</option>`;
-                });
-                html += `</optgroup>`;
-            }
+            (karyawan.apdList || []).forEach(a => {
+                if (a.nama && !seen.has(a.nama.toLowerCase())) {
+                    seen.add(a.nama.toLowerCase());
+                    allApds.push({ nama: a.nama, source: 'Karyawan', sn: a.sn });
+                }
+            });
 
             // 2. Master registered APD in company database
             const masterApds = (masterData && masterData.apd) ? masterData.apd : [];
-            if (masterApds.length > 0) {
-                html += `<optgroup label="🛡️ Master Referensi APD Terdaftar Perusahaan">`;
-                masterApds.forEach(m => {
-                    html += `<option value="${m.nama}">${m.nama} &bull; [${m.kategori || 'K3'}]</option>`;
-                });
-                html += `</optgroup>`;
-            }
-
-            html += `<option value="__custom__">➕ Jenis APD Lainnya (Ketik Manual)...</option>`;
-            select.innerHTML = html;
-
-            // Set current value if previously chosen
-            if (karyawan.apdDiperiksa) {
-                let exists = Array.from(select.options).some(o => o.value === karyawan.apdDiperiksa);
-                if (exists) {
-                    select.value = karyawan.apdDiperiksa;
-                } else {
-                    select.value = '__custom__';
-                    if (customInput) {
-                        customInput.style.display = 'block';
-                        customInput.value = karyawan.apdDiperiksa;
-                    }
+            masterApds.forEach(m => {
+                if (m.nama && !seen.has(m.nama.toLowerCase())) {
+                    seen.add(m.nama.toLowerCase());
+                    allApds.push({ nama: m.nama, source: 'Master K3', sn: null });
                 }
-            } else {
-                select.value = "";
-            }
-        }
+            });
 
-        function handleApdTypeSelectChange(val) {
-            const customInput = document.getElementById('multiUploadApdCustom');
-            if (!customInput) return;
-            if (val === '__custom__') {
-                customInput.style.display = 'block';
-                customInput.focus();
-            } else {
-                customInput.style.display = 'none';
-                customInput.value = '';
+            // Fallback common APD if empty
+            if (allApds.length === 0) {
+                ['Helm Safety', 'Safety Shoes', 'Safety Glasses', 'Hearing Protection', 'Hand Protection', 'Respiratory Protection', 'Body Protection'].forEach(n => {
+                    if (!seen.has(n.toLowerCase())) {
+                        seen.add(n.toLowerCase());
+                        allApds.push({ nama: n, source: 'Standar K3', sn: null });
+                    }
+                });
+            }
+
+            let html = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px;">`;
+            allApds.forEach(item => {
+                const isChecked = chosenList.some(c => c.toLowerCase() === item.nama.toLowerCase());
+                html += `
+                    <label style="display: flex; align-items: center; gap: 8px; padding: 7px 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 0.78rem; font-weight: 600; color: var(--text-main); user-select: none;">
+                        <input type="checkbox" class="chk-multi-apd" value="${escapeHtml(item.nama)}" ${isChecked ? 'checked' : ''} style="accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer;">
+                        <span>${escapeHtml(item.nama)}</span>
+                    </label>
+                `;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
+
+            // Fill custom input with items that were not in the known checklist
+            if (customInput) {
+                const customItems = chosenList.filter(c => !seen.has(c.toLowerCase()));
+                customInput.value = customItems.join(', ');
             }
         }
 
         function getSelectedUploadApdType() {
-            const select = document.getElementById('multiUploadApdType');
-            if (!select) return '';
-            const val = select.value.trim();
-            if (val === '__custom__') {
-                const customInput = document.getElementById('multiUploadApdCustom');
-                return customInput ? customInput.value.trim() : '';
+            const checkboxes = document.querySelectorAll('.chk-multi-apd:checked');
+            const selected = [];
+            checkboxes.forEach(cb => {
+                const val = cb.value.trim();
+                if (val && !selected.some(s => s.toLowerCase() === val.toLowerCase())) {
+                    selected.push(val);
+                }
+            });
+
+            const customInput = document.getElementById('multiUploadApdCustom');
+            if (customInput && customInput.value.trim()) {
+                const customs = customInput.value.split(',').map(s => s.trim()).filter(Boolean);
+                customs.forEach(c => {
+                    if (!selected.some(s => s.toLowerCase() === c.toLowerCase())) {
+                        selected.push(c);
+                    }
+                });
             }
-            return val;
+            return selected.join(', ');
         }
 
         function openMultiUploadModal(periodId, karyawanId, type) {
@@ -11416,8 +11555,8 @@ Tim Pengawas K3 & Field Inspector Safety`;
                 const selectedApd = getSelectedUploadApdType();
                 if (!selectedApd) {
                     e.target.value = '';
-                    showToast('⚠️ Wajib memilih Jenis APD yang diperiksa terlebih dahulu sebelum memilih/mengunggah foto!', 'warning');
-                    document.getElementById('multiUploadApdType')?.focus();
+                    showToast('⚠️ Wajib memilih atau mengetik minimal 1 Jenis APD yang diperiksa terlebih dahulu sebelum memilih/mengunggah foto!', 'warning');
+                    document.getElementById('multiUploadApdCustom')?.focus();
                     return;
                 }
             }
@@ -11479,8 +11618,8 @@ Tim Pengawas K3 & Field Inspector Safety`;
             if (type === 'karyawan') {
                 const selectedApd = getSelectedUploadApdType();
                 if (!selectedApd) {
-                    showToast('⚠️ Wajib memilih Jenis APD yang diperiksa sebelum menyimpan!', 'warning');
-                    document.getElementById('multiUploadApdType')?.focus();
+                    showToast('⚠️ Wajib memilih atau mengetik minimal 1 Jenis APD yang diperiksa sebelum menyimpan!', 'warning');
+                    document.getElementById('multiUploadApdCustom')?.focus();
                     return;
                 }
                 if (pendingUploadPhotos.length === 0) {
@@ -11504,6 +11643,11 @@ Tim Pengawas K3 & Field Inspector Safety`;
             closeModalMultiUploadDirect();
             renderPeriodKaryawanList();
             renderPeriodList();
+
+            // Cek apakah seluruh karyawan telah selesai upload foto APD -> kirim email otomatis ke Pengawas
+            if (type === 'karyawan') {
+                checkAndNotifyPengawasAllUploaded(periodId);
+            }
         }
 
         // =========================================================================
@@ -11540,6 +11684,110 @@ Tim Pengawas K3 & Field Inspector Safety`;
             renderPeriodKaryawanList();
             renderPeriodList();
             showToast(`👷 Karyawan ${k.nama} berhasil menyetujui APD miliknya! Sekarang menunggu pemeriksaan fisik oleh Pengawas.`, 'success');
+
+            // Cek apakah seluruh karyawan telah selesai upload/approve -> kirim email otomatis ke Pengawas
+            checkAndNotifyPengawasAllUploaded(periodId);
+        }
+
+        // Email Otomatis Pengawas: Terkirim otomatis KETIKA SELURUH KARYAWAN telah upload / menyetujui APD
+        async function checkAndNotifyPengawasAllUploaded(periodId) {
+            const pIdx = (periodsList || []).findIndex(p => p.id === periodId);
+            if (pIdx === -1) return;
+            const period = periodsList[pIdx];
+            if (!period || !period.karyawanList || period.karyawanList.length === 0) return;
+
+            // Jika notifikasi untuk periode ini sudah pernah terkirim, jangan kirim ulang
+            if (period.notifiedPengawasAllUploaded) return;
+
+            const total = period.karyawanList.length;
+            // Syarat mutlak: seluruh karyawan sudah upload foto APD ATAU sudah menyetujui APD masing-masing
+            const doneCount = period.karyawanList.filter(k => {
+                const hasPhoto = Array.isArray(k.fotoKaryawan) && k.fotoKaryawan.length > 0;
+                const isApproved = k.approvalKaryawan && k.approvalKaryawan.approved;
+                return hasPhoto || isApproved;
+            }).length;
+
+            // Jika masih ada 1 atau lebih karyawan yang belum selesai, jangan kirim email
+            if (doneCount < total) {
+                return;
+            }
+
+            // Seluruh karyawan telah selesai (doneCount === total)! Ambil perwakilan Pengawas terdaftar
+            const recipients = getCheckedMasterEmailRecipients('pengawas');
+            if (recipients.length === 0) {
+                console.log('[Auto Email Pengawas] Seluruh karyawan selesai, namun belum ada Pengawas yang ditandai menerima email di Master Pengguna.');
+                return;
+            }
+
+            const config = JSON.parse(localStorage.getItem('k3_web3forms_config')) || DEFAULT_WEB3FORMS;
+            if (!config.accessKey || getEmailQuota().remaining <= 0) return;
+
+            const defaultLink = "https://elnathanwebsite.github.io/sistempencatatan/";
+            const qrUrl = getQrCodeUrl(defaultLink, '250x250');
+            const barcodeUrl = getBarcodeUrl('K3-INSP-' + Date.now().toString().slice(-4));
+
+            showToast(`📨 Seluruh karyawan (${total} orang) telah selesai upload APD! Mengirim notifikasi otomatis ke Pengawas...`, 'info');
+
+            // Tandai sudah terkirim agar tidak duplikat
+            period.notifiedPengawasAllUploaded = true;
+            period.notifiedPengawasAt = new Date().toISOString();
+            localStorage.setItem('k3_periods', JSON.stringify(periodsList));
+
+            await dispatchSequence(recipients, async (r) => {
+                if (getEmailQuota().remaining <= 0) return;
+                const subject = `🔍 [PPE Compliance] Seluruh Karyawan Selesai Upload APD - Siap Pemeriksaan Lapangan (${period.nama})`;
+                const message = `Kepada Yth.
+Bapak/Ibu Pengawas K3 / Safety Inspector (${r.name}),
+
+Dengan hormat,
+Diberitahukan bahwa SELURUH KARYAWAN (${total} personel) pada periode pemeriksaan APD 90 hari berikut telah selesai mengunggah foto bukti fisik APD dan/atau menyetujui data APD masing-masing:
+
+==================================================
+INFORMASI PERIODE PEMERIKSAAN APD (90 HARI):
+==================================================
+• Nama Periode    : ${period.nama}
+• Siklus Interval : ${period.durasi_hari || 90} Hari
+• Tanggal Mulai   : ${formatTanggalIndo(period.tgl_mulai)}
+• Tanggal Selesai : ${formatTanggalIndo(period.tgl_selesai)}
+• Total Personel  : ${total} Karyawan (100% Selesai Upload)
+• Status Saat Ini : Menunggu Pemeriksaan Fisik Lapangan & Verifikasi Pengawas K3
+
+Dimohon kesediaan Bapak/Ibu Pengawas K3 untuk segera masuk ke sistem, melakukan inspeksi fisik di lapangan, menilai kelayakan APD, dan mengunggah foto bukti pemeriksaan fisik.
+
+==================================================
+AKSES SISTEM PEMERIKSAAN K3:
+==================================================
+Silakan klik tautan resmi di bawah ini untuk mengakses sistem:
+https://elnathanwebsite.github.io/sistempencatatan/
+
+Scan Barcode & QR Code Akses via HP:
+• Link QR Code : ${qrUrl}
+• Link Barcode : ${barcodeUrl}
+
+Terima kasih atas dedikasi dan kerja sama Anda dalam menjaga keselamatan kerja.
+
+Salam Keselamatan Kerja,
+Tim HSE & Manajemen K3`;
+
+                try {
+                    await sendViaWeb3Forms({
+                        subject: subject,
+                        name: r.name,
+                        email: r.email,
+                        to_email: r.email,
+                        role: r.role,
+                        message: message,
+                        approval_link: defaultLink,
+                        nama_apd: "Pemeriksaan Seluruh APD Karyawan",
+                        kondisi: "100% Karyawan Telah Upload",
+                        tgl_inspeksi: new Date().toISOString().slice(0, 10),
+                        pic: r.name,
+                        spv: period.spv_nama || 'Supervisor K3'
+                    });
+                } catch (e) {
+                    console.warn(`[Auto Email Pengawas] Gagal ke ${r.email}:`, e);
+                }
+            }, 600);
         }
 
         function approvePeriodPengawas(periodId, karyawanId) {
@@ -11707,7 +11955,7 @@ Tim Pengawas K3 & Field Inspector Safety`;
             const tbody = document.getElementById('reportBodyKaryawan');
             if (tbody) {
                 tbody.innerHTML = kList.map((k, idx) => {
-                    const apdStr = (k.apdList || []).map(a => `${a.nama} (${a.sn || '-'})`).join('<br>');
+                    const apdStr = k.apdDiperiksa ? `<span style="font-weight:700; color:#065f46;">${escapeHtml(k.apdDiperiksa)}</span>` : '<span style="color:#94a3b8; font-style:italic;">(Belum dipilih karyawan)</span>';
                     const fotoKaryawanCount = (k.fotoKaryawan || []).length;
                     const fotoPengawasCount = (k.fotoPengawas || []).length;
 
@@ -11883,7 +12131,7 @@ Tim Pengawas K3 & Field Inspector Safety`;
 
                 // Populate Rows
                 kList.forEach((k, idx) => {
-                    const apdFormatted = (k.apdList || []).map(a => `${a.nama} (${a.sn})`).join('; ');
+                    const apdFormatted = k.apdDiperiksa || '(Belum dipilih karyawan)';
                     const kApp = k.approvalKaryawan && k.approvalKaryawan.approved ? `Disetujui (${formatTanggalIndo(k.approvalKaryawan.approvedAt)})` : 'Belum Approve';
                     const pApp = k.approvalPengawas && k.approvalPengawas.approved ? `Disetujui (${k.approvalPengawas.approvedBy || 'Inspector'})` : 'Belum Diperiksa';
                     const lApp = k.approvalLeader && k.approvalLeader.approved ? `DISAHKAN LEADER (${k.approvalLeader.approvedBy || 'Leader'})` : 'MENUNGGU';
@@ -11998,7 +12246,7 @@ Tim Pengawas K3 & Field Inspector Safety`;
                                     <td>${i + 1}</td>
                                     <td>${k.nama}</td>
                                     <td>${k.dept}</td>
-                                    <td>${(k.apdList || []).map(a => `${a.nama} (${a.sn})`).join(', ')}</td>
+                                    <td>${escapeHtml(k.apdDiperiksa || '(Belum dipilih karyawan)')}</td>
                                     <td>${(k.fotoKaryawan || []).length}</td>
                                     <td>${(k.fotoPengawas || []).length}</td>
                                     <td>${k.kondisiFisik}</td>
@@ -12480,23 +12728,28 @@ Tim Pengawas K3 & Field Inspector Safety`;
                 <!-- Karyawan APD Selection (Wajib diisi terlebih dahulu) -->
                 <div class="form-group" id="groupMultiUploadApdType"
                     style="margin-bottom: 16px; background: var(--bg-input); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
-                    <label for="multiUploadApdType"
-                        style="font-weight: 700; font-size: 0.82rem; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                    <div style="font-weight: 700; font-size: 0.82rem; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                         <span style="display: flex; align-items: center; gap: 6px;">
                             <i data-lucide="shield-alert" style="width: 16px; height: 16px; color: var(--primary);"></i>
-                            Jenis APD Yang Diperiksa <span style="color: var(--danger); font-size: 0.72rem;">* (Wajib Diisi Terlebih Dahulu)</span>
+                            Jenis APD Yang Diperiksa <span style="color: var(--danger); font-size: 0.72rem;">* (Bisa Pilih Banyak Sesuai Foto)</span>
                         </span>
-                        <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: normal;">Referensi Master Terdaftar</span>
-                    </label>
-                    <select id="multiUploadApdType" style="width: 100%; font-size: 0.84rem; font-weight: 600; padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main);"
-                        onchange="handleApdTypeSelectChange(this.value)">
+                        <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: normal;">Pilih checklist & ketik APD</span>
+                    </div>
+
+                    <!-- Container Checklist APD Terdaftar -->
+                    <div id="multiUploadApdContainer" style="max-height: 155px; overflow-y: auto; padding: 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-card); margin-bottom: 8px;">
                         <!-- Populated dynamically by populateMultiUploadApdOptions() -->
-                    </select>
-                    <input type="text" id="multiUploadApdCustom" placeholder="Ketik nama / jenis APD lainnya..."
-                        style="display: none; width: 100%; margin-top: 8px; font-size: 0.82rem; padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main);">
-                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 5px; display: flex; align-items: center; gap: 4px;">
+                    </div>
+
+                    <!-- Ketik Manual APD Tambahan / Khusus -->
+                    <div>
+                        <input type="text" id="multiUploadApdCustom" placeholder="Ketik jenis APD lainnya (pisahkan koma jika lebih dari satu)..."
+                            style="width: 100%; font-size: 0.82rem; padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main);">
+                    </div>
+
+                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 4px;">
                         <i data-lucide="info" style="width: 12px; height: 12px; color: var(--primary);"></i>
-                        Pilih jenis APD terdaftar di atas sebelum memilih atau mengunggah file foto bukti fisik.
+                        Centang satu atau beberapa APD di atas dan/atau ketik manual sesuai dengan foto yang Anda unggah.
                     </div>
                 </div>
 
